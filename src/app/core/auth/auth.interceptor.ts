@@ -36,19 +36,23 @@ export const authInterceptor = (
         authService.accessToken &&
         !AuthUtils.isTokenExpired(authService.accessToken)
     ) {
+
         newReq = req.clone({
-            headers: req.headers.set(
-                'Authorization',
-                'Bearer ' + authService.accessToken
-            ),
+            setHeaders: {
+                Authorization: `Bearer ${authService.accessToken}`,
+            },
         });
     }
 
+    // authService.signOut();
+
     // Response
     return next(newReq).pipe(
-        catchError((error) => {
+        catchError((error) => {        
+            // return
             // Catch "401 Unauthorized" responses
             if (error instanceof HttpErrorResponse && error.status === 401) {
+                
                 // Sign out
                 authService.signOut();
 

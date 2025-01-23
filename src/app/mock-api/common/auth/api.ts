@@ -1,13 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
 import { user as userData } from 'app/mock-api/common/user/data';
 import Base64 from 'crypto-js/enc-base64';
 import Utf8 from 'crypto-js/enc-utf8';
 import HmacSHA256 from 'crypto-js/hmac-sha256';
 import { cloneDeep } from 'lodash-es';
+import { AuthService } from 'app/core/auth/auth.service';
+import { UserService } from 'app/core/user/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthMockApi {
+    private _authService = inject(AuthService);
+    private _userService = inject(UserService);
     private readonly _secret: any;
     private _user: any = userData;
 
@@ -77,27 +81,43 @@ export class AuthMockApi {
             .onPost('api/auth/sign-in-with-token')
             .reply(({ request }) => {
                 // Get the access token
-                const accessToken = request.body.accessToken;
+                // const accessToken = request.body.accessToken;
+                // console.log(request.body.user)
+                // let user = null
 
-                // Verify the token
-                if (this._verifyJWTToken(accessToken)) {
-                    return [
-                        200,
-                        {
-                            user: cloneDeep(this._user),
-                            accessToken: this._generateJWTToken(),
-                            tokenType: 'bearer',
-                        },
-                    ];
-                }
+                // this._userService.user$.pipe().subscribe((res) => {
+                //     user = res
+                // })
 
-                // Invalid token
                 return [
-                    401,
+                    200,
                     {
-                        error: 'Invalid token',
+                        user: this._userService.user,
+                        accessToken: this._authService.accessToken,
+                        tokenType: 'bearer',
                     },
                 ];
+
+
+                // // Verify the token
+                // if (this._verifyJWTToken(accessToken)) {
+                //     return [
+                //         200,
+                //         {
+                //             user: cloneDeep(this._user),
+                //             accessToken: this._generateJWTToken(),
+                //             tokenType: 'bearer',
+                //         },
+                //     ];
+                // }
+
+                // // Invalid token
+                // return [
+                //     401,
+                //     {
+                //         error: 'Invalid token',
+                //     },
+                // ];
             });
 
         // -----------------------------------------------------------------------------------------------------

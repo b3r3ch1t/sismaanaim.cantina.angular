@@ -31,8 +31,12 @@ export class AuthUtils {
             return true;
         }
 
+        // console.log("Access token verification ", date.valueOf() > new Date().valueOf())
+        // return
+
         // Check if the token is expired
-        return !(date.valueOf() > new Date().valueOf() + offsetSeconds * 1000);
+        // return !(date.valueOf() > new Date().valueOf() + offsetSeconds * 1000);
+        return !(date.valueOf() > new Date().valueOf());
     }
 
     // -----------------------------------------------------------------------------------------------------

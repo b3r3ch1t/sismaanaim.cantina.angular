@@ -95,7 +95,7 @@ export class AuthService {
         // Sign in using the token
         return this._httpClient
             .post('api/auth/sign-in-with-token', {
-                accessToken: this.accessToken,
+                accessToken: this.accessToken
             })
             .pipe(
                 catchError(() =>
@@ -103,7 +103,7 @@ export class AuthService {
                     of(false)
                 ),
                 switchMap((response: any) => {
-                    console.log(response)
+                    console.log('api/auth/sign-in-with-token ', response)
 
                     // Replace the access token with the new one if it's available on
                     // the response object.
@@ -134,6 +134,7 @@ export class AuthService {
     signOut(): Observable<any> {
         // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
 
         // Set the authenticated flag to false
         this._authenticated = false;
