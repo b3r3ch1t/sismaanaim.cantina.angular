@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,
     NgForm,
@@ -64,10 +64,18 @@ export class AuthSignInComponent implements OnInit {
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
 
+    @ViewChild('emailInput', { static: true }) emailInput: ElementRef;
+
     /**
      * On init
      */
     ngOnInit(): void {
+
+        this.emailInput.nativeElement.addEventListener('input', (event: Event) => {
+            const input = event.target as HTMLInputElement;
+            input.value = input.value.replace(/[^0-9.]/g, '');
+        });
+
         // Create the form
         this.signInForm = this._formBuilder.group({
             email: [
@@ -84,6 +92,8 @@ export class AuthSignInComponent implements OnInit {
             rememberMe: [''],
         });
     }
+
+
 
     createCpfValidator(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
@@ -126,7 +136,7 @@ export class AuthSignInComponent implements OnInit {
         this._authService.signIn(this.signInForm.value).subscribe(
             (response) => {
                 // console.log(response)
-                
+
                 // Set the redirect url.
                 // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
                 // to the correct page after a successful sign in. This way, that url can be set via

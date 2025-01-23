@@ -4,4 +4,6 @@ export interface User {
     email: string;
     avatar?: string;
     status?: string;
+    profiles?: Array<{ id: number; name: string }>;
 }
+

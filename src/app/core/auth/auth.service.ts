@@ -70,6 +70,7 @@ export class AuthService {
                         id: response.result.userId,
                         name: response.result.userName,
                         email: response.result.userEmail,
+                        profiles : response.result.profiles
                     }
 
                     // // Store the access token in the local storage

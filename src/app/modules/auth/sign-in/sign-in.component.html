@@ -58,7 +58,7 @@
 
                 <mat-form-field class="w-full">
                     <mat-label>CPF</mat-label>
-                    <input id="email" matInput [formControlName]="'email'" />
+                    <input id="email" matInput #emailInput [formControlName]="'email'" />
                     @if (signInForm.get('email').hasError('required')) {
                         <mat-error class="block"> CPF is required </mat-error>
                     }
