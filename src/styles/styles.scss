@@ -1,0 +1,22 @@
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Import/write your custom styles here.
+/*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
+/* ----------------------------------------------------------------------------------------------------- */
+
+.login-bg{
+    background-image: url('/images/login/bg-login.jpg');
+    background-size: cover;
+}
+
+.login-bg::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba($color: #000000, $alpha: 0.4);
+}
+
+.mat-mdc-form-field-hint-wrapper, 
+.mat-mdc-form-field-error-wrapper{
+    position: relative !important;
+    top: -16px !important;
+}
