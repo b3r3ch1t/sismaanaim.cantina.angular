@@ -58,7 +58,9 @@ export class AuthService {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('https://apicantina.berechit.com.br/v1/sismaanaim/account/generatetoken', {
+
+        const API_URL = "https://apicantina.berechit.com.br/v1/" // TODO : Load from Environment variables
+        return this._httpClient.post(API_URL + 'sismaanaim/account/generatetoken', {
             cpf: credentials.email,
             password: credentials.password
         }).pipe(

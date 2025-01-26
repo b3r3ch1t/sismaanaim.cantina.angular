@@ -105,7 +105,8 @@ export class AuthSignInComponent implements OnInit {
                 "268.432.520-01",
                 "487.662.930-73",
                 "243.231.990-74",
-                "00000000191"
+                "00000000191",
+                "19073856060"
             ]
 
             const isValid = validCpf.includes(value);

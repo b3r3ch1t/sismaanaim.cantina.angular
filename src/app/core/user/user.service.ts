@@ -24,7 +24,7 @@ export class UserService {
     }
 
 
-    get user(): string {
+    get user(): User {
         let user = JSON.parse(localStorage.getItem('user'));
         this._user.next(user);
         return user

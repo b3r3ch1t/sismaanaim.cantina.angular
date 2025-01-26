@@ -14,11 +14,11 @@
         <div class="flex w-full items-center p-4 pl-6">
             <!-- Logo -->
             <div class="flex items-center justify-center">
-                <img class="w-8" src="images/logo/logo.svg" />
+                <img class="w-full max-w-44" src="images/logo.svg" />
             </div>
             <!-- Components -->
             <div class="ml-auto flex items-center">
-                <notifications></notifications>
+                <!-- <notifications></notifications> -->
                 <user [showAvatar]="false"></user>
             </div>
         </div>
@@ -43,7 +43,7 @@
                 <div
                     class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center font-medium leading-normal"
                 >
-                    {{ user.name }} - {{ user.profiles[0].name }}
+                    {{ user.name }}
                 </div>
                 <div
                     class="text-secondary mt-0.5 w-full overflow-hidden text-ellipsis whitespace-nowrap text-center text-md font-medium leading-normal"
@@ -54,13 +54,13 @@
         </div>
     </ng-container>
     <!-- Navigation footer hook -->
-    <ng-container fuseVerticalNavigationContentFooter>
+    <!-- <ng-container fuseVerticalNavigationContentFooter>
         <div
             class="mb-4 mt-2 flex h-16 flex-0 items-center justify-center pl-2 pr-6 opacity-12"
         >
             <img class="max-w-36" src="images/logo/logo-text-on-dark.svg" />
         </div>
-    </ng-container>
+    </ng-container> -->
 </fuse-vertical-navigation>
 
 <!-- Wrapper -->
@@ -74,7 +74,7 @@
             <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
         </button>
         <!-- Components -->
-        <div class="ml-auto flex items-center space-x-0.5 pl-2 sm:space-x-2">
+        <!-- <div class="ml-auto flex items-center space-x-0.5 pl-2 sm:space-x-2">
             <languages></languages>
             <fuse-fullscreen class="hidden md:block"></fuse-fullscreen>
             <search [appearance]="'bar'"></search>
@@ -89,7 +89,7 @@
                     [svgIcon]="'heroicons_outline:chat-bubble-left-right'"
                 ></mat-icon>
             </button>
-        </div>
+        </div> -->
     </div>
 
     <!-- Content -->
@@ -108,4 +108,4 @@
 </div>
 
 <!-- Quick chat -->
-<quick-chat #quickChat="quickChat"></quick-chat>
+<!-- <quick-chat #quickChat="quickChat"></quick-chat> -->
