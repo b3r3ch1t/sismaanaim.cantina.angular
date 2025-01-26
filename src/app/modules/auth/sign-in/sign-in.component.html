@@ -9,7 +9,7 @@
 
             <!-- Title -->
             <div class="text-4xl font-extrabold leading-tight tracking-tight">
-                Sign in
+                Entrar
             </div>
 
             <!-- <div class="mt-0.5 flex items-baseline font-medium">
@@ -60,11 +60,11 @@
                     <mat-label>CPF</mat-label>
                     <input id="email" matInput #emailInput [formControlName]="'email'" />
                     @if (signInForm.get('email').hasError('required')) {
-                        <mat-error class="block"> CPF is required </mat-error>
+                        <mat-error class="block"> CPF é necessário</mat-error>
                     }
 
                     @if (signInForm.get('email').hasError('invalidCpf')) {
-                        <mat-error class="block"> CPF is invalid </mat-error>
+                        <mat-error class="block"> CPF é inválido</mat-error>
                     }
                 </mat-form-field>
 
@@ -84,7 +84,7 @@
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:eye-slash'"></mat-icon>
                         }
                     </button>   
-                    <mat-error class="block"> Senha is required </mat-error>
+                    <mat-error class="block"> Senha é necessário</mat-error>
                 </mat-form-field>
 
                 <!-- Actions -->
@@ -109,7 +109,7 @@
                 <button class="fuse-mat-button-large mt-6 w-full" mat-flat-button [color]="'primary'"
                     [disabled]="signInForm.disabled" (click)="signIn()">
                     @if (!signInForm.disabled) {
-                    <span> Sign in </span>
+                    <span> Enviar </span>
                     }
                     @if (signInForm.disabled) {
                     <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>

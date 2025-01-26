@@ -4,36 +4,36 @@
     >
         <div class="mx-auto w-full max-w-80 sm:mx-0 sm:w-80">
             <!-- Logo -->
-            <div class="mx-auto w-12">
-                <img src="images/logo/logo.svg" />
+            <div class="mx-auto w-44">
+                <img src="images/logo.svg" />
             </div>
 
             <!-- Title -->
             <div
                 class="mt-8 text-center text-4xl font-extrabold leading-tight tracking-tight"
             >
-                You have signed out!
+                Você saiu!
             </div>
             <div class="mt-0.5 flex justify-center font-medium">
                 <!-- Redirect countdown -->
                 @if (countdown > 0) {
-                    Redirecting in
+                    Redirecionando para
                     {{ countdown | i18nPlural: countdownMapping }}
                 }
 
                 <!-- Redirect message -->
                 @if (countdown === 0) {
-                    You are now being redirected!
+                    Agora você está sendo redirecionado!
                 }
             </div>
 
             <!-- Form footer -->
             <div class="text-secondary mt-8 text-center text-md font-medium">
-                <span>Go to</span>
+                <span>Vá para</span>
                 <a
                     class="ml-1 text-primary-500 hover:underline"
                     [routerLink]="['/sign-in']"
-                    >sign in
+                    >Entrar
                 </a>
             </div>
         </div>
