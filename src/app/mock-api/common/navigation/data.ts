@@ -16,29 +16,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:currency-dollar',
         link: '/replenishment'
-    },
-    {
-        id: 'sell-card',
-        title: 'Vender Cartão',
-        type: 'basic',
-        icon: 'heroicons_outline:credit-card',
-        link: '/sell-card'
-    }
-    ,
-    {
-        id: 'lock-card',
-        title: 'Bloquear Cartão',
-        type: 'basic',
-        icon: 'heroicons_outline:no-symbol',
-        link: '/lock-card'
-    }
-    ,
-    {
-        id: 'unlock-card',
-        title: 'Desbloquear Cartão',
-        type: 'basic',
-        icon: 'heroicons_outline:check',
-        link: '/unlock-card'
     }
     ,
     {
