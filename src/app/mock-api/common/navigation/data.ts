@@ -9,6 +9,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
         icon: 'heroicons_outline:chart-pie',
         link: '/dashboard'
     },
+
+    {
+        id: 'replenishment',
+        title: 'Abastecimento',
+        type: 'basic',
+        icon: 'heroicons_outline:currency-dollar',
+        link: '/replenishment'
+    },
     {
         id: 'sell-card',
         title: 'Vender Cartão',
