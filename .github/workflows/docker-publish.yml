@@ -34,7 +34,7 @@ jobs:
       - name: Install Dependencies and Build
         run: |
           npm install --legacy-peer-deps
-          npm run build -- --configuration=main
+          npm run build -- --configuration=production
 
       - name: Install Quill Dependency
         run: npm install quill
@@ -51,7 +51,7 @@ jobs:
             echo "Using Dockerfile $DOCKERFILE"
           fi
 
-          BUILD_ENV="production"
+          BUILD_ENV="${{ github.ref_name }}"
 
           docker build \
             --build-arg BUILD_ENV="$BUILD_ENV" \

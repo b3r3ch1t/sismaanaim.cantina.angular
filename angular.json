@@ -91,7 +91,20 @@
                                 }
                             ]
                         },
-                        "main": {
+                       "main": {
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "3mb",
+                                    "maximumError": "5mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "75kb",
+                                    "maximumError": "90kb"
+                                }
+                            ],
+                            "outputHashing": "all",
                             "fileReplacements": [
                                 {
                                     "replace": "/src/app/environments/environment.ts",
