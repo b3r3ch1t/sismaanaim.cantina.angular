@@ -76,6 +76,22 @@
                             "optimization": false,
                             "extractLicenses": false,
                             "sourceMap": true
+                        },
+                        "staging": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "/src/app/environments/environment.ts",
+                                    "with": "/src/app/environments/environment.staging.ts"
+                                }
+                            ]
+                        },
+                        "main": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "/src/app/environments/environment.ts",
+                                    "with": "/src/app/environments/environment.main.ts"
+                                }
+                            ]
                         }
                     },
                     "defaultConfiguration": "production"
