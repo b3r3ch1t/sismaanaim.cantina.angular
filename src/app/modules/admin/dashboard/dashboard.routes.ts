@@ -5,5 +5,5 @@ export default [
     {
         path     : '',
         component: DashboardComponent,
-    },
+    }
 ] as Routes;

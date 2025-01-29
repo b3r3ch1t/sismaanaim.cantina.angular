@@ -3,7 +3,7 @@ import { FuseCardComponent } from '@fuse/components/card';
 import { MatIcon } from '@angular/material/icon';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'dashboard',

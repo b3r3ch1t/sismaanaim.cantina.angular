@@ -1,0 +1,39 @@
+<div class="flex min-w-0 flex-auto flex-col">
+    <div class="flex-auto p-6 sm:p-10">
+
+
+        <div class="max-w-128">
+
+            <mat-form-field class="w-full">
+                <mat-label>Nome</mat-label>
+                <input id="name" placeholder="Enigu almenaŭ 4 signojn por serĉi" matInput />
+            </mat-form-field>
+
+            <div class="mb-6">
+                <p class="font-bold text-lg">OR</p>
+            </div>
+
+            <mat-form-field class="w-full">
+                <mat-label>CPF</mat-label>
+                <input id="cpf" placeholder="Enigu almenaŭ 4 signojn por serĉi" matInput />
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+                <mat-label>Elektu Klienton</mat-label>
+                <mat-select #clientDropdown [disabled]="clients().length === 0">
+                    <mat-option disabled="">Elektu Klienton</mat-option>
+                    @for (client of clients(); track $index) {
+                    <mat-option [value]="client.id">{{ client.nome }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <!-- <button class="fuse-mat-button-large mt-6 w-full" mat-flat-button [color]="'primary'">
+                <span> Enviar </span>
+                <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+            </button> -->
+
+        </div>
+
+    </div>
+</div>
