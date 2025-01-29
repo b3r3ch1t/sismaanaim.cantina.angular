@@ -94,7 +94,7 @@
                             ]
                         }
                     },
-                    "defaultConfiguration": "production"
+                    "defaultConfiguration": "main"
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
