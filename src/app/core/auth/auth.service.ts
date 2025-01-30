@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
+import { environment } from 'app/environments/environment';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -59,13 +60,13 @@ export class AuthService {
         }
 
 
-        const API_URL = "https://apicantina.berechit.com.br/v1/" // TODO : Load from Environment variables
-        return this._httpClient.post(API_URL + 'sismaanaim/account/generatetoken', {
+        const API_URL = environment.API_URL ;
+        return this._httpClient.post(API_URL + 'account/generatetoken', {
             cpf: credentials.email,
             password: credentials.password
         }).pipe(
             switchMap((response: any) => {
-                console.log('response : ', response)
+
 
                 if (response.success) {
                     const user = {
