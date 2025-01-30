@@ -107,7 +107,6 @@ export class AuthService {
                     of(false)
                 ),
                 switchMap((response: any) => {
-                    console.log('api/auth/sign-in-with-token ', response)
 
                     // Replace the access token with the new one if it's available on
                     // the response object.

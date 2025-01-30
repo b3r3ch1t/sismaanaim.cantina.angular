@@ -4,6 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { Subject, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'dashboard',
@@ -22,7 +23,7 @@ export class DashboardComponent {
     /**
      * Constructor
      */
-    constructor() {
+    constructor(private readonly router: Router) {
     }
 
     ngOnInit(): void {
@@ -35,4 +36,36 @@ export class DashboardComponent {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
+
+    goToOperadorDashboard(){
+
+        this.router.navigate(['/operador_dashboard'])
+
+    }
+
+    goToPermissionarioDashboard(){
+
+        this.router.navigate(['/permissionario_dashboard'])
+
+    }
+
+    goToAtendenteDashboard(){
+
+        this.router.navigate(['/atendente_dashboard'])
+
+    }
+
+    goToRevisorDashboard(){
+
+        this.router.navigate(['/revisor_dashboard'])
+
+    }
+
+    goToAuditoriaDashboard(){
+
+        this.router.navigate(['/auditoria_dashboard'])
+
+    }
+
+
 }

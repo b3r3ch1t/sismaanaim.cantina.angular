@@ -7,7 +7,7 @@
 
                 @case (1) {
 
-                <fuse-card
+                <fuse-card  (click)="goToOperadorDashboard()" (keydown)="onKeyDown($event)"
                     class="text-center bg-blue-950 tng sransition-all p-4 md:p-8 flex flex-col items-center justify-center gap-4">
                     <p class="text-2xl font-bold text-white">Operador de Caixa</p>
                     <button class="border group hover:bg-white transition-all rounded-full w-12 h-12">
@@ -19,7 +19,7 @@
                 }
                 @case (2) {
 
-                <fuse-card
+                <fuse-card  (click)="goToPermissionarioDashboard()" (keydown)="onKeyDown($event)"
                     class="text-center bg-blue-950 transition-all p-4 md:p-8 flex flex-col items-center justify-center gap-4">
                     <p class="text-2xl font-bold text-white">Permissionário</p>
                     <button class="border group hover:bg-white transition-all rounded-full w-12 h-12">
@@ -31,7 +31,7 @@
                 }
                 @case (3) {
 
-                <fuse-card
+                <fuse-card  (click)="goToAtendenteDashboard()" (keydown)="onKeyDown($event)"
                     class="text-center bg-blue-950 transition-all p-4 md:p-8 flex flex-col items-center justify-center gap-4">
                     <p class="text-2xl font-bold text-white">Atendente</p>
                     <button class="border group hover:bg-white transition-all rounded-full w-12 h-12">
@@ -43,7 +43,7 @@
                 }
                 @case (4) {
 
-                <fuse-card
+                <fuse-card  (click)="goToRevisorDashboard()" (keydown)="onKeyDown($event)"
                     class="text-center bg-blue-950 transition-all p-4 md:p-8 flex flex-col items-center justify-center gap-4">
                     <p class="text-2xl font-bold text-white">Revisor</p>
                     <button class="border group hover:bg-white transition-all rounded-full w-12 h-12">
@@ -55,7 +55,7 @@
                 }
                 @case (5) {
 
-                <fuse-card
+                <fuse-card  (click)="goToAuditoriaDashboard()" (keydown)="onKeyDown($event)"
                     class="text-center bg-blue-950 transition-all p-4 md:p-8 flex flex-col items-center justify-center gap-4">
                     <p class="text-2xl font-bold text-white">Auditoria</p>
                     <button class="border group hover:bg-white transition-all rounded-full w-12 h-12">
@@ -70,6 +70,6 @@
             }
 
 
-        </div>
+                 </div>
     </div>
 </div>
