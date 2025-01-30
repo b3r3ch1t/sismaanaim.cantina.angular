@@ -3,6 +3,7 @@ import { initialDataResolver } from 'app/app.resolvers';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
+import { PageNotFoundComponent } from './modules/admin/page-not-found/page-not-found.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -86,7 +87,7 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'operator-dashboard', loadChildren: () => import('app/modules/admin/operator-dashboard/operator-dashboard.routes') },
+            { path: 'replenishment', loadChildren: () => import('app/modules/admin/replenishment/replenishment.routes') },
         ]
     },
     {
@@ -98,7 +99,22 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'replenishment', loadChildren: () => import('app/modules/admin/replenishment/replenishment.routes') },
+            { path: 'cashier-dashboard', loadChildren: () => import('app/modules/admin/cashier-dashboard/cashier-dashboard.routes') },
+        ]
+    },
+    {
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        path: '**', 
+        children: [
+            {
+                path: "",
+                component: PageNotFoundComponent
+            }
         ]
     }
 

@@ -20,12 +20,12 @@ export class UserService {
     set user(value: User) {
         // Store the value
         this._user.next(value);
-        localStorage.setItem('user', JSON.stringify(value));
+        sessionStorage.setItem('user', JSON.stringify(value));
     }
 
 
     get user(): User {
-        let user = JSON.parse(localStorage.getItem('user'));
+        let user = JSON.parse(sessionStorage.getItem('user'));
         this._user.next(user);
         return user
     }
