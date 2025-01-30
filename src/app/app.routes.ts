@@ -3,6 +3,7 @@ import { initialDataResolver } from 'app/app.resolvers';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
+import { LayoutDashboardComponent } from './layout/layoutlayoutDashboard.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -69,7 +70,7 @@ export const appRoutes: Route[] = [
         path: '',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
-        component: LayoutComponent,
+        component: LayoutDashboardComponent,
         resolve: {
             initialData: initialDataResolver
         },

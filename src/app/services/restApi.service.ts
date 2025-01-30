@@ -1,7 +1,5 @@
 import { environment } from 'app/environments/environment';
 
-import { KeycloakService } from './keycloak.service';
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -15,23 +13,17 @@ export class RestApiService {
 
   constructor(
     private http: HttpClient,
-    private keycloakService: KeycloakService
   ) {}
 
   private getHeaders(): HttpHeaders {
-    const token = this.keycloakService.keycloak.token;
+
+
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
   }
 
-  private getHeadersUploadFile(): HttpHeaders {
-    const token = this.keycloakService.keycloak.token;
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-  }
+
 
 
   formatDateTime(date: Date): string {
@@ -45,30 +37,12 @@ export class RestApiService {
 }
 
 
-  private handle401Error<T>(requestFn: () => Observable<T>): Observable<T> {
 
-    const currentDate = new Date();
-
-    console.log("token atualizado. ", this.formatDateTime(currentDate));
-
-
-    return this.keycloakService.updateToken().pipe(
-      switchMap(() => requestFn()),
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          return throwError(() => new Error('Unauthorized'));
-        }
-        return throwError(() => error);
-      })
-    );
-  }
 
   private retryOn401<T>(requestFn: () => Observable<T>): Observable<T> {
     return requestFn().pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          return this.handle401Error(requestFn);
-        }
+
         return throwError(() => error);
       })
     );
