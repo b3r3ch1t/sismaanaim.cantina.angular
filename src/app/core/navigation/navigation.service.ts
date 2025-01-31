@@ -32,21 +32,16 @@ export class NavigationService {
      * Get all navigation data
      */
     get(): Observable<Navigation> {
-
         return this._httpClient.get<Navigation>('api/common/navigation').pipe(
             tap((navigation) => {
-                let currentURL = ""
-
                 this._router.events
                     .pipe(filter(event => event instanceof NavigationEnd))
                     .subscribe((event: any) => {
-                        currentURL = event.urlAfterRedirects
-                        if (currentURL.includes("cashier-dashboard")) {
+                        if (event.urlAfterRedirects.includes("cashier-dashboard")) {
                             navigation.default = cashierNavigation
                         }
                         this._navigation.next(navigation);
                     });
-
             })
         );
     }
