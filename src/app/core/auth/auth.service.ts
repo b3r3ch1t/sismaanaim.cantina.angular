@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
-import { environment } from 'app/environments/environment';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -19,11 +18,11 @@ export class AuthService {
      * Setter & getter for access token
      */
     set accessToken(token: string) {
-        localStorage.setItem('accessToken', token);
+        sessionStorage.setItem('accessToken', token);
     }
 
     get accessToken(): string {
-        return localStorage.getItem('accessToken') ?? '';
+        return sessionStorage.getItem('accessToken') ?? '';
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -60,13 +59,13 @@ export class AuthService {
         }
 
 
-        const API_URL = environment.API_URL ;
-        return this._httpClient.post(API_URL + 'account/generatetoken', {
+        const API_URL = "https://apicantina.berechit.com.br/v1/" // TODO : Load from Environment variables
+        return this._httpClient.post(API_URL + 'sismaanaim/account/generatetoken', {
             cpf: credentials.email,
             password: credentials.password
         }).pipe(
             switchMap((response: any) => {
-
+                console.log('response : ', response)
 
                 if (response.success) {
                     const user = {
@@ -107,6 +106,7 @@ export class AuthService {
                     of(false)
                 ),
                 switchMap((response: any) => {
+                    console.log('api/auth/sign-in-with-token ', response)
 
                     // Replace the access token with the new one if it's available on
                     // the response object.
@@ -136,8 +136,8 @@ export class AuthService {
      */
     signOut(): Observable<any> {
         // Remove the access token from the local storage
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
+        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem('user');
 
         // Set the authenticated flag to false
         this._authenticated = false;

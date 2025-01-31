@@ -1,6 +1,16 @@
 /* eslint-disable */
 import { FuseNavigationItem } from '@fuse/components/navigation';
 
+export const cashierNavigation: FuseNavigationItem[] = [
+    {
+        id: 'dashboard',
+        title: 'Principal',
+        type: 'basic',
+        icon: 'heroicons_outline:chart-pie',
+        link: '/dashboard'
+    },
+]
+
 export const defaultNavigation: FuseNavigationItem[] = [
     {
         id: 'dashboard',

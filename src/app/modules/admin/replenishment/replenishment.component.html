@@ -1,0 +1,43 @@
+<div class="flex min-w-0 flex-auto flex-col">
+    <div class="flex-auto p-6 sm:p-10">
+
+        <div class="max-w-128">
+
+            @if (showClearButton()) {
+                <button class="mb-5" mat-stroked-button (click)="clearInputs()">Clear</button>
+            }
+
+            <mat-form-field class="w-full">
+                <mat-label>Nome</mat-label>
+                <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput placeholder="Enigu almenaŭ 4 signojn por serĉi" matInput />
+            </mat-form-field>
+
+            <div class="mb-6">
+                <p class="font-bold text-lg">OR</p>
+            </div>
+
+            <mat-form-field class="w-full">
+                <mat-label>CPF</mat-label>
+                <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)" placeholder="Enigu almenaŭ 4 signojn por serĉi" #cpfInput matInput />
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+                <mat-label>Elektu Klienton</mat-label>
+                <mat-select #clientDropdown="matSelect" (selectionChange)="handleClientSelection()" [disabled]="clients().length === 0 || disableClientDropdown()">
+                    @for (client of clients(); track $index) {
+                    <mat-option [value]="client.id">{{ client.nome }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            @if (selectedClient() != null) {
+                <button class="fuse-mat-button-large mt-6 w-full" mat-flat-button [color]="'primary'">
+                    <span> Continuar </span>
+                    <!-- <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner> -->
+                </button>
+            }
+
+        </div>
+
+    </div>
+</div>

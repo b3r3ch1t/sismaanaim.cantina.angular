@@ -3,8 +3,9 @@ import { FuseCardComponent } from '@fuse/components/card';
 import { MatIcon } from '@angular/material/icon';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
-import { Subject, takeUntil } from 'rxjs';
-import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { RouterLink } from "@angular/router"
+import { UserProfile } from "app/core/user/user-profile.enum"
 
 @Component({
     selector: 'dashboard',
@@ -13,17 +14,34 @@ import { Router } from '@angular/router';
     encapsulation: ViewEncapsulation.None,
     imports: [
         FuseCardComponent,
-        MatIcon
+        MatIcon,
+        RouterLink
     ]
 })
 export class DashboardComponent {
     user: User;
     private _userService: UserService = inject(UserService);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    profileRoutes = {
+        [UserProfile.Cashier]: '/cashier-dashboard',
+        [UserProfile.Admin]: '/admin-dashboard',
+        [UserProfile.Attendant]: '/attendant-dashboard',
+        [UserProfile.Auditor]: '/auditor-dashboard',
+        [UserProfile.Reviewer]: '/reviewer-dashboard',
+        [UserProfile.Permissionary]: '/permissionary-dashboard',
+        [UserProfile.Indefinite]: '/indefinite-dashboard',
+        [UserProfile.SecretariatArea]: '/secretariat-area-dashboard',
+        [UserProfile.SecretariatRegion]: '/secretariat-region-dashboard',
+        [UserProfile.SecretaryChurch]: '/secretary-church-dashboard',
+        [UserProfile.SecretaryPolo]: '/secretary-polo-dashboard',
+    }
+
+
     /**
      * Constructor
      */
-    constructor(private readonly router: Router) {
+    constructor() {
     }
 
     ngOnInit(): void {
@@ -36,36 +54,4 @@ export class DashboardComponent {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
-
-    goToOperadorDashboard(){
-
-        this.router.navigate(['/operador_dashboard'])
-
-    }
-
-    goToPermissionarioDashboard(){
-
-        this.router.navigate(['/permissionario_dashboard'])
-
-    }
-
-    goToAtendenteDashboard(){
-
-        this.router.navigate(['/atendente_dashboard'])
-
-    }
-
-    goToRevisorDashboard(){
-
-        this.router.navigate(['/revisor_dashboard'])
-
-    }
-
-    goToAuditoriaDashboard(){
-
-        this.router.navigate(['/auditoria_dashboard'])
-
-    }
-
-
 }
