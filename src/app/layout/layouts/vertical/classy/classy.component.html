@@ -14,31 +14,16 @@
         <div class="flex w-full items-center p-4 pl-6">
             <!-- Logo -->
             <div class="flex items-center justify-center">
-                <img class="w-full max-w-44" src="images/logo.svg" />
+                <img class="w-full max-w-44" src="images/logo.svg" alt="" />
             </div>
             <!-- Components -->
             <div class="ml-auto flex items-center">
-                <!-- <notifications></notifications> -->
                 <user [showAvatar]="false"></user>
             </div>
         </div>
         <!-- User -->
         <div class="flex w-full flex-col items-center p-4">
-            <div class="relative h-24 w-24">
-                @if (user.avatar) {
-                    <img
-                        class="h-full w-full rounded-full"
-                        [src]="user.avatar"
-                        alt="User avatar"
-                    />
-                }
-                @if (!user.avatar) {
-                    <mat-icon
-                        class="icon-size-24"
-                        [svgIcon]="'heroicons_solid:user-circle'"
-                    ></mat-icon>
-                }
-            </div>
+
             <div class="mt-6 flex w-full flex-col items-center justify-center">
                 <div
                     class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center font-medium leading-normal"
@@ -102,9 +87,9 @@
     </div>
 
     <!-- Footer -->
-    <!--<div class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
-        <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span>
-    </div>-->
+    <div class="relative flex flex-0 items-center justify-center w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
+        <span class="font-medium text-secondary">Berechit Desenvolvimento de Sistemas &copy; {{currentYear}}</span>
+    </div>
 </div>
 
 <!-- Quick chat -->
