@@ -109,8 +109,9 @@ export class AuthSignInComponent implements OnInit {
         // Remove caracteres não numéricos
         const cpfLimpo = cpf.replace(/\D/g, '');
 
+        const validCPF = "19073856060" // '00000010191'
 
-        if(cpfLimpo==='00000010191') return true;
+        if(cpfLimpo=== validCPF) return true;
 
         // Verifica se o CPF tem 11 dígitos ou é inválido
         if (cpfLimpo.length !== 11 || /^(\d)\1+$/.test(cpfLimpo)) {
