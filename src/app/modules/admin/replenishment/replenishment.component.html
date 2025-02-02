@@ -4,12 +4,13 @@
         <div class="max-w-128">
 
             @if (showClearButton()) {
-                <button class="mb-5" mat-stroked-button (click)="clearInputs()">Clear</button>
+            <button class="mb-5" mat-stroked-button (click)="clearInputs()">Clear</button>
             }
 
             <mat-form-field class="w-full">
                 <mat-label>Nome</mat-label>
-                <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput placeholder="Enigu almenaŭ 4 signojn por serĉi" matInput />
+                <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput
+                    placeholder="Enigu almenaŭ 4 signojn por serĉi" matInput />
             </mat-form-field>
 
             <div class="mb-6">
@@ -18,12 +19,14 @@
 
             <mat-form-field class="w-full">
                 <mat-label>CPF</mat-label>
-                <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)" placeholder="Enigu almenaŭ 4 signojn por serĉi" #cpfInput matInput />
+                <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
+                    placeholder="Enigu almenaŭ 4 signojn por serĉi" #cpfInput matInput />
             </mat-form-field>
 
             <mat-form-field class="w-full">
                 <mat-label>Elektu Klienton</mat-label>
-                <mat-select #clientDropdown="matSelect" (selectionChange)="handleClientSelection()" [disabled]="clients().length === 0 || disableClientDropdown()">
+                <mat-select #clientDropdown="matSelect" (selectionChange)="handleClientSelection()"
+                    [disabled]="clients().length === 0 || disableClientDropdown()">
                     @for (client of clients(); track $index) {
                     <mat-option [value]="client.id">{{ client.nome }}</mat-option>
                     }
@@ -31,10 +34,84 @@
             </mat-form-field>
 
             @if (selectedClient() != null) {
-                <button class="fuse-mat-button-large mt-6 w-full" mat-flat-button [color]="'primary'">
-                    <span> Continuar </span>
-                    <!-- <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner> -->
-                </button>
+            <p class="text-xl">
+                <span class="font-bold">Nome:</span>
+                <span>{{ selectedClient().nome }}</span>
+            </p>
+
+            <p class="text-xl">
+                <span class="font-bold">CPF:</span>
+                <span>{{ selectedClient().cpf }}</span>
+            </p>
+
+            <p class="text-xl">
+                <span class="font-bold">Email:</span>
+                <span>{{ selectedClient().email }}</span>
+            </p>
+
+            <p class="text-xl">
+                <span class="font-bold">Telefone Contato:</span>
+                <span>{{ selectedClient().telefoneContato }}</span>
+            </p>
+
+            <p class="text-xl">
+                <span class="font-bold">Saldo:</span>
+                <span>{{ selectedClient().saldo | customCurrency}}</span>
+            </p>
+
+            <div class="border-t my-6"></div>
+
+            <div class="mb-6">
+                <p class="font-bold text-lg">Recarga</p>
+            </div>
+
+            <mat-form-field class="w-full">
+                <mat-label>Forma de Pagamento*</mat-label>
+                <mat-select (selectionChange)="handlePaymentMethodSelection()"
+                    [disabled]="paymentMethods().length === 0 || disablePaymentMethodDropdown()"
+                    #paymentMethodDropdown="matSelect">
+                    @for (payment of paymentMethods(); track $index) {
+                    <mat-option [value]="payment.id">{{ payment.descricao }}</mat-option>
+                    }
+                </mat-select>
+                @if (validPaymentMethod() === false) {
+                <mat-error>
+                    Por favor, selecione um método de pagamento válido.
+                </mat-error>
+                }
+            </mat-form-field>
+
+            <!-- Valor da Recarga -->
+            <mat-form-field class="w-full">
+                <mat-label>Valor da Recarga</mat-label>
+                <span matPrefix>R$&nbsp;</span>
+                <input matInput [disabled]="selectedPaymentMethod() === null" type="number" #rechargeValueInput
+                    placeholder="Informe o valor da recarga" (keypress)="handleRechargeValueInput($event)">
+                @if (validRechargeInput() === false) {
+                <mat-error>
+                    Por favor, insira apenas números.
+                </mat-error>
+                }
+            </mat-form-field>
+
+            <!-- Valor Pago -->
+            <mat-form-field class="w-full">
+                <mat-label>Valor Pago</mat-label>
+                <span matPrefix>R$&nbsp;</span>
+                <input matInput [disabled]="selectedPaymentMethod() === null" type="number"
+                    #paidValueInput (keypress)="handlePaidValueInput($event)"
+                    placeholder="Informe o valor pago em dinheiro">
+                @if(validPaidInput() === false){
+                <mat-error>
+                    Por favor, insira apenas números.
+                </mat-error>
+                }
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="handleSubmit()">
+                Efetuar Recarga
+            </button>
+
             }
 
         </div>
