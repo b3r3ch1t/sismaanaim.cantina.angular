@@ -3,6 +3,7 @@ import {
     ApplicationConfig,
     inject,
     isDevMode,
+    LOCALE_ID,
     provideAppInitializer,
 } from '@angular/core';
 import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
@@ -18,8 +19,16 @@ import { MockApiService } from 'app/mock-api';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import localePtExtra from '@angular/common/locales/extra/pt';
+
+// Register the locale data for 'pt-BR'
+registerLocaleData(localePt, 'pt-BR', localePtExtra);
+
 export const appConfig: ApplicationConfig = {
     providers: [
+        { provide: LOCALE_ID, useValue: 'pt-BR' },
         provideAnimations(),
         provideHttpClient(),
         provideRouter(
