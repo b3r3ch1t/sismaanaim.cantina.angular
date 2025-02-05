@@ -1,3 +1,4 @@
+import { environment } from 'app/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
@@ -59,8 +60,8 @@ export class AuthService {
         }
 
 
-        const API_URL = "https://apicantina.berechit.com.br/v1/" // TODO : Load from Environment variables
-        return this._httpClient.post(API_URL + 'sismaanaim/account/generatetoken', {
+
+        return this._httpClient.post(environment.API_URL + 'account/generatetoken', {
             cpf: credentials.email,
             password: credentials.password
         }).pipe(
