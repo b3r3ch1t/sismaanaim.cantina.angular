@@ -103,6 +103,18 @@ export const appRoutes: Route[] = [
         ]
     },
     {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'my-actions', loadChildren: () => import('app/modules/admin/my-actions/my-actions.routes') },
+        ]
+    },
+    {
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         component: LayoutComponent,

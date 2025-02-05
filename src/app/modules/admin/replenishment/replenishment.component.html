@@ -23,15 +23,14 @@
                     placeholder="Enigu almenaŭ 4 signojn por serĉi" #cpfInput matInput />
             </mat-form-field>
 
-            <mat-form-field class="w-full">
-                <mat-label>Elektu Klienton</mat-label>
-                <mat-select #clientDropdown="matSelect" (selectionChange)="handleClientSelection()"
-                    [disabled]="clients().length === 0 || disableClientDropdown()">
-                    @for (client of clients(); track $index) {
-                    <mat-option [value]="client.id">{{ client.nome }}</mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
+            <mat-radio-group #clientDropdown (change)="handleClientSelection($event)" class="w-full">
+                @for (client of clients(); track $index) {
+                  <mat-radio-button [value]="client.id" [disabled]="clients().length === 0 || disableClientDropdown()">
+                    {{ client.nome }}
+                  </mat-radio-button>
+                }
+            </mat-radio-group>
+              
 
             @if (selectedClient() != null) {
             <p class="text-xl">

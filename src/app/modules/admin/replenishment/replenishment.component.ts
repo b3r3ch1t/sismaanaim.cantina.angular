@@ -13,6 +13,7 @@ import { ApiResponse } from 'app/core/api/api-response.types';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { CurrencyPipe } from '@angular/common';
 import { UserService } from 'app/core/user/user.service';
+import { MatRadioChange, MatRadioGroup, MatRadioModule } from "@angular/material/radio"
 
 @Component({
   selector: 'app-replenishment',
@@ -24,7 +25,8 @@ import { UserService } from 'app/core/user/user.service';
     MatIconModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    CustomCurrencyPipe
+    CustomCurrencyPipe,
+    MatRadioModule
   ],
   providers: [CurrencyPipe],
   templateUrl: './replenishment.component.html',
@@ -52,7 +54,7 @@ export class ReplenishmentComponent implements OnInit {
 
   @ViewChild('nameInput', { static: true }) nameInput: ElementRef;
   @ViewChild('cpfInput', { static: true }) cpfInput: ElementRef;
-  @ViewChild('clientDropdown', { static: false }) clientDropdown: MatSelect;
+  @ViewChild('clientDropdown', { static: false }) clientDropdown: MatRadioGroup;
   @ViewChild('paymentMethodDropdown', { static: false }) paymentMethodDropdown: MatSelect;
   @ViewChild('paidValueInput', { static: false }) paidValueInput: ElementRef;
   @ViewChild('rechargeValueInput', { static: false }) rechargeValueInput: ElementRef;
@@ -205,9 +207,10 @@ export class ReplenishmentComponent implements OnInit {
   }
 
 
-  handleClientSelection() {
-    if (this.clientDropdown.value) {
-      const clientId = this.clientDropdown.value
+  handleClientSelection(event : MatRadioChange) {
+    console.log(event.value)
+    if (event.value) {
+      const clientId = event.value
       this.disableClientDropdown.set(true)
       this._httpClient.get(`https://apicantina.berechit.com.br/v1/sismaanaim/clientes/getclientebyid/${clientId}`, {
         headers: {
