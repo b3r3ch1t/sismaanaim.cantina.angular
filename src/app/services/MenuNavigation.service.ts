@@ -11,30 +11,7 @@ export class MenuNavigationService {
   private _navigationSubject = new BehaviorSubject<Navigation>(null);
   getDashboard$ = this._navigationSubject.asObservable(); // Expor como Observable
 
-  private readonly _defaultNavigation: FuseNavigationItem[] = [
-    {
-      id: 'Perfil',
-      title: 'Perfil',
-      type: 'basic',
-      icon: 'heroicons_outline:user',
-      link: '/dashboard',
-    },
-    {
-      id: 'ChangePassword',
-      title: 'Alterar Senha',
-      type: 'basic',
-      icon: 'heroicons_outline:lock-closed',
-      link: '/change-password',
-    },
 
-    {
-        id: 'Logout',
-        title: 'Logout',
-        type: 'basic',
-        icon: 'heroicons_outline:power',
-        link: '/change-password',
-      },
-  ];
 
   private readonly _compactNavigation: FuseNavigationItem[] = [
     {

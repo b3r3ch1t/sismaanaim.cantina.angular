@@ -5,6 +5,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { UserService } from 'app/core/user/user.service';
 import { catchError } from 'rxjs';
 import { MatTableModule } from '@angular/material/table';
+import { environment } from 'app/environments/environment';
 
 @Component({
   selector: 'app-my-actions',
@@ -21,7 +22,7 @@ export class MyActionsComponent implements OnInit {
   private _userService : UserService = inject(UserService);
 
   clientHistory = signal([]);
-  
+
   displayedColumns = [
     "clienteNome",
     "formaPagamento",
@@ -31,7 +32,7 @@ export class MyActionsComponent implements OnInit {
   ]
 
   ngOnInit(): void {
-    this._httpClient.get(`https://apicantina.berechit.com.br/v1/sismaanaim/caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
+    this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
       headers: {
         Authorization: `Bearer ${this._authService.accessToken}`
       }
@@ -46,7 +47,7 @@ export class MyActionsComponent implements OnInit {
         this.clientHistory.set(response.result.historicoCaixaDto)
       }
 
-    });    
+    });
   }
-  
+
 }

@@ -9,23 +9,13 @@ export const cashierNavigation: FuseNavigationItem[] = [
         icon: 'heroicons_outline:chart-pie',
         link: '/dashboard'
     },
-]
-
-export const defaultNavigation: FuseNavigationItem[] = [
-    {
-        id: 'dashboard',
-        title: 'Principal',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/dashboard'
-    },
 
     {
         id: 'replenishment',
         title: 'Abastecimento',
         type: 'basic',
         icon: 'heroicons_outline:currency-dollar',
-        link: '/replenishment'
+        link: '/cashier-dashboard/replenishment'
     }
     ,
     {
@@ -33,7 +23,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Ressarcimento',
         type: 'basic',
         icon: 'heroicons_outline:chevron-double-left',
-        link: '/reimbursement'
+        link: '/cashier-dashboard/reimbursement'
     }
     ,
     {
@@ -41,7 +31,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Histórico do Cliente',
         type: 'basic',
         icon: 'heroicons_outline:users',
-        link: '/client-history'
+        link: '/cashier-dashboard/client-history'
     }
     ,
     {
@@ -49,7 +39,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Sangria',
         type: 'basic',
         icon: 'heroicons_outline:beaker',
-        link: '/bleeding'
+        link: '/cashier-dashboard/bleeding'
     }
     ,
     {
@@ -57,17 +47,43 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Minhas Ações',
         type: 'basic',
         icon: 'heroicons_outline:presentation-chart-line',
-        link: '/my-actions'
+        link: '/cashier-dashboard/my-actions'
     }
     ,
+    // {
+    //     id: 'sign-off',
+    //     title: 'Sair',
+    //     type: 'basic',
+    //     icon: 'heroicons_outline:power',
+    //     link: '/sign-off'
+    // }
+]
+
+export const defaultNavigation: FuseNavigationItem[] = [
     {
-        id: 'sign-off',
+      id: 'Perfil',
+      title: 'Perfil',
+      type: 'basic',
+      icon: 'heroicons_outline:user',
+      link: '/dashboard',
+    },
+    {
+      id: 'ChangePassword',
+      title: 'Alterar Senha',
+      type: 'basic',
+      icon: 'heroicons_outline:lock-closed',
+      link: '/change-password',
+    },
+
+    {
+        id: 'Sair',
         title: 'Sair',
         type: 'basic',
         icon: 'heroicons_outline:power',
-        link: '/sign-off'
-    }
-];
+        link: '/sign-out',
+      },
+  ];
+
 export const compactNavigation: FuseNavigationItem[] = [
     {
         id: 'example',
@@ -77,6 +93,8 @@ export const compactNavigation: FuseNavigationItem[] = [
         link: '/example'
     }
 ];
+
+
 export const futuristicNavigation: FuseNavigationItem[] = [
     {
         id: 'example',

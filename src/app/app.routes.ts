@@ -87,7 +87,7 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'replenishment', loadChildren: () => import('app/modules/admin/replenishment/replenishment.routes') },
+            { path: 'cashier-dashboard/replenishment', loadChildren: () => import('app/modules/admin/replenishment/replenishment.routes') },
         ]
     },
     {
@@ -111,7 +111,7 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'my-actions', loadChildren: () => import('app/modules/admin/my-actions/my-actions.routes') },
+            { path: 'cashier-dashboard/my-actions', loadChildren: () => import('app/modules/admin/my-actions/my-actions.routes') },
         ]
     },
     {
@@ -121,7 +121,7 @@ export const appRoutes: Route[] = [
         resolve: {
             initialData: initialDataResolver
         },
-        path: '**', 
+        path: '**',
         children: [
             {
                 path: "",

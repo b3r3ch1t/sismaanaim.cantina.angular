@@ -8,6 +8,7 @@ import { ApiResponse } from 'app/core/api/api-response.types';
 import { MatTableModule } from '@angular/material/table';
 import { FuseCardComponent } from '@fuse/components/card';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
+import { environment } from 'app/environments/environment';
 
 @Component({
   selector: 'app-cashier-dashboard',
@@ -54,7 +55,7 @@ export class CashierDashboardComponent implements OnInit, OnDestroy {
   }
 
   loadCashRegister() {
-    this._httpClient.get(`https://apicantina.berechit.com.br/v1/sismaanaim/caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
+    this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
       headers: {
         Authorization: `Bearer ${this._authService.accessToken}`
       }

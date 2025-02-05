@@ -14,6 +14,7 @@ import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { CurrencyPipe } from '@angular/common';
 import { UserService } from 'app/core/user/user.service';
 import { MatRadioChange, MatRadioGroup, MatRadioModule } from "@angular/material/radio"
+import { environment } from 'app/environments/environment';
 
 @Component({
   selector: 'app-replenishment',
@@ -86,7 +87,7 @@ export class ReplenishmentComponent implements OnInit {
       return
     }
 
-    this._httpClient.post("https://apicantina.berechit.com.br/v1/sismaanaim/caixa/adicionarcredito", {
+    this._httpClient.post(`${environment.API_URL}caixa/adicionarcredito`, {
       "caixaId": this.currentEvent().id,
       "valor": this.paidValueInput.nativeElement.value,
       "formaPagamentoId": this.selectedPaymentMethod().id,
@@ -102,7 +103,7 @@ export class ReplenishmentComponent implements OnInit {
   }
 
   loadCashRegister() {
-    this._httpClient.get(`https://apicantina.berechit.com.br/v1/sismaanaim/caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
+    this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
       headers: {
         Authorization: `Bearer ${this._authService.accessToken}`
       }
@@ -143,7 +144,7 @@ export class ReplenishmentComponent implements OnInit {
     if (input.value.length >= 4) {
       this.inputDisabled.set(true);
       // TODO : Move this to an API service
-      this._httpClient.get(`https://apicantina.berechit.com.br/v1/sismaanaim/clientes/getclientesbynome/${input.value}`, {
+      this._httpClient.get(`${environment.API_URL}clientes/getclientesbynome/${input.value}`, {
         headers: {
           "Authorization": `Bearer ${this._authService.accessToken}`
         }
@@ -171,7 +172,7 @@ export class ReplenishmentComponent implements OnInit {
     if (input.value.length >= 4) {
       this.inputDisabled.set(true);
 
-      this._httpClient.get(`https://apicantina.berechit.com.br/v1/sismaanaim/clientes/getclientesbycpf/${input.value}`, {
+      this._httpClient.get(`${environment.API_URL}clientes/getclientesbycpf/${input.value}`, {
         headers: {
           "Authorization": `Bearer ${this._authService.accessToken}`
         }
@@ -212,7 +213,7 @@ export class ReplenishmentComponent implements OnInit {
     if (event.value) {
       const clientId = event.value
       this.disableClientDropdown.set(true)
-      this._httpClient.get(`https://apicantina.berechit.com.br/v1/sismaanaim/clientes/getclientebyid/${clientId}`, {
+      this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
         headers: {
           "Authorization": `Bearer ${this._authService.accessToken}`
         }
@@ -237,7 +238,7 @@ export class ReplenishmentComponent implements OnInit {
   }
 
   fetchPaymentMethods() {
-    this._httpClient.get(`https://apicantina.berechit.com.br/v1/sismaanaim/formapagamento/listarformapagamento`, {
+    this._httpClient.get(`${environment.API_URL}formapagamento/listarformapagamento`, {
       headers: {
         "Authorization": `Bearer ${this._authService.accessToken}`
       }
