@@ -2,7 +2,7 @@
     <div class="flex-auto p-6 sm:p-10">
 
         <div class="max-w-128">
-            <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Abastecimento</h1>
+            <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Ressarcimento</h1>
 
             @if (showClearButton()) {
             <button class="mb-5" mat-stroked-button (click)="clearInputs()">Clear</button>
@@ -81,12 +81,12 @@
                 }
             </mat-form-field>
 
-            <!-- Valor da Recarga -->
+            <!-- Valor Devolvido -->
             <mat-form-field class="w-full">
-                <mat-label>Valor da Recarga</mat-label>
+                <mat-label>Valor Devolvido</mat-label>
                 <span matPrefix>R$&nbsp;</span>
-                <input matInput [disabled]="selectedPaymentMethod() === null" type="number" #rechargeValueInput
-                    placeholder="Informe o valor da recarga" (keypress)="handleRechargeValueInput($event)">
+                <input matInput [disabled]="selectedPaymentMethod() === null" type="number" #returnAmountValueInput
+                    placeholder="Informe o Valor Devolvido" (keypress)="handleReturnAmountValue($event)">
                 @if (validRechargeInput() === false) {
                 <mat-error>
                     Por favor, insira apenas números.
@@ -94,22 +94,8 @@
                 }
             </mat-form-field>
 
-            <!-- Valor Pago -->
-            <mat-form-field class="w-full">
-                <mat-label>Valor Pago</mat-label>
-                <span matPrefix>R$&nbsp;</span>
-                <input matInput [disabled]="selectedPaymentMethod() === null" type="number"
-                    #paidValueInput (keypress)="handlePaidValueInput($event)"
-                    placeholder="Informe o valor pago em dinheiro">
-                @if(validPaidInput() === false){
-                <mat-error>
-                    Por favor, insira apenas números.
-                </mat-error>
-                }
-            </mat-form-field>
-
             <button mat-raised-button color="primary" (click)="handleSubmit()">
-                Efetuar Recarga
+                Efetuar devolução
             </button>
 
             }

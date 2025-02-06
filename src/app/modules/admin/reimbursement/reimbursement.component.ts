@@ -15,11 +15,11 @@ import { CurrencyPipe } from '@angular/common';
 import { UserService } from 'app/core/user/user.service';
 import { MatRadioChange, MatRadioGroup, MatRadioModule } from "@angular/material/radio"
 import { environment } from 'app/environments/environment';
-import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 import { SnackbarService } from 'app/services/snackbar.service';
+import { ConfirmationService } from 'app/services/confirmation.service';
 
 @Component({
-  selector: 'app-replenishment',
+  selector: 'app-reimbursement',
   imports: [
     MatButtonModule,
     MatCheckboxModule,
@@ -29,19 +29,19 @@ import { SnackbarService } from 'app/services/snackbar.service';
     MatProgressSpinnerModule,
     MatSelectModule,
     CustomCurrencyPipe,
-    MatRadioModule,
-    MatSnackBarModule
+    MatRadioModule
   ],
-  providers: [CurrencyPipe],
-  templateUrl: './replenishment.component.html',
-  styleUrl: './replenishment.component.scss'
+  providers: [CurrencyPipe, CustomCurrencyPipe],
+  templateUrl: './reimbursement.component.html',
+  styleUrl: './reimbursement.component.scss'
 })
 
-export class ReplenishmentComponent implements OnInit {
+export class ReimbursementComponent implements OnInit {
 
   private _httpClient = inject(HttpClient)
   private _authService = inject(AuthService)
   private _userService = inject(UserService);
+  private _customCurrencyPipe = inject(CustomCurrencyPipe)
 
   clients = signal([]);
   paymentMethods = signal([]);
@@ -60,10 +60,12 @@ export class ReplenishmentComponent implements OnInit {
   @ViewChild('cpfInput', { static: true }) cpfInput: ElementRef;
   @ViewChild('clientDropdown', { static: false }) clientDropdown: MatRadioGroup;
   @ViewChild('paymentMethodDropdown', { static: false }) paymentMethodDropdown: MatSelect;
-  @ViewChild('paidValueInput', { static: false }) paidValueInput: ElementRef;
-  @ViewChild('rechargeValueInput', { static: false }) rechargeValueInput: ElementRef;
+  @ViewChild('returnAmountValueInput', { static: false }) returnAmountValueInput: ElementRef;
 
-  constructor(private snackbar : SnackbarService) {}
+  constructor(
+    private snackbar: SnackbarService,
+    private confirmationService: ConfirmationService
+  ) { }
 
   ngOnInit(): void {
     this.loadCashRegister()
@@ -75,13 +77,8 @@ export class ReplenishmentComponent implements OnInit {
       return
     }
 
-    if (this.rechargeValueInput.nativeElement.value == "") {
+    if (this.returnAmountValueInput.nativeElement.value == "") {
       this.validRechargeInput.set(false)
-      return
-    }
-
-    if (this.paidValueInput.nativeElement.value == "") {
-      this.validPaidInput.set(false)
       return
     }
 
@@ -92,20 +89,26 @@ export class ReplenishmentComponent implements OnInit {
       return
     }
 
-    this._httpClient.post(`${environment.API_URL}caixa/adicionarcredito`, {
-      "caixaId": this.currentEvent().id,
-      "valor": this.paidValueInput.nativeElement.value,
-      "formaPagamentoId": this.selectedPaymentMethod().id,
-      "clienteId": this.selectedClient().id
-    }).pipe(
-      catchError((error) => {
-        console.log(error);
-        throw error
-      })
-    ).subscribe((response: ApiResponse<any>) => {
-      console.log(response)
-      this.snackbar.success("Success", 30 * 1000)
+    this.confirmationService.confirm('Reembolso', 'Deseja realmente estornar o reembolso para o cliente?').subscribe((result) => {
+      if (result) {
+        this._httpClient.post(`${environment.API_URL}caixa/estornarvalorcliente`, {
+          "caixaId": this.currentEvent().id,
+          "valor": this.returnAmountValueInput.nativeElement.value,
+          "formaPagamentoId": this.selectedPaymentMethod().id,
+          "clienteId": this.selectedClient().id
+        }).pipe(
+          catchError((error) => {
+            console.log(error);
+            throw error
+          })
+        ).subscribe((response: ApiResponse<any>) => {
+          const amount = this._customCurrencyPipe.transform(this.returnAmountValueInput.nativeElement.value)
+          this.snackbar.success(`*O Reembolso para o cliente ‘${this.selectedClient().nome}’ no valor de ‘${amount}’ foi feito com sucesso`, 30 * 1000)
+          console.log(response)
+        })
+      }
     })
+    
   }
 
   loadCashRegister() {
@@ -127,11 +130,7 @@ export class ReplenishmentComponent implements OnInit {
     });
   }
 
-  handleRechargeValueInput(event: KeyboardEvent) {
-    this.onKeyPress(event)
-  }
-
-  handlePaidValueInput(event: KeyboardEvent) {
+  handleReturnAmountValue(event: KeyboardEvent) {
     this.onKeyPress(event)
   }
 
@@ -214,7 +213,7 @@ export class ReplenishmentComponent implements OnInit {
   }
 
 
-  handleClientSelection(event : MatRadioChange) {
+  handleClientSelection(event: MatRadioChange) {
     console.log(event.value)
     if (event.value) {
       const clientId = event.value
@@ -253,10 +252,9 @@ export class ReplenishmentComponent implements OnInit {
         console.log(error);
         throw error;
       }))
-      .subscribe((data: ApiResponse<Array<{ id: string, descricao: string }>>) => {
+      .subscribe((data: ApiResponse<Array<{ id: string, descricao: string, aceitaEstorno: boolean }>>) => {
         if (data.success) {
-          this.paymentMethods.set(data.result)
-          console.log(data.result)
+          this.paymentMethods.set(data.result.filter(item => item.aceitaEstorno))
         }
       });
   }

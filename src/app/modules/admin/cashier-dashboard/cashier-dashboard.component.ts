@@ -1,4 +1,4 @@
-import { formatDate, CurrencyPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { Component, inject, OnInit, signal, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -9,13 +9,15 @@ import { MatTableModule } from '@angular/material/table';
 import { FuseCardComponent } from '@fuse/components/card';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { environment } from 'app/environments/environment';
+import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 
 @Component({
   selector: 'app-cashier-dashboard',
   imports: [
     MatTableModule,
     FuseCardComponent,
-    CustomCurrencyPipe
+    CustomCurrencyPipe,
+    CustomDatePipe
   ],
   providers: [CurrencyPipe],
   templateUrl: './cashier-dashboard.component.html',
@@ -32,7 +34,7 @@ export class CashierDashboardComponent implements OnInit, OnDestroy {
   currentEvent = signal(null)
   clientHistory = signal([])
   totalCash = signal(0)
-
+  statusClassName = signal("text-yellow-500")
 
   displayedColumns = [
     "clienteNome",
@@ -78,6 +80,17 @@ export class CashierDashboardComponent implements OnInit, OnDestroy {
 
         console.log(this.clientHistory())
         console.log(this.currentEvent())
+
+        switch (this.currentEvent().estadoCaixa) {
+          case "Aberto":
+            this.statusClassName.set("text-green-500")            
+            break;
+          case "Fechado":
+            this.statusClassName.set("text-red-500")
+          default:
+            this.statusClassName.set("text-yellow-500")
+            break;
+        }
       }
 
     });

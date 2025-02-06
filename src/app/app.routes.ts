@@ -132,6 +132,18 @@ export const appRoutes: Route[] = [
         ]
     },
     {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'cashier-dashboard/reimbursement', loadChildren: () => import('app/modules/admin/reimbursement/reimbursement.routes') },
+        ]
+    },
+    {
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         component: LayoutComponent,

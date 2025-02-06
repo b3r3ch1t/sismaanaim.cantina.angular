@@ -28,7 +28,6 @@ import { AuthService } from 'app/core/auth/auth.service';
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     imports: [
-        RouterLink,
         FuseAlertComponent,
         FormsModule,
         ReactiveFormsModule,
@@ -121,6 +120,7 @@ export class AuthSignInComponent implements OnInit {
             return;
         }
 
+        console.log("FORM ", this.signInForm.value)
         // Disable the form
         this.signInForm.disable();
 
