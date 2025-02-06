@@ -27,7 +27,6 @@ import { AuthService } from 'app/core/auth/auth.service';
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     imports: [
-        RouterLink,
         FuseAlertComponent,
         FormsModule,
         ReactiveFormsModule,
@@ -111,7 +110,7 @@ export class AuthSignInComponent implements OnInit {
 
         const validCPF = "19073856060" // '00000010191'
 
-        if(cpfLimpo=== validCPF) return true;
+        if (cpfLimpo === validCPF) return true;
 
         // Verifica se o CPF tem 11 dígitos ou é inválido
         if (cpfLimpo.length !== 11 || /^(\d)\1+$/.test(cpfLimpo)) {
@@ -149,6 +148,7 @@ export class AuthSignInComponent implements OnInit {
             return;
         }
 
+        console.log("FORM ", this.signInForm.value)
         // Disable the form
         this.signInForm.disable();
 
