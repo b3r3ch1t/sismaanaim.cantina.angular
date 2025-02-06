@@ -3,7 +3,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 
 export const cashierNavigation: FuseNavigationItem[] = [
     {
-        id: 'dashboard',
+        id: 'principal',
         title: 'Principal',
         type: 'basic',
         icon: 'heroicons_outline:chart-pie',
@@ -42,14 +42,14 @@ export const cashierNavigation: FuseNavigationItem[] = [
         icon: 'heroicons_outline:users',
         link: '/cashier-dashboard/client-history'
     }
-    ,
-    {
-        id: 'bleeding',
-        title: 'Sangria',
-        type: 'basic',
-        icon: 'heroicons_outline:beaker',
-        link: '/cashier-dashboard/bleeding'
-    }
+    // ,
+    // {
+    //     id: 'bleeding',
+    //     title: 'Sangria',
+    //     type: 'basic',
+    //     icon: 'heroicons_outline:beaker',
+    //     link: '/cashier-dashboard/bleeding'
+    // }
     ,
     {
         id: 'my-actions',
