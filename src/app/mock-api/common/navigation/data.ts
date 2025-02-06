@@ -10,6 +10,15 @@ export const cashierNavigation: FuseNavigationItem[] = [
         link: '/cashier-dashboard'
     },
 
+
+    {
+        id: 'replenishment',
+        title: 'Abastecimento',
+        type: 'basic',
+        icon: 'heroicons_outline:currency-dollar',
+        link: '/cashier-dashboard/replenishment'
+    },
+
     {
         id: 'clientRegistration',
         title: 'Cadastro de Cliente',
@@ -18,14 +27,6 @@ export const cashierNavigation: FuseNavigationItem[] = [
         link: '/cashier-dashboard/clientRegistration'
     },
 
-    {
-        id: 'replenishment',
-        title: 'Abastecimento',
-        type: 'basic',
-        icon: 'heroicons_outline:currency-dollar',
-        link: '/cashier-dashboard/replenishment'
-    }
-    ,
     {
         id: 'reimbursement',
         title: 'Ressarcimento',
