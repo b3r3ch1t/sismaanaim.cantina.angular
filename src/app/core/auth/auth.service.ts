@@ -73,7 +73,6 @@ export class AuthService {
             password: credentials.password
         }).pipe(
             switchMap((response: any) => {
-                console.log('response : ', response)
 
                 if (response.success) {
                     const user = {
@@ -114,7 +113,6 @@ export class AuthService {
                     of(false)
                 ),
                 switchMap((response: any) => {
-                    console.log('api/auth/sign-in-with-token ', response)
 
                     // Replace the access token with the new one if it's available on
                     // the response object.

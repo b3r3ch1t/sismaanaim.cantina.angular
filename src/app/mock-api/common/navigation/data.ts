@@ -11,6 +11,14 @@ export const cashierNavigation: FuseNavigationItem[] = [
     },
 
     {
+        id: 'clientRegistration',
+        title: 'Cadastro de Cliente',
+        type: 'basic',
+        icon: 'heroicons_outline:user',
+        link: '/cashier-dashboard/clientRegistration'
+    },
+
+    {
         id: 'replenishment',
         title: 'Abastecimento',
         type: 'basic',
