@@ -158,8 +158,23 @@ export class AuthSignInComponent implements OnInit {
         // Sign in
         this._authService.signIn(this.signInForm.value).subscribe(
             (response) => {
-                // console.log(response)
+                 if(response.error == true)
+                 {
+                    // Re-enable the form
+                    this.signInForm.enable();
 
+
+                    // Set the alert
+                    this.alert = {
+                        type: 'error',
+                        message: 'Usuário ou senha errados!',
+                    };
+
+                    // Show the alert
+                    this.showAlert = true;
+
+                    return;
+                 }
                 // Set the redirect url.
                 // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
                 // to the correct page after a successful sign in. This way, that url can be set via
