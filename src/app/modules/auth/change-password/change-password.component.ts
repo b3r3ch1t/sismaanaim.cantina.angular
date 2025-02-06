@@ -20,8 +20,8 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { finalize } from 'rxjs';
 
 @Component({
-    selector: 'auth-reset-password',
-    templateUrl: './reset-password.component.html',
+    selector: 'auth-change-password',
+    templateUrl: './change-password.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     imports: [
@@ -114,9 +114,18 @@ export class AuthResetPasswordComponent implements OnInit {
             .subscribe(
                 (response) => {
                     // Set the alert
+
+                    if(response.error){
+                        this.alert = {
+                            type: 'error',
+                            message: response.message,
+                        };
+                        return;
+                    };
+
                     this.alert = {
                         type: 'success',
-                        message: 'Your password has been reset.',
+                        message: 'Sua senha foi alterada com sucesso.',
                     };
                 },
                 (response) => {

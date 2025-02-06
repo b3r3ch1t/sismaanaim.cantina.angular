@@ -1,5 +1,5 @@
 import { environment } from 'app/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
@@ -45,7 +45,14 @@ export class AuthService {
      * @param password
      */
     resetPassword(password: string): Observable<any> {
-        return this._httpClient.post('api/auth/reset-password', password);
+
+
+        const params = new HttpParams()
+        .set('newPassword', password)
+        .set('confirmPassword', password);
+
+
+        return this._httpClient.post(`${environment.API_URL}account/changepassword`, params);
     }
 
     /**

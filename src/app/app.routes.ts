@@ -64,7 +64,7 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'change-password', loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes') },
+            { path: 'change-password', loadChildren: () => import('app/modules/auth/change-password/change-password.routes') },
 
         ]
     },
