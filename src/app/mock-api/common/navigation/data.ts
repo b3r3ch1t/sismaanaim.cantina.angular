@@ -7,7 +7,7 @@ export const cashierNavigation: FuseNavigationItem[] = [
         title: 'Principal',
         type: 'basic',
         icon: 'heroicons_outline:chart-pie',
-        link: '/dashboard'
+        link: '/cashier-dashboard'
     },
 
     {
