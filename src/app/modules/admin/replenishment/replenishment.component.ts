@@ -14,9 +14,11 @@ import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { CurrencyPipe } from '@angular/common';
 import { UserService } from 'app/core/user/user.service';
 import { MatRadioChange, MatRadioGroup, MatRadioModule } from "@angular/material/radio"
+import { MatSelectionListChange, MatSelectionList, MatListModule, MatList } from '@angular/material/list';
 import { environment } from 'app/environments/environment';
 import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 import { SnackbarService } from 'app/services/snackbar.service';
+import { CurrencyMaskDirective } from 'app/directives/currency-mask.directive';
 
 @Component({
   selector: 'app-replenishment',
@@ -30,9 +32,11 @@ import { SnackbarService } from 'app/services/snackbar.service';
     MatSelectModule,
     CustomCurrencyPipe,
     MatRadioModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatListModule,
+    CurrencyMaskDirective
   ],
-  providers: [CurrencyPipe],
+  providers: [CurrencyPipe, CustomCurrencyPipe],
   templateUrl: './replenishment.component.html',
   styleUrl: './replenishment.component.scss'
 })
@@ -56,8 +60,8 @@ export class ReplenishmentComponent implements OnInit {
   validPaymentMethod = signal(null);
   currentEvent = signal(null);
 
-  @ViewChild('nameInput', { static: true }) nameInput: ElementRef;
-  @ViewChild('cpfInput', { static: true }) cpfInput: ElementRef;
+  @ViewChild('nameInput', { static: false }) nameInput: ElementRef;
+  @ViewChild('cpfInput', { static: false }) cpfInput: ElementRef;
   @ViewChild('clientDropdown', { static: false }) clientDropdown: MatRadioGroup;
   @ViewChild('paymentMethodDropdown', { static: false }) paymentMethodDropdown: MatSelect;
   @ViewChild('paidValueInput', { static: false }) paidValueInput: ElementRef;
@@ -136,19 +140,26 @@ export class ReplenishmentComponent implements OnInit {
   }
 
   onKeyPress(event: KeyboardEvent) {
+    console.log(event.key)
+
+    if (event.key === 'Enter' || event.key === '-') {
+      return
+    }
+
     const allowedChars = /[0-9\.]/; // Allow numbers and a single decimal point
     const inputChar = String.fromCharCode(event.keyCode || event.which);
 
     if (!allowedChars.test(inputChar)) {
       event.preventDefault();
     }
-
   }
 
   handleNameInput(event: InputEvent) {
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
-      this.inputDisabled.set(true);
+      this.selectedClient.set(null)
+      this.clients.set([])
+      // this.inputDisabled.set(true);
       // TODO : Move this to an API service
       this._httpClient.get(`${environment.API_URL}clientes/getclientesbynome/${input.value}`, {
         headers: {
@@ -176,7 +187,9 @@ export class ReplenishmentComponent implements OnInit {
   handleCpfInput(event: InputEvent) {
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
-      this.inputDisabled.set(true);
+      this.selectedClient.set(null)
+      this.clients.set([])
+      // this.inputDisabled.set(true);
 
       this._httpClient.get(`${environment.API_URL}clientes/getclientesbycpf/${input.value}`, {
         headers: {
@@ -201,23 +214,15 @@ export class ReplenishmentComponent implements OnInit {
   }
 
   clearInputs() {
-    const nameInput = this.nameInput.nativeElement as HTMLInputElement;
-    const cpfInput = this.cpfInput.nativeElement as HTMLInputElement;
-
-    nameInput.value = '';
-    cpfInput.value = '';
     this.showClearButton.set(false)
     this.inputDisabled.set(false)
     this.clients.set([])
     this.selectedClient.set(null)
-    this.clientDropdown.value = null
   }
 
 
-  handleClientSelection(event : MatRadioChange) {
-    console.log(event.value)
-    if (event.value) {
-      const clientId = event.value
+  handleClientSelection(clientId : string) {    
+    if (clientId) {
       this.disableClientDropdown.set(true)
       this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
         headers: {

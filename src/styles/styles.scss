@@ -20,3 +20,7 @@
     position: relative !important;
     top: -16px !important;
 }
+
+.error-snackbar{
+    --mdc-snackbar-container-color: rgb(231, 1, 1) !important;
+}

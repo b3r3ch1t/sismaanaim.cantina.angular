@@ -1,6 +1,7 @@
 // confirmation-dialog.component.ts
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions, MatDialogModule } from '@angular/material/dialog';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-confirmation-dialog',
@@ -15,7 +16,9 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions, MatD
     imports : [
         MatDialogContent,
         MatDialogActions,
-        MatDialogModule
+        MatDialogModule,
+        MatButton,
+        MatButtonModule
     ]
 })
 export class ConfirmationDialogComponent {
