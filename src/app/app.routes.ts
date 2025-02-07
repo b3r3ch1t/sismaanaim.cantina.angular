@@ -20,6 +20,8 @@ export const appRoutes: Route[] = [
     // location. This is a small convenience to keep all main routes together here on this file.
     { path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'dashboard' },
 
+
+
     // Auth routes for guests
     {
         path: '',
@@ -143,6 +145,146 @@ export const appRoutes: Route[] = [
             { path: 'cashier-dashboard/reimbursement', loadChildren: () => import('app/modules/admin/reimbursement/reimbursement.routes') },
         ]
     },
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'cashier-dashboard/client-balance', loadChildren: () => import('app/modules/admin/client-balance/client-balance.routes') },
+        ]
+    },
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'cashier-dashboard/client-history', loadChildren: () => import('app/modules/admin/client-history/client-history.routes') },
+        ]
+    },
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'attendant/sell', loadChildren: () => import('app/modules/admin/sell/sellcomponent.routes') },
+        ]
+    },
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'attendant/client-balance', loadChildren: () => import('app/modules/admin/client-balance/client-balance.routes') },
+        ]
+    },
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'attendant/client-history', loadChildren: () => import('app/modules/admin/client-history/client-history.routes') },
+        ]
+    },
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'permissionary-dashboard', loadChildren: () => import('app/modules/admin/permissionary-dashboard/permissionary-dashboard.routes') },
+        ]
+    },
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'permissionary/sell', loadChildren: () => import('app/modules/admin/sell/sellcomponent.routes') },
+        ]
+    },
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'permissionary/client-balance', loadChildren: () => import('app/modules/admin/client-balance/client-balance.routes') },
+        ]
+    },
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'permissionary/client-history', loadChildren: () => import('app/modules/admin/client-history/client-history.routes') },
+        ]
+    },
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'permissionary/refund', loadChildren: () => import('app/modules/admin/refund/refundcomponent.routes') },
+        ]
+    },
+
+
+
     {
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],

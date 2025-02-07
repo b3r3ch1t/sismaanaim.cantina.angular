@@ -26,7 +26,7 @@ export class DashboardComponent {
     profileRoutes = {
         [UserProfile.Cashier]: '/cashier-dashboard',
         [UserProfile.Admin]: '/admin-dashboard',
-        [UserProfile.Attendant]: '/attendant-dashboard',
+        [UserProfile.Attendant]: '/attendant/sell',
         [UserProfile.Auditor]: '/auditor-dashboard',
         [UserProfile.Reviewer]: '/reviewer-dashboard',
         [UserProfile.Permissionary]: '/permissionary-dashboard',

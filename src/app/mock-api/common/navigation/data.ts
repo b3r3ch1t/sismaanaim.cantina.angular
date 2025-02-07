@@ -28,18 +28,30 @@ export const cashierNavigation: FuseNavigationItem[] = [
     },
 
     {
+        id: 'client-balance',
+        title: 'Saldo do Cliente',
+        type: 'basic',
+        icon: 'heroicons_outline:wallet',
+        link: '/cashier-dashboard/client-balance'
+    },
+
+
+    {
         id: 'reimbursement',
         title: 'Ressarcimento',
         type: 'basic',
         icon: 'heroicons_outline:chevron-double-left',
         link: '/cashier-dashboard/reimbursement'
-    }
-    ,
+    },
+
+
+
+
     {
         id: 'client-history',
         title: 'Histórico do Cliente',
         type: 'basic',
-        icon: 'heroicons_outline:users',
+        icon: 'heroicons_outline:banknotes',
         link: '/cashier-dashboard/client-history'
     }
     // ,
@@ -67,6 +79,98 @@ export const cashierNavigation: FuseNavigationItem[] = [
     //     link: '/sign-off'
     // }
 ]
+
+export const permissionaryNavigation: FuseNavigationItem[] = [
+
+    {
+        id: 'principal',
+        title: 'Principal',
+        type: 'basic',
+        icon: 'heroicons_outline:chart-pie',
+        link: '/permissionary-dashboard'
+    },
+
+    {
+        id: 'sell',
+        title: 'Vendas',
+        type: 'basic',
+        icon: 'heroicons_outline:currency-dollar',
+        link: '/permissionary/sell'
+    },
+
+    {
+        id: 'client-balance',
+        title: 'Saldo do Cliente',
+        type: 'basic',
+        icon: 'heroicons_outline:wallet',
+        link: '/permissionary/client-balance'
+    },
+
+
+    {
+        id: 'client-history',
+        title: 'Histórico do Cliente',
+        type: 'basic',
+        icon: 'heroicons_outline:banknotes',
+        link: '/permissionary/client-history'
+    },
+
+
+    {
+        id: 'refund',
+        title: 'Estorno',
+        type: 'basic',
+        icon: 'heroicons_outline:chevron-double-left',
+        link: '/permissionary/refund'
+    },
+
+
+
+
+]
+
+
+
+export const attendantNavigation: FuseNavigationItem[] = [
+
+
+    {
+        id: 'sell',
+        title: 'Vendas',
+        type: 'basic',
+        icon: 'heroicons_outline:currency-dollar',
+        link: '/attendant/sell'
+    },
+
+    {
+        id: 'client-balance',
+        title: 'Saldo do Cliente',
+        type: 'basic',
+        icon: 'heroicons_outline:wallet',
+        link: '/attendant/client-balance'
+    },
+
+
+    {
+        id: 'client-history',
+        title: 'Histórico do Cliente',
+        type: 'basic',
+        icon: 'heroicons_outline:banknotes',
+        link: '/attendant/client-history'
+    },
+
+
+
+    {
+        id: 'my-actions',
+        title: 'Minhas Ações',
+        type: 'basic',
+        icon: 'heroicons_outline:presentation-chart-line',
+        link: '/attendant/my-actions'
+    }
+    ,
+]
+
 
 export const defaultNavigation: FuseNavigationItem[] = [
     {

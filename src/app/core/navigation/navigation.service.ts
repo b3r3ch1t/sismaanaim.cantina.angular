@@ -3,7 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { filter, Observable, ReplaySubject, tap } from 'rxjs';
 import { NavigationEnd, Router } from "@angular/router";
-import { cashierNavigation } from 'app/mock-api/common/navigation/data';
+import { attendantNavigation, cashierNavigation, defaultNavigation, permissionaryNavigation } from 'app/mock-api/common/navigation/data';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -37,9 +37,23 @@ export class NavigationService {
                 this._router.events
                     .pipe(filter(event => event instanceof NavigationEnd))
                     .subscribe((event: any) => {
+
+
+                        navigation.default = defaultNavigation;
+
                         if (event.urlAfterRedirects.includes("cashier-dashboard")) {
                             navigation.default = cashierNavigation
                         }
+
+                        if(event.urlAfterRedirects.includes("attendant")) {
+                            navigation.default = attendantNavigation
+                        }
+
+                        if(event.urlAfterRedirects.includes("permissionary")) {
+                            navigation.default = permissionaryNavigation
+                        }
+
+
                         this._navigation.next(navigation);
                     });
             })
