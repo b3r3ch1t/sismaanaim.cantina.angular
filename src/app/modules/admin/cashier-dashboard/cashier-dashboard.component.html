@@ -5,14 +5,14 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
             <fuse-card
                 class=" bg-blue-950 transition-all p-4 md:p-8 flex-col gap-4">
-                <p class="text-2xl  text-white"><span class="font-bold">Seminário: {{ currentEvent().evento }}</span></p>
-                <p class="text-2xl  text-white"><span class="font-bold">Data: {{ currentEvent().dataFinal | customDate }}</span></p>
+                <p class="text-2xl  text-white"><span class="font-bold">Seminário:</span> {{ currentEvent().evento }}</p>
+                <p class="text-2xl  text-white"><span class="font-bold">Data:</span> {{ currentEvent().dataFinal | customDate }}</p>
                 <p class="text-2xl  text-white">
-                    <span class="font-bold">Status do Caixa:</span> 
+                    <span class="font-bold">Status do Caixa:</span>
                     <span [className]="statusClassName()">{{ currentEvent().estadoCaixa }}</span>
                 </p>
                 <p class="text-2xl  text-white"><span class="font-bold">Data/Hora de abertura:</span>  {{ currentEvent().dataInicial | customDate }}</p>
-                <p class="text-2xl  text-green-600"><span class="font-bold">Saldo inicial:</span>  {{ currentEvent().saldoDinheiro | customCurrency }}</p>                
+                <p class="text-2xl  text-green-600"><span class="font-bold">Saldo inicial:</span>  {{ currentEvent().saldoDinheiro | customCurrency }}</p>
             </fuse-card>
 
             <fuse-card
