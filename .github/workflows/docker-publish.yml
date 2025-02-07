@@ -71,3 +71,14 @@ jobs:
         run: |
          docker push b3r3ch1t/sismaanaim-cantina-angular:latest
          docker push b3r3ch1t/sismaanaim-cantina-angular:${{ env.IMAGE_TAG }}
+
+      - name: Configurar SSH 🔑
+        run: |
+         mkdir -p ~/.ssh
+         echo "${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+         chmod 600 ~/.ssh/id_rsa
+         ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      - name: Conectar via Conexão SSH e atualizar a solução
+        run: |
+         ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "echo 'Solução atualizada!'"
