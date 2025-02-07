@@ -1,0 +1,24 @@
+name: Test SSH and Docker Access
+
+on:
+  workflow_dispatch: # Permite executar manualmente
+
+jobs:
+  test-ssh:
+    runs-on: ubuntu-latest # O job roda em um ambiente Ubuntu do GitHub Actions
+
+    steps:
+      - name: Configurar SSH 🔑
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      - name: Testar Conexão SSH 🖥️
+        run: |
+          ssh -i ~/.ssh/id_rsa deploy_docker@${{ secrets.SERVER_IP }} "echo 'Acesso SSH Funcionando!'"
+
+      - name: Testar Comando Docker 🐳
+        run: |
+          ssh -i ~/.ssh/id_rsa deploy_docker@${{ secrets.SERVER_IP }} "docker ps"
