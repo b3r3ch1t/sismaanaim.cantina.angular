@@ -27,7 +27,7 @@ jobs:
       - name: Set Image Tag with Date
         id: image_tag
         run: |
-          TIMESTAMP=$(date +'%H_%M_%d_%m_%Y')
+          TIMESTAMP=$(date +'%d_%m_%Y_%H_%M')
           echo "IMAGE_TAG=${{ github.ref_name }}_${TIMESTAMP}" >> $GITHUB_ENV
 
       # Instalar dependências e gerar build
