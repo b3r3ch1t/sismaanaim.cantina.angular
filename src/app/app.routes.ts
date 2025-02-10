@@ -172,6 +172,19 @@ export const appRoutes: Route[] = [
         ]
     },
 
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'cashier-dashboard/clientRegistration', loadChildren: () => import('app/modules/admin/client-registration/client-registration.routes') },
+        ]
+    },
+
 
     {
         path: '',

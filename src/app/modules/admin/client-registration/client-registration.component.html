@@ -1,0 +1,78 @@
+<div class="flex min-w-0 flex-auto flex-col items-center sm:justify-center">
+    <div class="w-full px-4 py-8 sm:bg-card sm:w-auto sm:rounded-2xl sm:p-12 sm:shadow my-8">
+        <div class="mx-auto w-full max-w-80 sm:mx-0 sm:w-80">
+
+            <div
+                class="text-4xl font-extrabold leading-tight tracking-tight"
+            >
+            Cadastro de Cliente 
+            </div>
+
+
+            <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" class="mt-8 form-container">
+                <mat-form-field class="w-full">
+                    <mat-label>CPF (Somente números)</mat-label>
+                    <input matInput formControlName="cpf" maxlength="11" (input)="onCpfInput($event)"
+                        placeholder="Digite o CPF sem pontos e hífen">
+                    @if (clientForm.get('cpf')?.errors?.['required'] && clientForm.get('cpf')?.touched) {
+                    <mat-error>CPF é obrigatório</mat-error>
+                    }
+                    @if (clientForm.get('cpf')?.errors?.['invalidCpf']) {
+                    <mat-error>CPF inválido</mat-error>
+                    }
+                </mat-form-field>
+
+                @if (showAdditionalFields) {
+                <div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Nome</mat-label>
+                        <input matInput formControlName="nome" placeholder="Digite o nome do cliente">
+                        @if (clientForm.get('nome')?.errors?.['required'] && clientForm.get('nome')?.touched) {
+                        <mat-error>Nome é obrigatório</mat-error>
+                        }
+                        @if (clientForm.get('nome')?.errors?.['minlength']) {
+                        <mat-error>Nome deve ter no mínimo 5 caracteres</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Telefone</mat-label>
+                        <span matPrefix>+55&nbsp;</span>
+                        <input matInput formControlName="telefoneContato" placeholder="(XX) XXXX-XXXX"
+                            (input)="formatPhone($event)">
+                        @if (clientForm.get('telefoneContato')?.errors?.['pattern']) {
+                        <mat-error>Telefone inválido</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>E-mail</mat-label>
+                        <input matInput type="email" formControlName="email" placeholder="Informe o e-mail do cliente">
+                        @if (clientForm.get('email')?.errors?.['email']) {
+                        <mat-error>E-mail inválido</mat-error>
+                        }
+                    </mat-form-field>
+
+                    @if (isValidEmail) {
+                    <mat-form-field class="w-full">
+                        <mat-label>Tipo de envio de e-mail</mat-label>
+                        <mat-select formControlName="tipoEnvioEmailCliente">
+                            @for (type of emailTypes; track type.id) {
+                            <mat-option [value]="type.id">{{type.description}}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                    }
+
+                    <button mat-raised-button color="primary" type="submit" [disabled]="!clientForm.valid">
+                        {{isUpdate ? 'Atualizar' : 'Cadastrar'}}
+                    </button>
+                </div>
+                }
+            </form>
+
+
+
+        </div>
+    </div>
+</div>

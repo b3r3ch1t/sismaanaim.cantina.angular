@@ -16,7 +16,7 @@ import { UserService } from 'app/core/user/user.service';
 import { MatRadioChange, MatRadioGroup, MatRadioModule } from "@angular/material/radio"
 import { MatSelectionListChange, MatSelectionList, MatListModule, MatList } from '@angular/material/list';
 import { environment } from 'app/environments/environment';
-import {MatSnackBarModule} from '@angular/material/snack-bar'; 
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { CurrencyMaskDirective } from 'app/directives/currency-mask.directive';
 
@@ -67,7 +67,7 @@ export class ReplenishmentComponent implements OnInit {
   @ViewChild('paidValueInput', { static: false }) paidValueInput: ElementRef;
   @ViewChild('rechargeValueInput', { static: false }) rechargeValueInput: ElementRef;
 
-  constructor(private snackbar : SnackbarService) {}
+  constructor(private snackbar: SnackbarService) { }
 
   ngOnInit(): void {
     this.loadCashRegister()
@@ -221,7 +221,7 @@ export class ReplenishmentComponent implements OnInit {
   }
 
 
-  handleClientSelection(clientId : string) {    
+  handleClientSelection(clientId: string) {
     if (clientId) {
       this.disableClientDropdown.set(true)
       this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
