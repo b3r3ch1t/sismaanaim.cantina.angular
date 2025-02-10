@@ -214,6 +214,20 @@ export const appRoutes: Route[] = [
         ]
     },
 
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'attendant/my-actions', loadChildren: () => import('app/modules/admin/attendant-my-actions/attendant-my-actions.routes') },
+        ]
+    },
+
+
 
     {
         path: '',
