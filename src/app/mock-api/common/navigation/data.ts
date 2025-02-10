@@ -3,127 +3,138 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 
 export const cashierNavigation: FuseNavigationItem[] = [
     {
-        id: 'principal',
-        title: 'Principal',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/cashier-dashboard'
-    },
+        id: 'dashboards',
+        title: 'Menu Operador de Caixa',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'principal',
+                title: 'Principal',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-pie',
+                link: '/cashier-dashboard'
+            },
 
 
-    {
-        id: 'replenishment',
-        title: 'Abastecimento',
-        type: 'basic',
-        icon: 'heroicons_outline:currency-dollar',
-        link: '/cashier-dashboard/replenishment'
-    },
+            {
+                id: 'replenishment',
+                title: 'Abastecimento',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/cashier-dashboard/replenishment'
+            },
 
-    {
-        id: 'clientRegistration',
-        title: 'Cadastro de Cliente',
-        type: 'basic',
-        icon: 'heroicons_outline:user',
-        link: '/cashier-dashboard/clientRegistration'
-    },
+            {
+                id: 'clientRegistration',
+                title: 'Cadastro de Cliente',
+                type: 'basic',
+                icon: 'heroicons_outline:user',
+                link: '/cashier-dashboard/clientRegistration'
+            },
 
-    {
-        id: 'client-balance',
-        title: 'Saldo do Cliente',
-        type: 'basic',
-        icon: 'heroicons_outline:wallet',
-        link: '/cashier-dashboard/client-balance'
-    },
-
-
-    {
-        id: 'reimbursement',
-        title: 'Ressarcimento',
-        type: 'basic',
-        icon: 'heroicons_outline:chevron-double-left',
-        link: '/cashier-dashboard/reimbursement'
-    },
+            {
+                id: 'client-balance',
+                title: 'Saldo do Cliente',
+                type: 'basic',
+                icon: 'heroicons_outline:wallet',
+                link: '/cashier-dashboard/client-balance'
+            },
 
 
+            {
+                id: 'reimbursement',
+                title: 'Ressarcimento',
+                type: 'basic',
+                icon: 'heroicons_outline:chevron-double-left',
+                link: '/cashier-dashboard/reimbursement'
+            },
 
-
-    {
-        id: 'client-history',
-        title: 'Histórico do Cliente',
-        type: 'basic',
-        icon: 'heroicons_outline:banknotes',
-        link: '/cashier-dashboard/client-history'
-    }
-    // ,
-    // {
-    //     id: 'bleeding',
-    //     title: 'Sangria',
-    //     type: 'basic',
-    //     icon: 'heroicons_outline:beaker',
-    //     link: '/cashier-dashboard/bleeding'
-    // }
-    ,
-    {
-        id: 'my-actions',
-        title: 'Minhas Ações',
-        type: 'basic',
-        icon: 'heroicons_outline:presentation-chart-line',
-        link: '/cashier-dashboard/my-actions'
-    }
-    ,
-    // {
-    //     id: 'sign-off',
-    //     title: 'Sair',
-    //     type: 'basic',
-    //     icon: 'heroicons_outline:power',
-    //     link: '/sign-off'
-    // }
-]
+            {
+                id: 'client-history',
+                title: 'Histórico do Cliente',
+                type: 'basic',
+                icon: 'heroicons_outline:banknotes',
+                link: '/cashier-dashboard/client-history'
+            }
+            // ,
+            // {
+            //     id: 'bleeding',
+            //     title: 'Sangria',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:beaker',
+            //     link: '/cashier-dashboard/bleeding'
+            // }
+            ,
+            {
+                id: 'my-actions',
+                title: 'Minhas Ações',
+                type: 'basic',
+                icon: 'heroicons_outline:presentation-chart-line',
+                link: '/cashier-dashboard/my-actions'
+            }
+            ,
+            // {
+            //     id: 'sign-off',
+            //     title: 'Sair',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:power',
+            //     link: '/sign-off'
+            // }
+        ]
+    }];
 
 export const permissionaryNavigation: FuseNavigationItem[] = [
-
     {
-        id: 'principal',
-        title: 'Principal',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/permissionary-dashboard'
-    },
+        id: 'dashboards',
+        title: 'Menu Permissionário',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'principal',
+                title: 'Principal',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-pie',
+                link: '/permissionary-dashboard'
+            },
 
-    {
-        id: 'sell',
-        title: 'Vendas',
-        type: 'basic',
-        icon: 'heroicons_outline:currency-dollar',
-        link: '/permissionary/sell'
-    },
+            {
+                id: 'sell',
+                title: 'Vendas',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/permissionary/sell'
+            },
 
-    {
-        id: 'client-balance',
-        title: 'Saldo do Cliente',
-        type: 'basic',
-        icon: 'heroicons_outline:wallet',
-        link: '/permissionary/client-balance'
-    },
-
-
-    {
-        id: 'client-history',
-        title: 'Histórico do Cliente',
-        type: 'basic',
-        icon: 'heroicons_outline:banknotes',
-        link: '/permissionary/client-history'
-    },
+            {
+                id: 'client-balance',
+                title: 'Saldo do Cliente',
+                type: 'basic',
+                icon: 'heroicons_outline:wallet',
+                link: '/permissionary/client-balance'
+            },
 
 
-    {
-        id: 'refund',
-        title: 'Estorno',
-        type: 'basic',
-        icon: 'heroicons_outline:chevron-double-left',
-        link: '/permissionary/refund'
-    },
+            {
+                id: 'client-history',
+                title: 'Histórico do Cliente',
+                type: 'basic',
+                icon: 'heroicons_outline:banknotes',
+                link: '/permissionary/client-history'
+            },
 
+
+            {
+                id: 'refund',
+                title: 'Estorno',
+                type: 'basic',
+                icon: 'heroicons_outline:chevron-double-left',
+                link: '/permissionary/refund'
+            },
+        ]
+
+    }
 
 
 
@@ -132,60 +143,68 @@ export const permissionaryNavigation: FuseNavigationItem[] = [
 
 
 export const attendantNavigation: FuseNavigationItem[] = [
-
-
     {
-        id: 'sell',
-        title: 'Vendas',
-        type: 'basic',
-        icon: 'heroicons_outline:currency-dollar',
-        link: '/attendant/sell'
-    },
+        id: 'dashboards',
+        title: 'Menu Atendente',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'sell',
+                title: 'Vendas',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/attendant/sell'
+            },
 
-    {
-        id: 'client-balance',
-        title: 'Saldo do Cliente',
-        type: 'basic',
-        icon: 'heroicons_outline:wallet',
-        link: '/attendant/client-balance'
-    },
-
-
-    {
-        id: 'client-history',
-        title: 'Histórico do Cliente',
-        type: 'basic',
-        icon: 'heroicons_outline:banknotes',
-        link: '/attendant/client-history'
-    },
+            {
+                id: 'client-balance',
+                title: 'Saldo do Cliente',
+                type: 'basic',
+                icon: 'heroicons_outline:wallet',
+                link: '/attendant/client-balance'
+            },
 
 
+            {
+                id: 'client-history',
+                title: 'Histórico do Cliente',
+                type: 'basic',
+                icon: 'heroicons_outline:banknotes',
+                link: '/attendant/client-history'
+            },
 
-    {
-        id: 'my-actions',
-        title: 'Minhas Ações',
-        type: 'basic',
-        icon: 'heroicons_outline:presentation-chart-line',
-        link: '/attendant/my-actions'
+
+
+            {
+                id: 'my-actions',
+                title: 'Minhas Ações',
+                type: 'basic',
+                icon: 'heroicons_outline:presentation-chart-line',
+                link: '/attendant/my-actions'
+            }
+
+
+        ]
+
     }
-    ,
-]
+];
 
 
 export const defaultNavigation: FuseNavigationItem[] = [
     {
-      id: 'Perfil',
-      title: 'Perfil',
-      type: 'basic',
-      icon: 'heroicons_outline:user',
-      link: '/dashboard',
+        id: 'Perfil',
+        title: 'Perfil',
+        type: 'basic',
+        icon: 'heroicons_outline:user',
+        link: '/dashboard',
     },
     {
-      id: 'ChangePassword',
-      title: 'Alterar Senha',
-      type: 'basic',
-      icon: 'heroicons_outline:lock-closed',
-      link: '/change-password',
+        id: 'ChangePassword',
+        title: 'Alterar Senha',
+        type: 'basic',
+        icon: 'heroicons_outline:lock-closed',
+        link: '/change-password',
     },
 
     {
@@ -194,8 +213,8 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:power',
         link: '/sign-out',
-      },
-  ];
+    },
+];
 
 export const compactNavigation: FuseNavigationItem[] = [
     {
