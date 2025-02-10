@@ -8,30 +8,32 @@
             <button class="mb-5" mat-stroked-button (click)="clearInputs()">Clear</button>
             }
 
-            <mat-form-field class="w-full">
-                <mat-label>Nome</mat-label>
-                <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput
-                    placeholder="Enigu almenaŭ 4 signojn por serĉi" matInput />
-            </mat-form-field>
+            @if (selectedClient() == null) {
+                <mat-form-field class="w-full">
+                    <mat-label>Nome</mat-label>
+                    <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput
+                        placeholder="Enigu almenaŭ 4 signojn por serĉi" matInput />
+                </mat-form-field>
+    
+                <div class="mb-6">
+                    <p class="font-bold text-lg">OR</p>
+                </div>
+    
+                <mat-form-field class="w-full">
+                    <mat-label>CPF</mat-label>
+                    <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
+                        placeholder="Enigu almenaŭ 4 signojn por serĉi" #cpfInput matInput />
+                </mat-form-field>
+            }
 
-            <div class="mb-6">
-                <p class="font-bold text-lg">OR</p>
-            </div>
-
-            <mat-form-field class="w-full">
-                <mat-label>CPF</mat-label>
-                <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
-                    placeholder="Enigu almenaŭ 4 signojn por serĉi" #cpfInput matInput />
-            </mat-form-field>
-
-            <mat-radio-group #clientDropdown (change)="handleClientSelection($event)" class="w-full">
+            <div class="flex flex-wrap gap-2 mb-8">
                 @for (client of clients(); track $index) {
-                  <mat-radio-button [value]="client.id" [disabled]="clients().length === 0 || disableClientDropdown()">
-                    {{ client.nome }}
-                  </mat-radio-button>
+                <button mat-stroked-button [class.bg-blue-500]="selectedClient()?.id === client.id"
+                    [class.text-white]="selectedClient()?.id === client.id" (click)="handleClientSelection(client.id)">
+                    {{client.nome}}
+                </button>
                 }
-            </mat-radio-group>
-              
+            </div>
 
             @if (selectedClient() != null) {
             <p>
@@ -85,7 +87,7 @@
             <mat-form-field class="w-full">
                 <mat-label>Valor da Recarga</mat-label>
                 <span matPrefix>R$&nbsp;</span>
-                <input matInput [disabled]="selectedPaymentMethod() === null" type="number" #rechargeValueInput
+                <input matInput appCurrencyMask [disabled]="selectedPaymentMethod() === null" type="text" #rechargeValueInput
                     placeholder="Informe o valor da recarga" (keypress)="handleRechargeValueInput($event)">
                 @if (validRechargeInput() === false) {
                 <mat-error>
@@ -98,9 +100,8 @@
             <mat-form-field class="w-full">
                 <mat-label>Valor Pago</mat-label>
                 <span matPrefix>R$&nbsp;</span>
-                <input matInput [disabled]="selectedPaymentMethod() === null" type="number"
-                    #paidValueInput (keypress)="handlePaidValueInput($event)"
-                    placeholder="Informe o valor pago em dinheiro">
+                <input matInput appCurrencyMask [disabled]="selectedPaymentMethod() === null" type="text" #paidValueInput
+                    (keypress)="handlePaidValueInput($event)" placeholder="Informe o valor pago em dinheiro">
                 @if(validPaidInput() === false){
                 <mat-error>
                     Por favor, insira apenas números.

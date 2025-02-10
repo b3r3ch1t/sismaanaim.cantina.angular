@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelect, MatSelectModule } from "@angular/material/select"
 import { HttpClient } from "@angular/common/http"
@@ -17,6 +17,7 @@ import { MatRadioChange, MatRadioGroup, MatRadioModule } from "@angular/material
 import { environment } from 'app/environments/environment';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { ConfirmationService } from 'app/services/confirmation.service';
+import { CurrencyMaskDirective } from 'app/directives/currency-mask.directive';
 
 @Component({
   selector: 'app-reimbursement',
@@ -29,7 +30,8 @@ import { ConfirmationService } from 'app/services/confirmation.service';
     MatProgressSpinnerModule,
     MatSelectModule,
     CustomCurrencyPipe,
-    MatRadioModule
+    MatRadioModule,
+    CurrencyMaskDirective
   ],
   providers: [CurrencyPipe, CustomCurrencyPipe],
   templateUrl: './reimbursement.component.html',
@@ -73,11 +75,13 @@ export class ReimbursementComponent implements OnInit {
 
   handleSubmit() {
     if (this.selectedPaymentMethod() == null) {
+      console.log("invalid value ", this.selectedPaymentMethod())
       this.validPaymentMethod.set(false)
       return
     }
 
-    if (this.returnAmountValueInput.nativeElement.value == "") {
+    if (this.returnAmountValueInput.nativeElement.value == null) {
+      console.log("invalid value ", this.returnAmountValueInput.nativeElement.value)
       this.validRechargeInput.set(false)
       return
     }
@@ -91,24 +95,52 @@ export class ReimbursementComponent implements OnInit {
 
     this.confirmationService.confirm('Reembolso', 'Deseja realmente estornar o reembolso para o cliente?').subscribe((result) => {
       if (result) {
-        this._httpClient.post(`${environment.API_URL}caixa/estornarvalorcliente`, {
-          "caixaId": this.currentEvent().id,
-          "valor": this.returnAmountValueInput.nativeElement.value,
-          "formaPagamentoId": this.selectedPaymentMethod().id,
-          "clienteId": this.selectedClient().id
+        this._httpClient.get(`${environment.API_URL}clientes/getsaldoclientebyclientid/${this.selectedClient().id}`, {
+          headers: {
+            "Authorization": `Bearer ${this._authService.accessToken}`
+          }
         }).pipe(
           catchError((error) => {
             console.log(error);
             throw error
           })
         ).subscribe((response: ApiResponse<any>) => {
-          const amount = this._customCurrencyPipe.transform(this.returnAmountValueInput.nativeElement.value)
-          this.snackbar.success(`*O Reembolso para o cliente ‘${this.selectedClient().nome}’ no valor de ‘${amount}’ foi feito com sucesso`, 30 * 1000)
-          console.log(response)
+          const value = parseFloat(this.returnAmountValueInput.nativeElement.value.replace(".", "").replace(",", "."))
+          console.log(response.result)
+          let saldo = 0
+          response.result.forEach(item => {
+            item.formaPagamentoId === this.selectedPaymentMethod().id ? saldo = item.saldo : null
+          });
+
+          if (saldo > value) {
+            this.snackbar.error("Saldo insuficiente", 30 * 1000)
+            return
+          }
+
+          this._httpClient.post(`${environment.API_URL}caixa/estornarvalorcliente`, {
+            "caixaId": this.currentEvent().id,
+            "valor": value,
+            "formaPagamentoId": this.selectedPaymentMethod().id,
+            "clienteId": this.selectedClient().id
+          }).pipe(
+            catchError((error) => {
+              console.log(error);
+              throw error
+            })
+          ).subscribe((response: ApiResponse<any>) => {
+            const value = parseFloat(this.returnAmountValueInput.nativeElement.value.replace(".", "").replace(",", "."))
+            const amount = this._customCurrencyPipe.transform(value)
+            this.snackbar.success(`*O Reembolso para o cliente ‘${this.selectedClient().nome}’ no valor de ‘${amount}’ foi feito com sucesso`, 30 * 1000)
+            this.clearInputs()
+            console.log(response)
+          })
+
         })
+
+
       }
     })
-    
+
   }
 
   loadCashRegister() {
@@ -135,13 +167,18 @@ export class ReimbursementComponent implements OnInit {
   }
 
   onKeyPress(event: KeyboardEvent) {
+    console.log(event.key)
+
+    if (event.key === 'Enter' || event.key === '-') {
+      return
+    }
+
     const allowedChars = /[0-9\.]/; // Allow numbers and a single decimal point
     const inputChar = String.fromCharCode(event.keyCode || event.which);
 
     if (!allowedChars.test(inputChar)) {
       event.preventDefault();
     }
-
   }
 
   handleNameInput(event: InputEvent) {
@@ -200,23 +237,21 @@ export class ReimbursementComponent implements OnInit {
   }
 
   clearInputs() {
-    const nameInput = this.nameInput.nativeElement as HTMLInputElement;
-    const cpfInput = this.cpfInput.nativeElement as HTMLInputElement;
+    // const nameInput = this.nameInput.nativeElement as HTMLInputElement;
+    // const cpfInput = this.cpfInput.nativeElement as HTMLInputElement;
 
-    nameInput.value = '';
-    cpfInput.value = '';
+    // nameInput.value = '';
+    // cpfInput.value = '';
     this.showClearButton.set(false)
     this.inputDisabled.set(false)
     this.clients.set([])
     this.selectedClient.set(null)
-    this.clientDropdown.value = null
+    // this.clientDropdown.value = null
   }
 
 
-  handleClientSelection(event: MatRadioChange) {
-    console.log(event.value)
-    if (event.value) {
-      const clientId = event.value
+  handleClientSelection(clientId: string) {
+    if (clientId) {
       this.disableClientDropdown.set(true)
       this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
         headers: {
@@ -270,4 +305,5 @@ export class ReimbursementComponent implements OnInit {
       this.disablePaymentMethodDropdown.set(false)
     }
   }
+
 }
