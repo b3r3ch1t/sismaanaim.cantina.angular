@@ -184,7 +184,7 @@ export class ReimbursementComponent implements OnInit {
   handleNameInput(event: InputEvent) {
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
-      this.inputDisabled.set(true);
+      // this.inputDisabled.set(true);
       // TODO : Move this to an API service
       this._httpClient.get(`${environment.API_URL}clientes/getclientesbynome/${input.value}`, {
         headers: {
@@ -212,7 +212,7 @@ export class ReimbursementComponent implements OnInit {
   handleCpfInput(event: InputEvent) {
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
-      this.inputDisabled.set(true);
+      // this.inputDisabled.set(true);
 
       this._httpClient.get(`${environment.API_URL}clientes/getclientesbycpf/${input.value}`, {
         headers: {
