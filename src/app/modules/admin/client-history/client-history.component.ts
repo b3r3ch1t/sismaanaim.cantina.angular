@@ -1,15 +1,202 @@
-import { Component, OnInit } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { AuthService } from 'app/core/auth/auth.service';
+import { UserService } from 'app/core/user/user.service';
+import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
+import { ConfirmationService } from 'app/services/confirmation.service';
+import { SnackbarService } from 'app/services/snackbar.service';
+import { MatInputModule } from '@angular/material/input';
+import { environment } from 'app/environments/environment';
+import { catchError } from 'rxjs';
+import { ApiResponse } from 'app/core/api/api-response.types';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
+
 
 @Component({
   selector: 'app-client-history',
   templateUrl: './client-history.component.html',
-  styleUrls: ['./client-history.component.css']
+  styleUrls: ['./client-history.component.css'],
+  providers: [
+    CurrencyPipe,
+    CustomCurrencyPipe,
+    CustomDatePipe
+  ],
+  imports: [
+    MatInputModule,
+    MatButtonModule,
+    MatTableModule,
+    MatSortModule,
+    MatSort,
+    MatPaginator,
+    CustomDatePipe,
+    CustomCurrencyPipe
+  ]
 })
+
 export class ClientHistoryComponent implements OnInit {
 
-  constructor() { }
+  private _httpClient = inject(HttpClient)
+  private _authService = inject(AuthService)
+  private _userService = inject(UserService);
+  private _customCurrencyPipe = inject(CustomCurrencyPipe)
 
-  ngOnInit() {
+  clients = signal([]);
+  showClearButton = signal(false);
+  selectedClient = signal(null);
+  clientDataSource = signal(new MatTableDataSource([]));
+
+  displayedColumns = [
+    "Data",
+    "Tipo",
+    "Valor",
+    "Pagamento",
+    "Responsável",
+    "Transação",
+    "Evento",
+    "Enviado"
+  ]
+
+  @ViewChild('nameInput', { static: true }) nameInput: ElementRef;
+  @ViewChild('cpfInput', { static: true }) cpfInput: ElementRef;
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
+
+  constructor(
+    private snackbar: SnackbarService,
+    private confirmationService: ConfirmationService
+  ) { }
+
+  ngOnInit(): void {
+
   }
 
+  handleNameInput(event: InputEvent) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length >= 4) {
+      // this.inputDisabled.set(true);
+      // TODO : Move this to an API service
+      this._httpClient.get(`${environment.API_URL}clientes/getclientesbynome/${input.value}`, {
+        headers: {
+          "Authorization": `Bearer ${this._authService.accessToken}`
+        }
+      })
+        .pipe(catchError((error) => {
+          console.log(error);
+          throw error;
+        }))
+        // TODO : Create datatype for Client
+        .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
+          if (data.result) {
+            const clients = data.result
+            this.clients.set(clients)
+          }
+          this.showClearButton.set(true)
+        });
+
+    } else {
+      this.showClearButton.set(false)
+    }
+  }
+
+  handleCpfInput(event: InputEvent) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length >= 4) {
+      // this.inputDisabled.set(true);
+
+      this._httpClient.get(`${environment.API_URL}clientes/getclientesbycpf/${input.value}`, {
+        headers: {
+          "Authorization": `Bearer ${this._authService.accessToken}`
+        }
+      })
+        .pipe(catchError((error) => {
+          console.log(error);
+          throw error;
+        }))
+        .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
+          if (data.success) {
+            const clients = data.result
+            this.clients.set(clients)
+          }
+          this.showClearButton.set(true)
+        });
+
+    } else {
+      this.showClearButton.set(false)
+    }
+  }
+
+  clearInputs() {
+    this.showClearButton.set(false)
+    this.clients.set([])
+    this.selectedClient.set(null)
+  }
+
+  handleClientSelection(clientId: string) {
+    if (clientId) {
+      this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
+        headers: {
+          "Authorization": `Bearer ${this._authService.accessToken}`
+        }
+      })
+        .pipe(catchError((error) => {
+          console.log(error);
+          throw error;
+        }))
+        // TODO : Create a datatype for Client
+        // TODO : Move this to an API service
+        .subscribe((data: ApiResponse<object>) => {
+          console.log(data)
+          if (data.success) {
+            this.selectedClient.set(data.result)
+            console.log(this.selectedClient())
+            this.updateHistoryTable()
+          }
+        });
+    }
+  }
+
+
+  updateHistoryTable() {
+    if (this.selectedClient() != null) {
+      const clientId = this.selectedClient().id
+      this._httpClient.get(`${environment.API_URL}clientes/getclienthistorybyclientid/${clientId}`, {
+        headers: {
+          "Authorization": `Bearer ${this._authService.accessToken}`
+        }
+      }).pipe(catchError((error) => {
+        console.log(error)
+        throw error
+      })).subscribe((response: ApiResponse<any>) => {
+        if (response.success) {
+          console.log(response.result)
+          // Create a new MatTableDataSource instance
+          const dataSource = new MatTableDataSource(response.result);
+
+          if (dataSource) {
+            dataSource.sortingDataAccessor = (item : any, property) => {
+              switch(property) {
+                case 'Data':
+                  return new Date(item.data);  // Return the actual date object for sorting
+                case 'Valor':
+                  return Number(item.valor);   // Return the numeric value for sorting
+                default:
+                  return item[property];
+              }
+            };
+          }
+
+          // Set the paginator and sort
+          dataSource.paginator = this.paginator;
+          dataSource.sort = this.sort;
+          // Update the signal
+          this.clientDataSource.set(dataSource);
+        }
+      })
+    }
+  }
 }
