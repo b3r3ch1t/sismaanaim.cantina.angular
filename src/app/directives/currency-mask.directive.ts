@@ -7,7 +7,7 @@ import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 export class CurrencyMaskDirective {
   constructor(private el: ElementRef, private _currencyPipe: CustomCurrencyPipe) {}
 
-  @HostListener('input', ['$event'])
+  @HostListener('change', ['$event'])
   onInput(event: KeyboardEvent) {
     const input = this.el.nativeElement;
     let value = input.value

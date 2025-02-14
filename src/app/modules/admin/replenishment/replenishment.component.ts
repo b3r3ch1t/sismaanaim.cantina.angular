@@ -142,7 +142,7 @@ export class ReplenishmentComponent implements OnInit {
   onKeyPress(event: KeyboardEvent) {
     console.log(event.key)
 
-    if (event.key === 'Enter' || event.key === '-') {
+    if (event.key === 'Enter' || event.key === '-' || event.key === ',') {
       return
     }
 
