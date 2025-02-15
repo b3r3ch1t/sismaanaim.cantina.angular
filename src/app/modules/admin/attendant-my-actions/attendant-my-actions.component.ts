@@ -26,7 +26,7 @@ import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
   ],
   providers : [
     CurrencyPipe,
-  ],  
+  ],
 })
 export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
 
@@ -49,7 +49,7 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
   ]
 
   constructor() { }
-  
+
   ngOnInit(): void {
     this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
       headers: {
@@ -62,13 +62,11 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
       })
     ).subscribe((response: ApiResponse<any>) => {
       if (response.success) {
-        console.log("Event response => ", response)
-        const eventId = response.result.eventoId.trim()
-        console.log("EVENT ID:", eventId)
 
-        // https://apicantina.berechit.com.br/v1/sismaanaim/atendente/getmyhistorybyeventoid/c6b10cf0-21d7-497a-86b9-15e24f6a6be1
 
-        this._httpClient.get(`${environment.API_URL}atendente/getmyhistorybyeventoid/${eventId}`,{
+        const eventId = response.result.eventoId.trim();
+
+        this._httpClient.get(`${environment.API_URL}atendente/getmyhistorybyeventoId/${eventId}`,{
           headers: {
             Authorization: `Bearer ${this._authService.accessToken}`
           }
