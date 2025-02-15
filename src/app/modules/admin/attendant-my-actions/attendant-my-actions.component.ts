@@ -51,7 +51,7 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
   constructor() { }
 
   ngOnInit(): void {
-    this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
+    this._httpClient.get(`${environment.API_URL}atendente/getatendentebyid/${this._userService.user.id}`, {
       headers: {
         Authorization: `Bearer ${this._authService.accessToken}`
       }
