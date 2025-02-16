@@ -117,10 +117,10 @@ export class ClientRegistrationComponent implements OnInit {
   onSubmit() {
     if (this.clientForm.valid) {
       const confirmationMessage = `
-        CPF: ${this.clientForm.get('cpf')?.value}
-        Nome: ${this.clientForm.get('nome')?.value}
-        Telefone Contato: ${this.clientForm.get('telefoneContato').value !== '' ? '+55' + this.clientForm.get('telefoneContato').value.toString() : ''}
-        Email: ${this.clientForm.get('email')?.value}`;
+        CPF: ${this.clientForm.get('cpf')?.value} <br>
+        Nome: ${this.clientForm.get('nome')?.value} <br>
+        Telefone Contato: ${this.clientForm.get('telefoneContato').value !== '' ? '+55' + this.clientForm.get('telefoneContato').value.toString() : ''} <br>
+        Email: ${this.clientForm.get('email')?.value} <br>` ;
 
         this._confirmationService.confirm("Confirma os dados?", confirmationMessage).subscribe((result) => {
           if (result) { 

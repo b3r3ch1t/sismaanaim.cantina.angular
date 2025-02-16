@@ -7,7 +7,7 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
   selector: 'app-confirmation-dialog',
   template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
-    <mat-dialog-content>{{ data.message }}</mat-dialog-content>
+    <mat-dialog-content [innerHTML]="data.message"></mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button [mat-dialog-close]="false">Cancelar</button>
       <button mat-raised-button color="primary" [mat-dialog-close]="true">Confirmar</button>
