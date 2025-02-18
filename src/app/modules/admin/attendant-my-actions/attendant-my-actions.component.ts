@@ -24,9 +24,9 @@ import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
     CustomCurrencyPipe,
     CustomDatePipe
   ],
-  providers : [
+  providers: [
     CurrencyPipe,
-  ],  
+  ],
 })
 export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
 
@@ -42,14 +42,12 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
 
   displayedColumns = [
     "clienteNome",
-    "formaPagamento",
-    "tipoOperacao",
+    "data",
     "valor",
-    "horario"
   ]
 
   constructor() { }
-  
+
   ngOnInit(): void {
     this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
       headers: {
@@ -66,9 +64,7 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
         const eventId = response.result.eventoId.trim()
         console.log("EVENT ID:", eventId)
 
-        // https://apicantina.berechit.com.br/v1/sismaanaim/atendente/getmyhistorybyeventoid/c6b10cf0-21d7-497a-86b9-15e24f6a6be1
-
-        this._httpClient.get(`${environment.API_URL}atendente/getmyhistorybyeventoid/${eventId}`,{
+        this._httpClient.get(`${environment.API_URL}atendente/getmyhistorybyeventoid/${eventId}`, {
           headers: {
             Authorization: `Bearer ${this._authService.accessToken}`
           }
@@ -78,17 +74,24 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
             throw error
           })
         ).subscribe((response: ApiResponse<any>) => {
-          console.log("history response => ", response)
+          console.log(response.result)
+          this.history.set(response.result)
+          console.log(this.history())
+          const dataSource = new MatTableDataSource(this.history())
+          if(dataSource){
+            console.log("data source", dataSource)
+
+            console.log("paginator => ", this.paginator)
+            console.log("sort => ", this.sort)
+
+            dataSource.paginator = this.paginator;
+            dataSource.sort = this.sort;
+            this.dataSource.set(dataSource);
+          }
         })
 
 
-        // this.history.set(response.result.historicoCaixaDto)
-        // this.dataSource.set(new MatTableDataSource(this.history()));
-        // if (this.dataSource()) {
-        //   console.log(this.dataSource())
-        //   this.dataSource().paginator = this.paginator;
-        //   this.dataSource().sort = this.sort;
-        // }
+
       }
 
     });
