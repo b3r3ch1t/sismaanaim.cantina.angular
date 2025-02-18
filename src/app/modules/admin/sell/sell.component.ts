@@ -19,7 +19,7 @@ import { environment } from 'app/environments/environment';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { CurrencyMaskDirective } from 'app/directives/currency-mask.directive';
-
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @Component({
   selector: 'app-sell',
@@ -37,7 +37,8 @@ import { CurrencyMaskDirective } from 'app/directives/currency-mask.directive';
     MatRadioModule,
     MatSnackBarModule,
     MatListModule,
-    CurrencyMaskDirective
+    CurrencyMaskDirective,
+    CurrencyMaskModule
   ],
   providers: [CurrencyPipe, CustomCurrencyPipe],
 })

@@ -69,13 +69,18 @@
 
             <mat-form-field class="w-full">
                 <mat-label>Forma de Pagamento*</mat-label>
-                <mat-select (selectionChange)="handlePaymentMethodSelection()"
+                <div class="flex gap-4 items-center">
+                    <mat-select (selectionChange)="handlePaymentMethodSelection()"
                     [disabled]="paymentMethods().length === 0 || disablePaymentMethodDropdown()"
                     #paymentMethodDropdown="matSelect">
                     @for (payment of paymentMethods(); track $index) {
                     <mat-option [value]="payment.id">{{ payment.descricao }}</mat-option>
                     }
                 </mat-select>
+                @if (this.balanceAgainstPaymentMethod() !== null) {
+                    <p>{{ this.balanceAgainstPaymentMethod() | customCurrency }} </p>
+                }
+                </div>
                 @if (validPaymentMethod() === false) {
                 <mat-error>
                     Por favor, selecione um método de pagamento válido.
@@ -87,7 +92,7 @@
             <mat-form-field class="w-full">
                 <mat-label>Valor da Recarga</mat-label>
                 <span matPrefix>R$&nbsp;</span>
-                <input matInput appCurrencyMask [disabled]="selectedPaymentMethod() === null" type="text" #rechargeValueInput
+                <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value" [disabled]="selectedPaymentMethod() === null" type="text" #rechargeValueInput
                     placeholder="Informe o valor da recarga" (keypress)="handleRechargeValueInput($event)">
                 @if (validRechargeInput() === false) {
                 <mat-error>
@@ -100,7 +105,7 @@
             <mat-form-field class="w-full">
                 <mat-label>Valor Pago</mat-label>
                 <span matPrefix>R$&nbsp;</span>
-                <input matInput appCurrencyMask [disabled]="selectedPaymentMethod() === null" type="text" #paidValueInput
+                <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value" [disabled]="selectedPaymentMethod() === null" type="text" #paidValueInput
                     (keypress)="handlePaidValueInput($event)" placeholder="Informe o valor pago em dinheiro">
                 @if(validPaidInput() === false){
                 <mat-error>

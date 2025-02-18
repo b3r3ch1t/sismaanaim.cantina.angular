@@ -56,13 +56,13 @@
           <!-- Saldo -->
           <mat-form-field class="w-full">
               <mat-label>Saldo</mat-label>
-              <input matInput readonly appCurrencyMask value="{{ totalClientBalance() | customCurrency }}" type="text" placeholder="Informe o Saldo">
+              <input matInput readonly currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value" value="{{ totalClientBalance() | customCurrency }}" type="text" placeholder="Informe o Saldo">
           </mat-form-field>
 
           <mat-form-field class="w-full">
             <mat-label>Vendendo</mat-label>
             <span matPrefix>R$&nbsp;</span>
-            <input matInput appCurrencyMask #sellingInput type="text" placeholder="Informe o Vendendo">
+            <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value" #sellingInput type="text" placeholder="Informe o Vendendo">
           </mat-form-field>
 
           <button mat-raised-button color="primary" (click)="handleSubmit()">
