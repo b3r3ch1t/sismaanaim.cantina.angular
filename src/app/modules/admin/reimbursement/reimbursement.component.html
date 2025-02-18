@@ -71,13 +71,18 @@
 
             <mat-form-field class="w-full">
                 <mat-label>Forma de Pagamento*</mat-label>
-                <mat-select (selectionChange)="handlePaymentMethodSelection()"
-                    [disabled]="paymentMethods().length === 0 || disablePaymentMethodDropdown()"
-                    #paymentMethodDropdown="matSelect">
-                    @for (payment of paymentMethods(); track $index) {
-                    <mat-option [value]="payment.id">{{ payment.descricao }}</mat-option>
+                <div class="flex gap-4 items-center">
+                    <mat-select (selectionChange)="handlePaymentMethodSelection()"
+                        [disabled]="paymentMethods().length === 0 || disablePaymentMethodDropdown()"
+                        #paymentMethodDropdown="matSelect">
+                        @for (payment of paymentMethods(); track $index) {
+                        <mat-option [value]="payment.id">{{ payment.descricao }}</mat-option>
+                        }
+                    </mat-select>
+                    @if (this.balanceAgainstPaymentMethod() !== null) {
+                        <p>{{ this.balanceAgainstPaymentMethod() | customCurrency }} </p>
                     }
-                </mat-select>
+                </div>
                 @if (validPaymentMethod() === false) {
                 <mat-error>
                     Por favor, selecione um método de pagamento válido.
@@ -94,7 +99,7 @@
                 ></app-currency-input> -->
                 <input matInput [disabled]="selectedPaymentMethod() === null" type="text" #returnAmountValueInput
                     placeholder="Informe o Valor Devolvido"  
-                    appCurrencyMask
+                    currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value"
                     (keypress)="handleReturnAmountValue($event)">
                 @if (validRechargeInput() === false) {
                 <mat-error>
