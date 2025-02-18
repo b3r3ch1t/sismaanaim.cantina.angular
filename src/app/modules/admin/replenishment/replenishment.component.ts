@@ -18,7 +18,7 @@ import { MatSelectionListChange, MatSelectionList, MatListModule, MatList } from
 import { environment } from 'app/environments/environment';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarService } from 'app/services/snackbar.service';
-import { CurrencyMaskDirective } from 'app/directives/currency-mask.directive';
+import { CurrencyMaskModule } from "ng2-currency-mask";
 
 @Component({
   selector: 'app-replenishment',
@@ -34,7 +34,7 @@ import { CurrencyMaskDirective } from 'app/directives/currency-mask.directive';
     MatRadioModule,
     MatSnackBarModule,
     MatListModule,
-    CurrencyMaskDirective
+    CurrencyMaskModule
   ],
   providers: [CurrencyPipe, CustomCurrencyPipe],
   templateUrl: './replenishment.component.html',
@@ -59,6 +59,8 @@ export class ReplenishmentComponent implements OnInit {
   validRechargeInput = signal(null);
   validPaymentMethod = signal(null);
   currentEvent = signal(null);
+  selectedClientBalance = signal([])
+  balanceAgainstPaymentMethod = signal(null)
 
   @ViewChild('nameInput', { static: false }) nameInput: ElementRef;
   @ViewChild('cpfInput', { static: false }) cpfInput: ElementRef;
@@ -96,9 +98,11 @@ export class ReplenishmentComponent implements OnInit {
       return
     }
 
+    const valor = parseFloat(this.paidValueInput.nativeElement.value.replace(".", "").replace(",", "."))
+
     this._httpClient.post(`${environment.API_URL}caixa/adicionarcredito`, {
       "caixaId": this.currentEvent().id,
-      "valor": this.paidValueInput.nativeElement.value,
+      "valor": valor,
       "formaPagamentoId": this.selectedPaymentMethod().id,
       "clienteId": this.selectedClient().id
     }).pipe(
@@ -142,7 +146,7 @@ export class ReplenishmentComponent implements OnInit {
   onKeyPress(event: KeyboardEvent) {
     console.log(event.key)
 
-    if (event.key === 'Enter' || event.key === '-') {
+    if (event.key === 'Enter' || event.key === '-' || event.key === ',') {
       return
     }
 
@@ -224,6 +228,22 @@ export class ReplenishmentComponent implements OnInit {
   handleClientSelection(clientId: string) {
     if (clientId) {
       this.disableClientDropdown.set(true)
+      this._httpClient.get(`${environment.API_URL}clientes/getsaldoclientebyclientid/${clientId}`, {
+        headers: {
+          "Authorization": `Bearer ${this._authService.accessToken}`
+        }
+      }).pipe(
+        catchError((error) => {
+          console.log(error);
+          throw error
+        })
+      ).subscribe((response : ApiResponse<any>) => {
+        if (response.success) {
+          this.selectedClientBalance.set(response.result)
+          console.log(this.selectedClientBalance())
+        }
+      })
+
       this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
         headers: {
           "Authorization": `Bearer ${this._authService.accessToken}`
@@ -274,6 +294,17 @@ export class ReplenishmentComponent implements OnInit {
         paymentMethod.id === paymentMethodId ? this.selectedPaymentMethod.set(paymentMethod) : null
       });
       console.log(this.selectedPaymentMethod())
+      this.selectedClientBalance().some(balance => {
+         if (balance.formaPagamentoId == this.selectedPaymentMethod().id) {
+          console.log(balance.formaPagamentoId , this.selectedPaymentMethod().id)
+          this.balanceAgainstPaymentMethod.set(balance.saldo)
+          return true
+         }else{
+          console.log(balance.formaPagamentoId , this.selectedPaymentMethod().id)
+          this.balanceAgainstPaymentMethod.set(null)
+          return false
+         }
+      })
       this.disablePaymentMethodDropdown.set(false)
     }
   }

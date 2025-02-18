@@ -1,3 +1,77 @@
-<p>
-  sell works!  
-</p>
+<div class="flex min-w-0 flex-auto flex-col">
+  <div class="flex-auto p-6 sm:p-10">
+
+      <div class="max-w-128">
+          <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Consultar saldo do cliente</h1>
+
+          @if (showClearButton()) {
+          <button class="mb-5" mat-stroked-button (click)="clearInputs()">Clear</button>
+          }
+
+          @if (selectedClient() == null) {
+              <mat-form-field class="w-full">
+                  <mat-label>CPF</mat-label>
+                  <input type="number" [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
+                      placeholder="Enigu almenaŭ 4 signojn por serĉi" #cpfInput matInput />
+              </mat-form-field>
+          }
+
+          <div class="flex flex-wrap gap-2 mb-8">
+              @for (client of clients(); track $index) {
+              <button mat-stroked-button [class.bg-blue-500]="selectedClient()?.id === client.id"
+                  [class.text-white]="selectedClient()?.id === client.id" (click)="handleClientSelection(client.id)">
+                  {{client.nome}}
+              </button>
+              }
+          </div>
+
+          @if (selectedClient() != null) {
+          <p>
+              <span class="font-bold">Nome:</span>
+              <span>{{ selectedClient().nome }}</span>
+          </p>
+
+          <p>
+              <span class="font-bold">CPF:</span>
+              <span>{{ selectedClient().cpf }}</span>
+          </p>
+
+          <p>
+              <span class="font-bold">Email:</span>
+              <span>{{ selectedClient().email }}</span>
+          </p>
+
+          <p>
+              <span class="font-bold">Telefone Contato:</span>
+              <span>{{ selectedClient().telefoneContato }}</span>
+          </p>
+
+          <p>
+              <span class="font-bold">Saldo:</span>
+              <span>{{ selectedClient().saldo | customCurrency}}</span>
+          </p>
+
+          <div class="border-t my-6"></div>
+
+          <!-- Saldo -->
+          <mat-form-field class="w-full">
+              <mat-label>Saldo</mat-label>
+              <input matInput readonly currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value" value="{{ totalClientBalance() | customCurrency }}" type="text" placeholder="Informe o Saldo">
+          </mat-form-field>
+
+          <mat-form-field class="w-full">
+            <mat-label>Vendendo</mat-label>
+            <span matPrefix>R$&nbsp;</span>
+            <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value" #sellingInput type="text" placeholder="Informe o Vendendo">
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="handleSubmit()">
+              Efetuar Recarga
+          </button>
+
+          }
+
+      </div>
+
+  </div>
+</div>

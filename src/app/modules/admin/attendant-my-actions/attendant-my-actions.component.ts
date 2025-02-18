@@ -49,7 +49,7 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
   constructor() { }
 
   ngOnInit(): void {
-    this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
+    this._httpClient.get(`${environment.API_URL}atendente/getatendentebyid/${this._userService.user.id}`, {
       headers: {
         Authorization: `Bearer ${this._authService.accessToken}`
       }
@@ -60,11 +60,10 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
       })
     ).subscribe((response: ApiResponse<any>) => {
       if (response.success) {
-        console.log("Event response => ", response)
-        const eventId = response.result.eventoId.trim()
-        console.log("EVENT ID:", eventId)
 
-        this._httpClient.get(`${environment.API_URL}atendente/getmyhistorybyeventoid/${eventId}`, {
+        const eventId = response.result.eventoId.trim();
+
+        this._httpClient.get(`${environment.API_URL}atendente/getmyhistorybyeventoId/${eventId}`,{
           headers: {
             Authorization: `Bearer ${this._authService.accessToken}`
           }
