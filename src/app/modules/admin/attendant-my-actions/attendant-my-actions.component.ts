@@ -24,7 +24,7 @@ import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
     CustomCurrencyPipe,
     CustomDatePipe
   ],
-  providers : [
+  providers: [
     CurrencyPipe,
   ],
 })
@@ -42,10 +42,8 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
 
   displayedColumns = [
     "clienteNome",
-    "formaPagamento",
-    "tipoOperacao",
+    "data",
     "valor",
-    "horario"
   ]
 
   constructor() { }
@@ -63,7 +61,6 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
     ).subscribe((response: ApiResponse<any>) => {
       if (response.success) {
 
-
         const eventId = response.result.eventoId.trim();
 
         this._httpClient.get(`${environment.API_URL}atendente/getmyhistorybyeventoId/${eventId}`,{
@@ -76,17 +73,24 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
             throw error
           })
         ).subscribe((response: ApiResponse<any>) => {
-          console.log("history response => ", response)
+          console.log(response.result)
+          this.history.set(response.result)
+          console.log(this.history())
+          const dataSource = new MatTableDataSource(this.history())
+          if(dataSource){
+            console.log("data source", dataSource)
+
+            console.log("paginator => ", this.paginator)
+            console.log("sort => ", this.sort)
+
+            dataSource.paginator = this.paginator;
+            dataSource.sort = this.sort;
+            this.dataSource.set(dataSource);
+          }
         })
 
 
-        // this.history.set(response.result.historicoCaixaDto)
-        // this.dataSource.set(new MatTableDataSource(this.history()));
-        // if (this.dataSource()) {
-        //   console.log(this.dataSource())
-        //   this.dataSource().paginator = this.paginator;
-        //   this.dataSource().sort = this.sort;
-        // }
+
       }
 
     });

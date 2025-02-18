@@ -1,6 +1,5 @@
 <div class="flex min-w-0 flex-auto flex-col">
   <div class="flex-auto p-6 sm:p-10">
-      <!-- Client History Table -->
       <table mat-table matSort [dataSource]="dataSource()" class="mat-elevation-z8">
 
           <ng-container matColumnDef="clienteNome">
@@ -8,14 +7,9 @@
               <td mat-cell *matCellDef="let client"> {{client.clienteNome}} </td>
           </ng-container>
 
-          <ng-container matColumnDef="formaPagamento">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Forma Pagamento </th>
-              <td mat-cell *matCellDef="let client"> {{client.formaPagamento}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="tipoOperacao">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Operacao </th>
-              <td mat-cell *matCellDef="let client"> {{client.tipoOperacao}} </td>
+          <ng-container matColumnDef="data">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
+              <td mat-cell *matCellDef="let client"> {{client.data | customDate  }} </td>
           </ng-container>
 
           <ng-container matColumnDef="valor">
@@ -23,14 +17,9 @@
               <td mat-cell *matCellDef="let client"> {{client.valor | customCurrency }} </td>
           </ng-container>
 
-          <ng-container matColumnDef="horario">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Horario </th>
-              <td mat-cell *matCellDef="let client"> {{client.horario | customDate}} </td>
-          </ng-container>
-
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      <mat-paginator [pageSize]="25" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
