@@ -326,6 +326,62 @@ export const appRoutes: Route[] = [
 
 
     {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'reviewer/clientRegistration', loadChildren: () => import('app/modules/admin/client-registration/client-registration.routes') },
+        ]
+    },
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'reviewer/client-balance', loadChildren: () => import('app/modules/admin/client-balance/client-balance.routes') },
+        ]
+    },
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'reviewer/client-history', loadChildren: () => import('app/modules/admin/client-history/client-history.routes') },
+        ]
+    },
+
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'reviewer/client-loading', loadChildren: () => import('app/modules/admin/client-loading/client-loading.routes') },
+        ]
+    },
+
+
+    {
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         component: LayoutComponent,

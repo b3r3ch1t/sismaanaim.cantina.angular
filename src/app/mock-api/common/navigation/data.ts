@@ -203,7 +203,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         title: 'Carregar Cliente',
                         type: 'basic',
                         icon: 'heroicons_outline:banknotes',
-                        link: '/reviewer/client-history'
+                        link: '/reviewer/client-loading'
                     }
 
 
