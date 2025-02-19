@@ -141,6 +141,139 @@ export const permissionaryNavigation: FuseNavigationItem[] = [
 ]
 
 
+export const reviewerNavigation: FuseNavigationItem[] = [
+
+    {
+        id: 'dashboards',
+        title: 'Menu revisor',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'principal',
+                title: 'Principal',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-pie',
+                link: '/reviewer-dashboard'
+            },
+
+            {
+                id: 'events',
+                title: 'Eventos',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-pie',
+                link: '/reviewer-dashboard'
+            },
+
+            {
+                id: 'clients',
+                title: 'Clientes',
+                type: 'collapsable',
+                icon: 'heroicons_outline:chart-pie',
+                children: [
+
+
+
+                    {
+                        id: 'clientRegistration',
+                        title: 'Cadastro de Cliente',
+                        type: 'basic',
+                        icon: 'heroicons_outline:user',
+                        link: '/reviewer/clientRegistration'
+                    },
+
+                    {
+                        id: 'client-balance',
+                        title: 'Saldo do Cliente',
+                        type: 'basic',
+                        icon: 'heroicons_outline:wallet',
+                        link: '/reviewer/client-balance'
+                    },
+
+                    {
+                        id: 'client-history',
+                        title: 'Histórico do Cliente',
+                        type: 'basic',
+                        icon: 'heroicons_outline:banknotes',
+                        link: '/reviewer/client-history'
+                    },
+
+                    {
+                        id: 'load-client',
+                        title: 'Carregar Cliente',
+                        type: 'basic',
+                        icon: 'heroicons_outline:banknotes',
+                        link: '/reviewer/client-history'
+                    }
+
+
+                ]
+            },
+
+            {
+                id: 'reviewer-users',
+                title: 'Usuários',
+                type: 'collapsable',
+                icon: 'heroicons_outline:users',
+                children: [
+
+                    {
+                        id: 'reviewer-users',
+                        title: 'Cadastro Geral',
+                        type: 'basic',
+                        icon: 'heroicons_outline:user',
+                        link: '/reviewer-dashboard/reviewer-users'
+                    },
+
+                    {
+                        id: 'reviewer-operators',
+                        title: 'Operadores de Caixa',
+                        type: 'basic',
+                        icon: 'heroicons_outline:currency-dollar',
+                        link: '/reviewer-dashboard/reviewer-operators'
+                    },
+
+
+
+                    {
+                        id: 'reviewer-attendant',
+                        title: 'Atendentes',
+                        type: 'basic',
+                        icon: 'heroicons_outline:user',
+                        link: '/reviewer-dashboard/reviewer-operators'
+                    },
+
+
+                    {
+                        id: 'reviewer',
+                        title: 'Revisores',
+                        type: 'basic',
+                        icon: 'heroicons_outline:user',
+                        link: '/reviewer-dashboard/reviewers'
+                    },
+
+                    {
+                        id: 'reviewer-permissionary',
+                        title: 'Permissionários',
+                        type: 'basic',
+                        icon: 'heroicons_outline:user',
+                        link: '/reviewer-dashboard/permissionaries'
+                    },
+
+                ]
+
+
+
+
+
+            },
+
+        ]
+
+    }
+
+]
+
 
 export const attendantNavigation: FuseNavigationItem[] = [
     {
