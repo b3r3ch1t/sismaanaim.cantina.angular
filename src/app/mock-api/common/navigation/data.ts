@@ -161,7 +161,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                 id: 'events',
                 title: 'Eventos',
                 type: 'basic',
-                icon: 'heroicons_outline:chart-pie',
+                icon: 'heroicons_outline:calendar-days',
                 link: '/reviewer-dashboard'
             },
 
@@ -169,7 +169,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                 id: 'clients',
                 title: 'Clientes',
                 type: 'collapsable',
-                icon: 'heroicons_outline:chart-pie',
+                icon: 'heroicons_outline:user-circle',
                 children: [
 
 
@@ -202,7 +202,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         id: 'load-client',
                         title: 'Carregar Cliente',
                         type: 'basic',
-                        icon: 'heroicons_outline:banknotes',
+                        icon: 'heroicons_outline:user-plus',
                         link: '/reviewer/client-loading'
                     }
 
@@ -239,7 +239,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         id: 'reviewer-attendant',
                         title: 'Atendentes',
                         type: 'basic',
-                        icon: 'heroicons_outline:user',
+                        icon: 'heroicons_outline:user-group',
                         link: '/reviewer-dashboard/reviewer-operators'
                     },
 
@@ -248,7 +248,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         id: 'reviewer',
                         title: 'Revisores',
                         type: 'basic',
-                        icon: 'heroicons_outline:user',
+                        icon: 'heroicons_outline:document-check',
                         link: '/reviewer-dashboard/reviewers'
                     },
 
@@ -257,7 +257,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         title: 'Permissionários',
                         type: 'basic',
                         icon: 'heroicons_outline:user',
-                        link: '/reviewer-dashboard/permissionaries'
+                        link: '/reviewer-dashboard/check'
                     },
 
                 ]
