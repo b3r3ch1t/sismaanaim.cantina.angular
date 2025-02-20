@@ -119,11 +119,11 @@ export class ClientRegistrationComponent implements OnInit {
       const confirmationMessage = `
         CPF: ${this.clientForm.get('cpf')?.value} <br>
         Nome: ${this.clientForm.get('nome')?.value} <br>
-        Telefone Contato: ${this.clientForm.get('telefoneContato').value !== '' ? '+55' + this.clientForm.get('telefoneContato').value.toString() : ''} <br>
+        Telefone: ${this.clientForm.get('telefoneContato').value !== '' ? '+55' + this.clientForm.get('telefoneContato').value.toString() : ''} <br>
         Email: ${this.clientForm.get('email')?.value} <br>` ;
 
         this._confirmationService.confirm("Confirma os dados?", confirmationMessage).subscribe((result) => {
-          if (result) { 
+          if (result) {
             const endpoint = this.isUpdate ? 'clientes/updatecliente' : 'clientes/addcliente';
             if (this.isUpdate) {
               this.http.put(`${environment.API_URL}${endpoint}`, this.clientForm.value, { headers: { "Authorization": `Bearer ${this._authService.accessToken}` } }).subscribe({
@@ -157,7 +157,7 @@ export class ClientRegistrationComponent implements OnInit {
               });
 
             }
-    
+
           }
         })
 

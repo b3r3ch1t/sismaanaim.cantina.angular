@@ -13,18 +13,18 @@
                 <mat-form-field class="w-full">
                     <mat-label>Nome</mat-label>
                     <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput
-                        placeholder="Enigu almenaŭ 4 signojn por serĉi" matInput />
+                        placeholder="Insira pelo menos 4 caracteres para pesquisar" matInput />
                 </mat-form-field>
-    
+
                 <div class="mb-6">
                     <p class="font-bold text-lg">OR</p>
                 </div>
-    
+
                 <mat-form-field class="w-full">
                     <mat-label>CPF</mat-label>
                     <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
-                        placeholder="Enigu almenaŭ 4 signojn por serĉi" #cpfInput matInput />
-                </mat-form-field>    
+                        placeholder="Insira pelo menos 4 caracteres para pesquisar" #cpfInput matInput />
+                </mat-form-field>
             }
 
             <div class="flex flex-wrap gap-2 mb-8">
@@ -35,7 +35,7 @@
                 </button>
                 }
             </div>
-              
+
 
             @if (selectedClient() != null) {
             <p>
@@ -94,11 +94,11 @@
             <mat-form-field class="w-full">
                 <mat-label>Valor Devolvido</mat-label>
                 <span matPrefix>R$&nbsp;</span>
-                <!-- <app-currency-input #returnAmountValueInput [disabled]="selectedPaymentMethod() === null" 
+                <!-- <app-currency-input #returnAmountValueInput [disabled]="selectedPaymentMethod() === null"
                 placeholder="Informe o Valor Devolvido" (change)="onChangeReturnValue($event)" (keypress)="handleReturnAmountValue($event)"
                 ></app-currency-input> -->
                 <input matInput [disabled]="selectedPaymentMethod() === null" type="text" #returnAmountValueInput
-                    placeholder="Informe o Valor Devolvido"  
+                    placeholder="Informe o Valor Devolvido"
                     currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value"
                     (keypress)="handleReturnAmountValue($event)">
                 @if (validRechargeInput() === false) {

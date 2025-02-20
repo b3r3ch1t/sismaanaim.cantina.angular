@@ -1,3 +1,4 @@
+import { Navigation } from './../../../core/navigation/navigation.types';
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -19,6 +20,7 @@ import { environment } from 'app/environments/environment';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { CurrencyMaskModule } from "ng2-currency-mask";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-replenishment',
@@ -112,7 +114,11 @@ export class ReplenishmentComponent implements OnInit {
       })
     ).subscribe((response: ApiResponse<any>) => {
       console.log(response)
-      this.snackbar.success("Success", 30 * 1000)
+      this.snackbar.success("A recarga foi realizada com sucesso !", 30 * 1000);
+
+
+
+
     })
   }
 

@@ -8,7 +8,7 @@
                 <p class="text-2xl  text-white"><span class="font-bold">Seminário:</span> {{ currentEvent().evento }}</p>
                 <p class="text-2xl  text-white"><span class="font-bold">Data:</span> {{ currentEvent().dataFinal | customDate }}</p>
                 <p class="text-2xl  text-white">
-                    <span class="font-bold">Status do Caixa:</span>
+                    <span class="font-bold">Status do Caixa: </span>
                     <span [className]="statusClassName()">{{ currentEvent().estadoCaixa }}</span>
                 </p>
                 <p class="text-2xl  text-white"><span class="font-bold">Data/Hora de abertura:</span>  {{ currentEvent().dataInicial | customDate }}</p>
