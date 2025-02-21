@@ -284,7 +284,7 @@ export const attendantNavigation: FuseNavigationItem[] = [
         children: [
             {
                 id: 'sell',
-                title: 'Vendas',
+                title: 'Realizar vendas',
                 type: 'basic',
                 icon: 'heroicons_outline:currency-dollar',
                 link: '/attendant/sell'

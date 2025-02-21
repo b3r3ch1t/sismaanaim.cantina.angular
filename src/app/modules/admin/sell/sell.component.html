@@ -60,13 +60,13 @@
           </mat-form-field>
 
           <mat-form-field class="w-full">
-            <mat-label>Vendendo</mat-label>
+            <mat-label>Valor vendido</mat-label>
             <span matPrefix>R$&nbsp;</span>
             <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value" #sellingInput type="text" placeholder="Informe o Vendendo">
           </mat-form-field>
 
           <button mat-raised-button color="primary" (click)="handleSubmit()">
-              Efetuar Recarga
+              Efetuar Venda
           </button>
 
           }
