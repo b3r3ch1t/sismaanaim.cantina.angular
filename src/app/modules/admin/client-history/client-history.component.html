@@ -1,30 +1,32 @@
 <div class="flex min-w-0 flex-auto flex-col">
   <div class="flex-auto p-6 sm:p-10">
 
-    <div class="max-w-128">
+    <div>
       <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Histórico do Cliente</h1>
 
       @if (showClearButton()) {
-      <button class="mb-5" mat-stroked-button (click)="clearInputs()">Clear</button>
+      <button class="mb-5 bg-blue-500 text-white" mat-stroked-button (click)="clearInputs()">Clear</button>
       }
 
 
       @if (selectedClient() == null) {
-      <mat-form-field class="w-full">
-        <mat-label>Nome</mat-label>
-        <input (input)="handleNameInput($event)" id="name" #nameInput placeholder="Insira pelo menos 4 caracteres para pesquisar"
-          matInput />
-      </mat-form-field>
-
-      <div class="mb-6">
-        <p class="font-bold text-lg">OR</p>
-      </div>
-
-      <mat-form-field class="w-full">
-        <mat-label>CPF</mat-label>
-        <input id="cpf" (input)="handleCpfInput($event)" placeholder="Insira pelo menos 4 caracteres para pesquisar" #cpfInput
-          matInput />
-      </mat-form-field>
+        <div class="max-w-128">
+          <mat-form-field class="w-full">
+            <mat-label>Nome</mat-label>
+            <input (input)="handleNameInput($event)" id="name" #nameInput
+              placeholder="Insira pelo menos 4 caracteres para pesquisar" matInput />
+          </mat-form-field>
+    
+          <div class="mb-6">
+            <p class="font-bold text-lg">OR</p>
+          </div>
+    
+          <mat-form-field class="w-full">
+            <mat-label>CPF</mat-label>
+            <input id="cpf" (input)="handleCpfInput($event)" placeholder="Insira pelo menos 4 caracteres para pesquisar"
+              #cpfInput matInput />
+          </mat-form-field>
+        </div>
       }
 
       <div class="flex flex-wrap gap-2 mb-8">
@@ -37,8 +39,13 @@
       </div>
 
 
-      <div [classList]="selectedClient() == null ? 'hidden' : ''">
-        <table mat-table matSort [dataSource]="clientDataSource()" class="mat-elevation-z8">
+      @if(noClientFound()) {
+      <p class="text-red-500 font-bold">Cliente não encontrado</p>
+      }
+
+
+      <div [classList]="selectedClient() == null ? 'hidden' : 'flex flex-col'">
+        <table mat-table matSort [dataSource]="clientDataSource()" class="mat-elevation-z8 full-width">
 
           <ng-container matColumnDef="Data">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
@@ -84,7 +91,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <mat-paginator [pageSize]="25" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
+        <mat-paginator class="flex-grow" [pageSize]="25" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
       </div>
 
 

@@ -47,6 +47,7 @@ export class ReimbursementComponent implements OnInit {
   private _userService = inject(UserService);
   private _customCurrencyPipe = inject(CustomCurrencyPipe)
 
+  noClientFound = signal(false);
   clients = signal([]);
   paymentMethods = signal([]);
   showClearButton = signal(false);
@@ -76,6 +77,7 @@ export class ReimbursementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCashRegister()
+    this.fetchPaymentMethods()
   }
 
   handleSubmit() {
@@ -187,6 +189,7 @@ export class ReimbursementComponent implements OnInit {
   }
 
   handleNameInput(event: InputEvent) {
+    this.noClientFound.set(false)
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
       // this.inputDisabled.set(true);
@@ -205,6 +208,15 @@ export class ReimbursementComponent implements OnInit {
           if (data.result) {
             const clients = data.result
             this.clients.set(clients)
+
+            if(this.clients().length === 1){
+              this.selectedClient.set(this.clients()[0])
+            }
+
+            if (!this.clients().length) {
+              this.noClientFound.set(true)
+            }
+
           }
           this.showClearButton.set(true)
         });
@@ -215,6 +227,7 @@ export class ReimbursementComponent implements OnInit {
   }
 
   handleCpfInput(event: InputEvent) {
+    this.noClientFound.set(false)
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
       // this.inputDisabled.set(true);
@@ -232,6 +245,15 @@ export class ReimbursementComponent implements OnInit {
           if (data.success) {
             const clients = data.result
             this.clients.set(clients)
+
+            if(this.clients().length === 1){
+              this.selectedClient.set(this.clients()[0])
+            }
+
+            if (!this.clients().length) {
+              this.noClientFound.set(true)
+            }
+
           }
           this.showClearButton.set(true)
         });
@@ -268,7 +290,7 @@ export class ReimbursementComponent implements OnInit {
           console.log(error);
           throw error
         })
-      ).subscribe((response : ApiResponse<any>) => {
+      ).subscribe((response: ApiResponse<any>) => {
         if (response.success) {
           this.selectedClientBalance.set(response.result)
           console.log(this.selectedClientBalance())
@@ -292,7 +314,6 @@ export class ReimbursementComponent implements OnInit {
           if (data.success) {
             this.selectedClient.set(data.result)
             console.log(this.selectedClient())
-            this.fetchPaymentMethods()
           }
         });
 
@@ -326,15 +347,15 @@ export class ReimbursementComponent implements OnInit {
       console.log(this.selectedPaymentMethod())
       this.selectedClientBalance().some(balance => {
         if (balance.formaPagamentoId == this.selectedPaymentMethod().id) {
-         console.log(balance.formaPagamentoId , this.selectedPaymentMethod().id)
-         this.balanceAgainstPaymentMethod.set(balance.saldo)
-         return true
-        }else{
-         console.log(balance.formaPagamentoId , this.selectedPaymentMethod().id)
-         this.balanceAgainstPaymentMethod.set(null)
-         return false
+          console.log(balance.formaPagamentoId, this.selectedPaymentMethod().id)
+          this.balanceAgainstPaymentMethod.set(balance.saldo)
+          return true
+        } else {
+          console.log(balance.formaPagamentoId, this.selectedPaymentMethod().id)
+          this.balanceAgainstPaymentMethod.set(null)
+          return false
         }
-     })
+      })
       this.disablePaymentMethodDropdown.set(false)
     }
   }

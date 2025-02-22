@@ -17,7 +17,9 @@
             [queryParams]="item.queryParams ?? null"
             [queryParamsHandling]="item.queryParamsHandling ?? null"
             [routerLinkActive]="'fuse-vertical-navigation-item-active'"
-            [routerLinkActiveOptions]="isActiveMatchOptions"
+            [routerLinkActiveOptions]="{
+                exact: true,
+            }"
             [matTooltip]="item.tooltip || ''"
         >
             <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>

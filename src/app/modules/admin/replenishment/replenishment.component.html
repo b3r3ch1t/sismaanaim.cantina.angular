@@ -5,25 +5,29 @@
             <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Abastecimento</h1>
 
             @if (showClearButton()) {
-            <button class="mb-5" mat-stroked-button (click)="clearInputs()">Limpar</button>
+            <button class="mb-5 bg-blue-500 text-white" mat-stroked-button (click)="clearInputs()">Limpar</button>
             }
 
             @if (selectedClient() == null) {
-                <mat-form-field class="w-full">
-                    <mat-label>Nome</mat-label>
-                    <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput
-                        placeholder="Insira pelo menos 4 caracteres para pesquisar" matInput />
-                </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>Nome</mat-label>
+                <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput
+                    placeholder="Insira pelo menos 4 caracteres para pesquisar" matInput />
+            </mat-form-field>
 
-                <div class="mb-6">
-                    <p class="font-bold text-lg">Ou</p>
-                </div>
+            <div class="mb-6">
+                <p class="font-bold text-lg">Ou</p>
+            </div>
 
-                <mat-form-field class="w-full">
-                    <mat-label>CPF</mat-label>
-                    <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
-                        placeholder="Insira pelo menos 4 caracteres para pesquisar" #cpfInput matInput />
-                </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>CPF</mat-label>
+                <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
+                    placeholder="Insira pelo menos 4 caracteres para pesquisar" #cpfInput matInput />
+            </mat-form-field>
+            }
+
+            @if(noClientFound()) {
+            <p class="text-red-500 font-bold">Cliente não encontrado</p>
             }
 
             <div class="flex flex-wrap gap-2 mb-8">
@@ -71,15 +75,15 @@
                 <mat-label>Forma de Pagamento*</mat-label>
                 <div class="flex gap-4 items-center">
                     <mat-select (selectionChange)="handlePaymentMethodSelection()"
-                    [disabled]="paymentMethods().length === 0 || disablePaymentMethodDropdown()"
-                    #paymentMethodDropdown="matSelect">
-                    @for (payment of paymentMethods(); track $index) {
-                    <mat-option [value]="payment.id">{{ payment.descricao }}</mat-option>
-                    }
-                </mat-select>
-                @if (this.balanceAgainstPaymentMethod() !== null) {
+                        [disabled]="paymentMethods().length === 0 || disablePaymentMethodDropdown()"
+                        #paymentMethodDropdown="matSelect">
+                        @for (payment of paymentMethods(); track $index) {
+                        <mat-option [value]="payment.id">{{ payment.descricao }}</mat-option>
+                        }
+                    </mat-select>
+                    @if (this.balanceAgainstPaymentMethod() !== null) {
                     <p>{{ this.balanceAgainstPaymentMethod() | customCurrency }} </p>
-                }
+                    }
                 </div>
                 @if (validPaymentMethod() === false) {
                 <mat-error>
@@ -92,7 +96,8 @@
             <mat-form-field class="w-full">
                 <mat-label>Valor da Recarga</mat-label>
                 <span matPrefix>R$&nbsp;</span>
-                <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value" [disabled]="selectedPaymentMethod() === null" type="text" #rechargeValueInput
+                <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }"
+                    [(ngModel)]="value" [disabled]="selectedPaymentMethod() === null" type="text" #rechargeValueInput
                     placeholder="Informe o valor da recarga" (keypress)="handleRechargeValueInput($event)">
                 @if (validRechargeInput() === false) {
                 <mat-error>
@@ -105,7 +110,8 @@
             <mat-form-field class="w-full">
                 <mat-label>Valor Pago</mat-label>
                 <span matPrefix>R$&nbsp;</span>
-                <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value" [disabled]="selectedPaymentMethod() === null" type="text" #paidValueInput
+                <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }"
+                    [(ngModel)]="value" [disabled]="selectedPaymentMethod() === null" type="text" #paidValueInput
                     (keypress)="handlePaidValueInput($event)" placeholder="Informe o valor pago em dinheiro">
                 @if(validPaidInput() === false){
                 <mat-error>

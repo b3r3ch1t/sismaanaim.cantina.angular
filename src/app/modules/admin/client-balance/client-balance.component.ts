@@ -46,11 +46,11 @@ export class ClientBalanceComponent implements OnInit {
   selectedClient = signal(null);
   clientBalanceDataSource = signal(new MatTableDataSource([]));
   inputDisabled = signal(false);
+  noClientFound = signal(false);
 
   displayedColumns = [
     "Forma Pagamento",
-    "Saldo",
-    "Ordem de Débito"
+    "Saldo"
   ]
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -61,7 +61,12 @@ export class ClientBalanceComponent implements OnInit {
   ngOnInit() {
   }
 
+  getTotalBalance(): number {
+    return this.clientBalanceDataSource().data.reduce((acc, client) => acc + client.saldo, 0);
+  }
+
   handleCpfInput(event: InputEvent) {
+    this.noClientFound.update(old => false)
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
       this.inputDisabled.set(true);
@@ -80,6 +85,8 @@ export class ClientBalanceComponent implements OnInit {
             const clients = data.result
             this.clients.set(clients)
             this.clients().length == 1 ? this.handleClientSelection(this.clients()[0].id) : null
+          }else{
+            this.noClientFound.set(true)
           }
           this.showClearButton.set(true)
         });

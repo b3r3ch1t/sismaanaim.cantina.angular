@@ -49,6 +49,7 @@ export class ClientHistoryComponent implements OnInit {
   showClearButton = signal(false);
   selectedClient = signal(null);
   clientDataSource = signal(new MatTableDataSource([]));
+  noClientFound = signal(false)
 
   displayedColumns = [
     "Data",
@@ -76,6 +77,9 @@ export class ClientHistoryComponent implements OnInit {
   }
 
   handleNameInput(event: InputEvent) {
+
+    this.noClientFound.set(false)
+
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
       // this.inputDisabled.set(true);
@@ -94,6 +98,13 @@ export class ClientHistoryComponent implements OnInit {
           if (data.result) {
             const clients = data.result
             this.clients.set(clients)
+
+            this.clients().length === 1 ? this.selectedClient.set(this.clients()[0]) : this.selectedClient.set(null)
+
+            if (!this.clients().length) {
+              this.noClientFound.set(true)
+            }
+
           }
           this.showClearButton.set(true)
         });
@@ -104,6 +115,9 @@ export class ClientHistoryComponent implements OnInit {
   }
 
   handleCpfInput(event: InputEvent) {
+
+    this.noClientFound.set(false)
+
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
       // this.inputDisabled.set(true);
@@ -121,6 +135,12 @@ export class ClientHistoryComponent implements OnInit {
           if (data.success) {
             const clients = data.result
             this.clients.set(clients)
+
+            this.clients().length === 1 ? this.selectedClient.set(this.clients()[0]) : this.selectedClient.set(null)
+
+            if (!this.clients().length) {
+              this.noClientFound.set(true)
+            }
           }
           this.showClearButton.set(true)
         });
@@ -178,8 +198,8 @@ export class ClientHistoryComponent implements OnInit {
           const dataSource = new MatTableDataSource(response.result);
 
           if (dataSource) {
-            dataSource.sortingDataAccessor = (item : any, property) => {
-              switch(property) {
+            dataSource.sortingDataAccessor = (item: any, property) => {
+              switch (property) {
                 case 'Data':
                   return new Date(item.data);  // Return the actual date object for sorting
                 case 'Valor':

@@ -5,26 +5,26 @@
             <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Ressarcimento</h1>
 
             @if (showClearButton()) {
-            <button class="mb-5" mat-stroked-button (click)="clearInputs()">Clear</button>
+            <button class="mb-5 bg-blue-500 text-white" mat-stroked-button (click)="clearInputs()">Clear</button>
             }
 
 
             @if (selectedClient() == null) {
-                <mat-form-field class="w-full">
-                    <mat-label>Nome</mat-label>
-                    <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput
-                        placeholder="Insira pelo menos 4 caracteres para pesquisar" matInput />
-                </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>Nome</mat-label>
+                <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput
+                    placeholder="Insira pelo menos 4 caracteres para pesquisar" matInput />
+            </mat-form-field>
 
-                <div class="mb-6">
-                    <p class="font-bold text-lg">OR</p>
-                </div>
+            <div class="mb-6">
+                <p class="font-bold text-lg">OR</p>
+            </div>
 
-                <mat-form-field class="w-full">
-                    <mat-label>CPF</mat-label>
-                    <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
-                        placeholder="Insira pelo menos 4 caracteres para pesquisar" #cpfInput matInput />
-                </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>CPF</mat-label>
+                <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
+                    placeholder="Insira pelo menos 4 caracteres para pesquisar" #cpfInput matInput />
+            </mat-form-field>
             }
 
             <div class="flex flex-wrap gap-2 mb-8">
@@ -36,6 +36,9 @@
                 }
             </div>
 
+            @if(noClientFound()) {
+            <p class="text-red-500 font-bold">Cliente não encontrado</p>
+            }
 
             @if (selectedClient() != null) {
             <p>
@@ -80,7 +83,7 @@
                         }
                     </mat-select>
                     @if (this.balanceAgainstPaymentMethod() !== null) {
-                        <p>{{ this.balanceAgainstPaymentMethod() | customCurrency }} </p>
+                    <p>{{ this.balanceAgainstPaymentMethod() | customCurrency }} </p>
                     }
                 </div>
                 @if (validPaymentMethod() === false) {
@@ -98,8 +101,8 @@
                 placeholder="Informe o Valor Devolvido" (change)="onChangeReturnValue($event)" (keypress)="handleReturnAmountValue($event)"
                 ></app-currency-input> -->
                 <input matInput [disabled]="selectedPaymentMethod() === null" type="text" #returnAmountValueInput
-                    placeholder="Informe o Valor Devolvido"
-                    currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value"
+                    placeholder="Informe o Valor Devolvido" currencyMask
+                    [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value"
                     (keypress)="handleReturnAmountValue($event)">
                 @if (validRechargeInput() === false) {
                 <mat-error>

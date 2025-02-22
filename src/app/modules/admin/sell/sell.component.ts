@@ -48,6 +48,7 @@ export class AttendantSellComponent implements OnInit {
   private _authService = inject(AuthService)
   private _userService = inject(UserService);
 
+  noClientFound = signal(false)
   clients = signal([]);
   paymentMethods = signal([]);
   showClearButton = signal(false);
@@ -83,7 +84,8 @@ export class AttendantSellComponent implements OnInit {
       return
     }
 
-    let sellingAmount = unformatedValue.replace('R$', '').replace('.', '').replace(',', '.')
+    let sellingAmount = parseFloat(unformatedValue.replace('R$', '').replace('.', '').replace(',', '.'))
+    console.log("Selling Amount", sellingAmount, "total balance", this.totalClientBalance())
     if (sellingAmount > this.totalClientBalance()) {
       this.snackbar.error("O valor de venda deve ser menor que o saldo")
       return
@@ -92,7 +94,7 @@ export class AttendantSellComponent implements OnInit {
     this._httpClient.post(`${environment.API_URL}atendente/realizarvenda`,
       {
         eventoId: this.currentAttendant().eventoId,
-        valor: parseFloat(sellingAmount),
+        valor: sellingAmount,
         clienteId: this.selectedClient().id,
         permissionarioId: this.currentAttendant().permissionarioId
       },
@@ -104,6 +106,8 @@ export class AttendantSellComponent implements OnInit {
         console.log(error)
         throw error
       })).subscribe((response: ApiResponse<any>) => {
+        this.snackbar.success("Venda Realizada com sucesso!", 1000 * 10)
+        this.clearInputs()
         console.log(response)
       })
 
@@ -153,6 +157,9 @@ export class AttendantSellComponent implements OnInit {
   }
 
   handleCpfInput(event: InputEvent) {
+
+    this.noClientFound.set(false)
+
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
       this.selectedClient.set(null)
@@ -172,6 +179,16 @@ export class AttendantSellComponent implements OnInit {
           if (data.success) {
             const clients = data.result
             this.clients.set(clients)
+
+            if(this.clients().length === 1){
+              this.selectedClient.set(this.clients()[0])
+              this.handleClientSelection(this.selectedClient().id)
+            }
+
+            if(!this.clients().length) {
+              this.noClientFound.set(false)
+            }
+
           }
           this.showClearButton.set(true)
         });
@@ -190,6 +207,7 @@ export class AttendantSellComponent implements OnInit {
 
 
   handleClientSelection(clientId: string) {
+    this.noClientFound.set(false)
     if (clientId) {
       this.disableClientDropdown.set(true)
       this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
