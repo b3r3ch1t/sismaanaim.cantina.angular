@@ -48,7 +48,7 @@ export class ReplenishmentComponent implements OnInit {
   private _httpClient = inject(HttpClient)
   private _authService = inject(AuthService)
   private _userService = inject(UserService);
-
+  noClientFound = signal(false)
   clients = signal([]);
   paymentMethods = signal([]);
   showClearButton = signal(false);
@@ -75,6 +75,7 @@ export class ReplenishmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCashRegister()
+    this.fetchPaymentMethods()
   }
 
   handleSubmit() {
@@ -115,10 +116,7 @@ export class ReplenishmentComponent implements OnInit {
     ).subscribe((response: ApiResponse<any>) => {
       console.log(response)
       this.snackbar.success("A recarga foi realizada com sucesso !", 30 * 1000);
-
-
-
-
+      this.clearInputs()
     })
   }
 
@@ -165,6 +163,7 @@ export class ReplenishmentComponent implements OnInit {
   }
 
   handleNameInput(event: InputEvent) {
+    this.noClientFound.set(false)
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
       this.selectedClient.set(null)
@@ -185,6 +184,15 @@ export class ReplenishmentComponent implements OnInit {
           if (data.result) {
             const clients = data.result
             this.clients.set(clients)
+
+            if(this.clients().length === 1){
+              this.selectedClient.set(this.clients()[0])
+            }
+
+            if (!this.clients().length) {
+              this.noClientFound.set(true)
+            }
+
           }
           this.showClearButton.set(true)
         });
@@ -195,6 +203,7 @@ export class ReplenishmentComponent implements OnInit {
   }
 
   handleCpfInput(event: InputEvent) {
+    this.noClientFound.set(false)
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
       this.selectedClient.set(null)
@@ -214,6 +223,14 @@ export class ReplenishmentComponent implements OnInit {
           if (data.success) {
             const clients = data.result
             this.clients.set(clients)
+
+            if(this.clients().length === 1){
+              this.selectedClient.set(this.clients()[0])
+            }
+
+            if (!this.clients().length) {
+              this.noClientFound.set(true)
+            }
           }
           this.showClearButton.set(true)
         });
@@ -243,7 +260,7 @@ export class ReplenishmentComponent implements OnInit {
           console.log(error);
           throw error
         })
-      ).subscribe((response : ApiResponse<any>) => {
+      ).subscribe((response: ApiResponse<any>) => {
         if (response.success) {
           this.selectedClientBalance.set(response.result)
           console.log(this.selectedClientBalance())
@@ -267,7 +284,7 @@ export class ReplenishmentComponent implements OnInit {
           if (data.success) {
             this.selectedClient.set(data.result)
             console.log(this.selectedClient())
-            this.fetchPaymentMethods()
+
           }
         });
 
@@ -301,15 +318,15 @@ export class ReplenishmentComponent implements OnInit {
       });
       console.log(this.selectedPaymentMethod())
       this.selectedClientBalance().some(balance => {
-         if (balance.formaPagamentoId == this.selectedPaymentMethod().id) {
-          console.log(balance.formaPagamentoId , this.selectedPaymentMethod().id)
+        if (balance.formaPagamentoId == this.selectedPaymentMethod().id) {
+          console.log(balance.formaPagamentoId, this.selectedPaymentMethod().id)
           this.balanceAgainstPaymentMethod.set(balance.saldo)
           return true
-         }else{
-          console.log(balance.formaPagamentoId , this.selectedPaymentMethod().id)
+        } else {
+          console.log(balance.formaPagamentoId, this.selectedPaymentMethod().id)
           this.balanceAgainstPaymentMethod.set(null)
           return false
-         }
+        }
       })
       this.disablePaymentMethodDropdown.set(false)
     }
