@@ -162,7 +162,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                 title: 'Eventos',
                 type: 'basic',
                 icon: 'heroicons_outline:calendar-days',
-                link: '/reviewer-dashboard'
+                link: '/reviewer-events'
             },
 
             {
