@@ -117,7 +117,7 @@ export class ReimbursementComponent implements OnInit {
             item.formaPagamentoId === this.selectedPaymentMethod().id ? saldo = item.saldo : null
           });
 
-          if (saldo > value) {
+          if (saldo < value) {
             this.snackbar.error("Saldo insuficiente", 30 * 1000)
             return
           }
