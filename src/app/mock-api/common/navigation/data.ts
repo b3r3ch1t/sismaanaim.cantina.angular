@@ -166,6 +166,14 @@ export const reviewerNavigation: FuseNavigationItem[] = [
             },
 
             {
+                id: 'formaPagamento',
+                title: 'Formas Pagamento',
+                type: 'basic',
+                icon: 'heroicons_outline:banknotes',
+                link: '/reviewer-money'
+            },
+
+            {
                 id: 'clients',
                 title: 'Clientes',
                 type: 'collapsable',
