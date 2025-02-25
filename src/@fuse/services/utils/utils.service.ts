@@ -79,4 +79,38 @@ export class FuseUtilsService {
         return cpfLimpo === base + digito1 + digito2;
     }
 
+
+    validarCNPJ(cnpj: string): boolean {
+        if (!cnpj) return false;
+
+        // Remove caracteres não numéricos
+        cnpj = cnpj.replace(/[^\d]+/g, '');
+
+        if (cnpj.length !== 14) return false;
+
+        // Elimina CNPJs com todos os dígitos iguais (ex: 00000000000000)
+        if (/^(\d)\1+$/.test(cnpj)) return false;
+
+        // Cálculo dos dígitos verificadores
+        const validarDigito = (cnpj: string, pesoInicial: number) => {
+          let soma = 0;
+          let peso = pesoInicial;
+
+          for (let i = 0; i < cnpj.length; i++) {
+            soma += parseInt(cnpj[i]) * peso--;
+            if (peso < 2) peso = 9;
+          }
+
+          const resto = soma % 11;
+          return resto < 2 ? 0 : 11 - resto;
+        };
+
+        const cnpjBase = cnpj.slice(0, 12);
+        const primeiroDV = validarDigito(cnpjBase, 5);
+        const segundoDV = validarDigito(cnpjBase + primeiroDV, 6);
+
+        return primeiroDV === parseInt(cnpj[12]) && segundoDV === parseInt(cnpj[13]);
+      }
+
+
 }
