@@ -347,6 +347,22 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
+            { path: 'reviewer-money', loadChildren: () => import('app/modules/admin/money/money.routes') },
+        ]
+    },
+
+
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
             { path: 'reviewer/clientRegistration', loadChildren: () => import('app/modules/admin/client-registration/client-registration.routes') },
         ]
     },
@@ -392,6 +408,22 @@ export const appRoutes: Route[] = [
             { path: 'reviewer/client-loading', loadChildren: () => import('app/modules/admin/client-loading/client-loading.routes') },
         ]
     },
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'reviewer-dashboard/users', loadChildren: () => import('app/modules/admin/users/users.routes') },
+        ]
+    },
+
+
+
 
 
     {

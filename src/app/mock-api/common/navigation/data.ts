@@ -230,7 +230,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         title: 'Cadastro Geral',
                         type: 'basic',
                         icon: 'heroicons_outline:user',
-                        link: '/reviewer-dashboard/reviewer-users'
+                        link: '/reviewer-dashboard/users'
                     },
 
                     {
