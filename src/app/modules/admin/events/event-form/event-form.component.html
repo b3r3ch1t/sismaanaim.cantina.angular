@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>Adicionar Evento</h2>
+<mat-dialog-content>
+    <form [formGroup]="eventForm" (ngSubmit)="submitForm()">
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Nome</mat-label>
+            <input matInput formControlName="nome" maxlength="50" />
+    
+            @if (eventForm.get('nome')?.hasError('required')) {
+            <mat-error>Nome é obrigatório</mat-error>
+            }
+    
+            @if (eventForm.get('nome')?.hasError('maxlength')) {
+            <mat-error *ngIf="">Máx 50 caracteres</mat-error>
+            }
+    
+        </mat-form-field>
+    
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Data Inicial</mat-label>
+            <input matInput formControlName="dataInicial" type="date" (change)="validateEndDate()" />
+            @if (eventForm.get('dataInicial')?.hasError('required')) {
+            <mat-error>Data Inicial é obrigatória</mat-error>
+            }
+    
+            @if (eventForm.get('dataInicial')?.hasError('invalidDate')) {
+            <mat-error>
+                A data inicial deve ser no mínimo D+1
+            </mat-error>
+            }
+    
+        </mat-form-field>
+    
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Data Final</mat-label>
+            <input matInput formControlName="dataFinal" type="date" />
+            @if (eventForm.get('dataFinal')?.hasError('required')) {
+            <mat-error>Data Final é obrigatória</mat-error>
+            }
+    
+            @if (eventForm.get('dataFinal')?.hasError('invalidEndDate')) {
+            <mat-error>
+                A data final deve ser pelo menos um dia após a Data Inicial
+            </mat-error>
+            }
+    
+        </mat-form-field>
+    
+        <button mat-raised-button color="primary" type="submit" [disabled]="!eventForm.valid">
+            Salvar Evento
+        </button>
+    </form>
+</mat-dialog-content>

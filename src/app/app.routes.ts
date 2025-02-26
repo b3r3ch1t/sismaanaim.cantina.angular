@@ -337,6 +337,19 @@ export const appRoutes: Route[] = [
             { path: 'reviewer-events', loadChildren: () => import('app/modules/admin/events/events.routes') },
         ]
     },
+    
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'reviewer-money', loadChildren: () => import('app/modules/admin/money/money.routes') },
+        ]
+    },
 
     {
         path: '',
