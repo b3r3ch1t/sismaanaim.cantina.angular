@@ -190,6 +190,9 @@ export class AttendantSellComponent implements OnInit {
             }
 
           }
+          else{
+            this.snackbar.error("Nenhum cliente encontrado");
+          }
           this.showClearButton.set(true)
         });
 

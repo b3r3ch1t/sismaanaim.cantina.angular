@@ -101,6 +101,8 @@ export class ClientBalanceComponent implements OnInit {
     this.clients.set([])
     this.selectedClient.set(null)
     this.inputDisabled.set(false)
+
+
   }
 
   handleClientSelection(clientId: string) {
@@ -128,7 +130,7 @@ export class ClientBalanceComponent implements OnInit {
   }
 
   showClientBalance() {
-    const clientId = this.selectedClient().id   
+    const clientId = this.selectedClient().id
     if(clientId){
       this._httpClient.get(`${environment.API_URL}clientes/getsaldoclientebyclientid/${clientId}`, {
         headers: {
@@ -147,11 +149,11 @@ export class ClientBalanceComponent implements OnInit {
             dataSource.sortingDataAccessor = (item : any, property) => {
               switch(property) {
                 case 'Forma Pagamento':
-                  return item.formaPagamentoNome;  
+                  return item.formaPagamentoNome;
                 case 'Saldo':
-                  return Number(item.saldo);  
+                  return Number(item.saldo);
                 case 'Ordem de Débito':
-                    return Number(item.ordemDebito);  
+                    return Number(item.ordemDebito);
                 default:
                   return item[property];
               }
