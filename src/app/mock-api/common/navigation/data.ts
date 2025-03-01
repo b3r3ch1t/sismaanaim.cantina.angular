@@ -238,7 +238,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         title: 'Operadores de Caixa',
                         type: 'basic',
                         icon: 'heroicons_outline:currency-dollar',
-                        link: '/reviewer-dashboard/reviewer-operators'
+                        link: '/reviewer/operators'
                     },
 
 
@@ -248,7 +248,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         title: 'Atendentes',
                         type: 'basic',
                         icon: 'heroicons_outline:user-group',
-                        link: '/reviewer-dashboard/reviewer-operators'
+                        link: '/reviewer/attendant'
                     },
 
 
@@ -257,7 +257,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         title: 'Revisores',
                         type: 'basic',
                         icon: 'heroicons_outline:document-check',
-                        link: '/reviewer-dashboard/reviewers'
+                        link: '/reviewer/reviewers'
                     },
 
                     {
@@ -265,7 +265,7 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         title: 'Permissionários',
                         type: 'basic',
                         icon: 'heroicons_outline:user',
-                        link: '/reviewer-dashboard/check'
+                        link: '/reviewer/permissionario'
                     },
 
                 ]

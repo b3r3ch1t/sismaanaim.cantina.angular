@@ -337,7 +337,7 @@ export const appRoutes: Route[] = [
             { path: 'reviewer-events', loadChildren: () => import('app/modules/admin/events/events.routes') },
         ]
     },
-    
+
     {
         path: '',
         canActivate: [AuthGuard],
@@ -436,8 +436,59 @@ export const appRoutes: Route[] = [
     },
 
 
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'reviewer/operators', loadChildren: () => import('app/modules/admin/operators/operators.routes') },
+        ]
+    },
 
 
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'reviewer/attendant', loadChildren: () => import('app/modules/admin/attendant/attendant.routes') },
+        ]
+    },
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'reviewer/reviewers', loadChildren: () => import('app/modules/admin/reviewers/reviewers.routes') },
+        ]
+    },
+
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'reviewer/permissionario', loadChildren: () => import('app/modules/admin/permissionaries/permissionaries.routes') },
+        ]
+    },
 
     {
         canActivate: [AuthGuard],
