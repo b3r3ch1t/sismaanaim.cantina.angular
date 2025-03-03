@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>Adicionar Usuário</h2>
+<mat-dialog-content>
+  <form [formGroup]="addUserForm" (submit)="submitForm()" class="space-y-4">
+    <!-- Nome -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome" maxlength="50" />
+      @if (addUserForm.controls['nome'].hasError('required')) {
+        <mat-error>Nome is required</mat-error>
+      }
+      @if (addUserForm.controls['nome'].hasError('maxlength')) {
+        <mat-error>Max 50 characters</mat-error>
+      }
+    </mat-form-field>
+  
+    <!-- CPF -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>CPF</mat-label>
+      <input matInput formControlName="cpf" type="text" />
+      @if (addUserForm.controls['cpf'].hasError('required')) {
+        <mat-error>CPF is required</mat-error>
+      }
+      @if (addUserForm.controls['cpf'].hasError('invalidCPF')) {
+        <mat-error>Invalid CPF</mat-error>
+      }
+    </mat-form-field>
+  
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" />
+      @if (addUserForm.controls['email'].hasError('required')) {
+        <mat-error>E-mail is required</mat-error>
+      }
+      @if (addUserForm.controls['email'].hasError('email')) {
+        <mat-error>Invalid e-mail format</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="flex justify-end">
+      <button mat-button type="button" (click)="closeModal()">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="addUserForm.invalid">Create User</button>
+    </div>
+  </form>
+  
+</mat-dialog-content>
+
+
