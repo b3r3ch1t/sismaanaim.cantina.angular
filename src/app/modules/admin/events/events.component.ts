@@ -15,7 +15,6 @@ import { ConfirmationService } from 'app/services/confirmation.service';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { EventFormComponent } from './event-form/event-form.component';
 import { EventStatus } from './event-status.enum';
-import { result } from 'lodash';
 
 @Component({
   selector: 'app-events',
