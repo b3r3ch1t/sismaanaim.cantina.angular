@@ -13,10 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { PaymentMethodFormComponent } from './payment-method-form/payment-method-form.component';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { ConfirmationService } from 'app/services/confirmation.service';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-money',
-  imports: [MatTableModule, MatPaginator, MatSortModule, MatButtonModule, MatIconModule],
+  imports: [MatTableModule, MatPaginator, MatSortModule, MatButtonModule, MatIconModule, MatCheckboxModule],
   templateUrl: './money.component.html',
   styleUrl: './money.component.scss'
 })
@@ -163,7 +164,7 @@ export class MoneyComponent implements OnInit {
                 case 'Aceita Estorno':
                   return item.aceitaEstorno;
                 case 'Ordem débito':
-                  return Number(item.ordemDebito);
+                  return parseInt(item.ordemDebito);
                 default:
                   return item[property];
               }
@@ -175,5 +176,9 @@ export class MoneyComponent implements OnInit {
           }
         }
       });
+  }
+
+  handleCheckbox(e : MatCheckboxChange){
+    e.source.toggle()
   }
 }

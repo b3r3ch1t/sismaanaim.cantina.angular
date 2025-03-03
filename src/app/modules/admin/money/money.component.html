@@ -18,7 +18,9 @@
 
         <ng-container matColumnDef="Aceita Estorno">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Aceita Estorno </th>
-          <td mat-cell *matCellDef="let paymentMethod"> {{paymentMethod.aceitaEstorno }} </td>
+          <td mat-cell *matCellDef="let paymentMethod"> 
+          <mat-checkbox disableRipple (change)="handleCheckbox($event)" checked="{{ paymentMethod.aceitaEstorno }}" />
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="Ordem débito">
