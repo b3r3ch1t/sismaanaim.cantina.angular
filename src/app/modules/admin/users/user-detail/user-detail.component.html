@@ -1,0 +1,74 @@
+<h2 mat-dialog-title>User Details</h2>
+<mat-dialog-content>
+  <p><strong>Name:</strong> {{ user.nome }}</p>
+  <p><strong>Username:</strong> {{ user.userName }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><strong>Status:</strong> {{ user.ativo ? 'Active' : 'Inactive' }}</p>
+
+  
+  <div class="flex justify-between flex-col mb-6">
+    <h3 class="text-lg font-bold">Claims</h3>
+    <form [formGroup]="claimForm" (ngSubmit)="addClaim()">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Select a Claim</mat-label>
+        <mat-select formControlName="selectedClaim">
+          @for (claim of availableClaims; track $index) {
+            <mat-option [value]="claim">
+              {{ claim.name }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (claimForm.controls['selectedClaim'].hasError('required')) {          
+          <mat-error>
+            Please select a claim
+          </mat-error>
+        }
+      </mat-form-field>
+    
+      <button mat-flat-button color="primary" type="submit" [disabled]="claimForm.invalid">
+        Add Claim
+      </button>
+    </form>
+  </div>
+
+  <table mat-table [dataSource]="userClaims()" class="border border-gray-300 w-full mt-2">
+
+    <!-- Claim Type Column -->
+    <ng-container matColumnDef="claimType">
+      <th mat-header-cell *matHeaderCellDef class="border border-gray-300 p-2"> Claim Type </th>
+      <td mat-cell class="border border-gray-300 p-2" *matCellDef="let claim"> {{ claim.claimType }} </td>
+    </ng-container>
+
+    <!-- Claim Value Column -->
+    <ng-container matColumnDef="claimValue">
+      <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Claim Value </th>
+      <td mat-cell class="border border-gray-300 p-2" *matCellDef="let claim"> {{ claim.claimValue }} </td>
+    </ng-container>
+
+    <!-- Perfil Usuario Column -->
+    <ng-container matColumnDef="perfilUsuario">
+      <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Perfil </th>
+      <td mat-cell class="border border-gray-300 p-2" *matCellDef="let claim"> {{ claim.perfilUsuario }} </td>
+    </ng-container>
+
+    <!-- Description Column -->
+    <ng-container matColumnDef="descriptionPerfilUsuario">
+      <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Description </th>
+      <td mat-cell class="border border-gray-300 p-2" *matCellDef="let claim"> {{ claim.descriptionPerfilUsuario }} </td>
+    </ng-container>
+
+    <!-- Table Headers and Rows -->
+    <thead>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    </thead>
+    <tbody>
+      <tr class="border border-gray-300 p-2" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </tbody>
+
+  </table>
+
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>
