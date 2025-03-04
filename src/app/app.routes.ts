@@ -459,7 +459,7 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'reviewer/attendant', loadChildren: () => import('app/modules/admin/attendant/attendant.routes') },
+            { path: 'reviewer/attendant', loadChildren: () => import('app/modules/admin/attendants/attendants.routes') },
         ]
     },
 
