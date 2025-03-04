@@ -1,6 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator } from '@angular/material/paginator';
@@ -55,6 +55,7 @@ export class ClientBalanceComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
+  @ViewChild('cpfInput', { static: false }) cpfInput!: ElementRef;
 
   constructor() { }
 
@@ -101,8 +102,8 @@ export class ClientBalanceComponent implements OnInit {
     this.clients.set([])
     this.selectedClient.set(null)
     this.inputDisabled.set(false)
-
-
+    this.noClientFound.set(false)
+    this.cpfInput.nativeElement.value = ''
   }
 
   handleClientSelection(clientId: string) {
