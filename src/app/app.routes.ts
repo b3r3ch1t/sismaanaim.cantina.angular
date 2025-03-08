@@ -363,10 +363,6 @@ export const appRoutes: Route[] = [
             { path: 'reviewer-money', loadChildren: () => import('app/modules/admin/money/money.routes') },
         ]
     },
-
-
-
-
     {
         path: '',
         canActivate: [AuthGuard],

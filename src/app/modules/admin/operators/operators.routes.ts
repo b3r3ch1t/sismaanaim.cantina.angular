@@ -4,6 +4,6 @@ import { OperatorsComponent } from './operators.component';
 export default [
     {
         path     : '',
-        component: OperatorsComponent,
+        component: OperatorsComponent
     }
 ] as Routes;
