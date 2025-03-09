@@ -4,6 +4,6 @@ import { PermissionariesComponent } from './permissionaries.component';
 export default [
     {
         path     : '',
-        component: PermissionariesComponent,
+        component: PermissionariesComponent
     }
 ] as Routes;
