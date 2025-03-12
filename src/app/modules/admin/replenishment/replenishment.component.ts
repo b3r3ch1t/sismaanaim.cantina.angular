@@ -94,6 +94,18 @@ export class ReplenishmentComponent implements OnInit {
       return
     }
 
+    console.log(this.rechargeValueInput.nativeElement.value);
+    console.log(this.paidValueInput.nativeElement.value);
+
+    const paidValue = parseFloat(this.paidValueInput.nativeElement.value.replace(".", "").replace(",", "."))
+    const rechargeValue = parseFloat(this.rechargeValueInput.nativeElement.value.replace(".", "").replace(",", "."))
+
+    if (rechargeValue  > paidValue) {
+      this.snackbar.error("O valor da recarga deve ser igual ou menor que o valor pago", 30 * 1000);
+      this.validRechargeInput.set(false)
+      return
+    }
+
     console.log("validation passed")
 
     if (this.currentEvent() === null) {
