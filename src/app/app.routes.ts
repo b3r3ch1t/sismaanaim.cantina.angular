@@ -10,6 +10,12 @@ import { PageNotFoundComponent } from './modules/admin/page-not-found/page-not-f
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export const appRoutes: Route[] = [
 
+
+    {
+        path: 'qr-code',
+        loadChildren: () => import('app/modules/qr-code/qr-code.routes').then(m => m.QR_CODE_ROUTES),
+    },
+
     // Redirect empty path to '/example'
     { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
 
@@ -500,7 +506,6 @@ export const appRoutes: Route[] = [
                 component: PageNotFoundComponent
             }
         ]
-    }
-
+    },
 
 ];
