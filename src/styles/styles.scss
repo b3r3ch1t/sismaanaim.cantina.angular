@@ -8,7 +8,7 @@
     background-size: cover;
 }
 
-.login-bg::after{
+.login-bg::before{
     content: "";
     position: absolute;
     inset: 0;
