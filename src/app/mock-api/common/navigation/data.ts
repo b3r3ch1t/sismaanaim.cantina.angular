@@ -132,6 +132,15 @@ export const permissionaryNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:chevron-double-left',
                 link: '/permissionary/refund'
             },
+
+            {
+                id: 'reviewer-attendant',
+                title: 'Atendentes',
+                type: 'basic',
+                icon: 'heroicons_outline:user-group',
+                link: '/permissionary/attendant'
+            },
+
         ]
 
     }

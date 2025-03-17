@@ -1,7 +1,7 @@
 
 
 export enum BackendURL {
-  Local = 'https://localhost:53837/v1/sismaanaim/',
+  Local = 'http://localhost:55228/v1/sismaanaim/',
   Staging = 'https://apicantina.berechit.com.br/v1/sismaanaim/'
 }
 
