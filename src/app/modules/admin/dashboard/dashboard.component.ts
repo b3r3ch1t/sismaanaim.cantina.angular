@@ -29,7 +29,7 @@ export class DashboardComponent {
         [UserProfile.Attendant]: '/attendant/sell',
         [UserProfile.Auditor]: '/auditor-dashboard',
         [UserProfile.Reviewer]: '/reviewer-dashboard',
-        [UserProfile.Permissionary]: '/permissionary-dashboard',
+        [UserProfile.Permissionary]: '/permissionary/sell',
         [UserProfile.Indefinite]: '/indefinite-dashboard',
         [UserProfile.SecretariatArea]: '/secretariat-area-dashboard',
         [UserProfile.SecretariatRegion]: '/secretariat-region-dashboard',
