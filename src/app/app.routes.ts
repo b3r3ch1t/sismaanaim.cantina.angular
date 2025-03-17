@@ -326,6 +326,19 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
+            { path: 'permissionary/attendant', loadChildren: () => import('app/modules/admin/permissionary-attendant/permissionary-attendant.routes') },
+        ]
+    },
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
             { path: 'reviewer-dashboard', loadChildren: () => import('app/modules/admin/reviewer-dashboard/reviewer-dashboard.routes') },
         ]
     },
