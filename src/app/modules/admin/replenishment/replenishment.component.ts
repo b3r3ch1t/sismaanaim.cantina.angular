@@ -113,11 +113,9 @@ export class ReplenishmentComponent implements OnInit {
       return
     }
 
-    const valor = parseFloat(this.paidValueInput.nativeElement.value.replace(".", "").replace(",", "."))
-
     this._httpClient.post(`${environment.API_URL}caixa/adicionarcredito`, {
       "caixaId": this.currentEvent().id,
-      "valor": valor,
+      "valor": rechargeValue,
       "formaPagamentoId": this.selectedPaymentMethod().id,
       "clienteId": this.selectedClient().id
     }).pipe(
@@ -127,7 +125,7 @@ export class ReplenishmentComponent implements OnInit {
       })
     ).subscribe((response: ApiResponse<any>) => {
       console.log(response)
-      this.snackbar.success("A recarga foi realizada com sucesso !", 30 * 1000);
+      this.snackbar.success(`A recarga foi realizada com sucesso! O valor do troco é {Valor pago ${this.paidValueInput.nativeElement.value} - Valor recarga ${this.rechargeValueInput.nativeElement.value}}`, 30 * 1000);
       this.clearInputs()
     })
   }
