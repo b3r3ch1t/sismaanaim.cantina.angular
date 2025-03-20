@@ -125,7 +125,19 @@ export class ReplenishmentComponent implements OnInit {
       })
     ).subscribe((response: ApiResponse<any>) => {
       console.log(response)
-      this.snackbar.success(`A recarga foi realizada com sucesso! O valor do troco é {Valor pago ${this.paidValueInput.nativeElement.value} - Valor recarga ${this.rechargeValueInput.nativeElement.value}}`, 30 * 1000);
+
+
+
+     // this.snackbar.success(`A recarga foi realizada com sucesso! O valor do troco é {Valor pago ${this.paidValueInput.nativeElement.value} - Valor recarga ${this.rechargeValueInput.nativeElement.value}}`, 30 * 1000);
+
+     const troco = paidValue - rechargeValue;
+
+     this.snackbar.success(
+         `A recarga foi realizada com sucesso! O valor do troco é ${troco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`,
+         30 * 1000
+     );
+
+
       this.clearInputs()
     })
   }
