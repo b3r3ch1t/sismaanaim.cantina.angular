@@ -31,7 +31,7 @@ export enum Checkout_URL {
 }
 
 export const environment = {
-  API_URL:BackendURL.Staging,
+  API_URL:BackendURL.Local,
   production: false,
   KEYCLOAK_URL:KEYCLOAKURL.Staging,
   KEYCLOAK_REALM: KEYCLOAKREALM.Local,
