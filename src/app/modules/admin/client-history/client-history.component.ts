@@ -59,7 +59,6 @@ export class ClientHistoryComponent implements OnInit {
     "Responsável",
     "Transação",
     "Evento",
-    "Enviado"
   ]
 
   @ViewChild('nameInput', { static: true }) nameInput: ElementRef;

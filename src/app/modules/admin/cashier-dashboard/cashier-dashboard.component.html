@@ -12,7 +12,7 @@
                     <span [className]="statusClassName()">{{ currentEvent().estadoCaixa }}</span>
                 </p>
                 <p class="text-2xl  text-white"><span class="font-bold">Data/Hora de abertura:</span>  {{ currentEvent().dataInicial | customDate }}</p>
-                <p class="text-2xl  text-green-600"><span class="font-bold">Saldo inicial:</span>  {{ currentEvent().saldoDinheiro | customCurrency }}</p>
+                <p class="text-2xl  text-green-600"><span class="font-bold">Saldo inicial:</span>  {{ currentEvent().valorAbertura | customCurrency }}</p>
             </fuse-card>
 
             <fuse-card
