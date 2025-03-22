@@ -35,14 +35,14 @@ export class MoneyComponent implements OnInit {
   displayedColumns = [
     "Descricao",
     "Aceita Estorno",
-    "Ordem débito",
-    "Ações"
+    "Ordem dÃ©bito",
+    "AÃ§Ãµes"
   ]
 
   constructor(
-    private dialog: MatDialog,
-    private snackbarService: SnackbarService,
-    private confirmationService: ConfirmationService
+    private readonly dialog: MatDialog,
+    private readonly snackbarService: SnackbarService,
+    private readonly confirmationService: ConfirmationService
   ) { }
 
   ngOnInit(): void {
@@ -136,7 +136,7 @@ export class MoneyComponent implements OnInit {
             console.error('Error:', error);
           }
         });
-        
+
       }
     })
   }

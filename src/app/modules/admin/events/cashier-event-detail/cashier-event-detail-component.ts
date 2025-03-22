@@ -19,6 +19,7 @@ import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { EventStatus } from '../event-status.enum';
 import { CashierDetailComponent } from '../../cashier-detail/cashier-detail-component';
 import { AddCashierComponent } from '../add-cashier/add-cashier.component';
+import { ConfirmationService } from 'app/services/confirmation.service';
 @Component({
     selector: 'app-cashier-event-detail-component',
     templateUrl: './cashier-event-detail-component.html',
@@ -45,16 +46,21 @@ export class CashierEventDetailComponent {
 
     private readonly _httpClient = inject(HttpClient)
     private readonly _authService = inject(AuthService)
+
+
+
     public event: any;
     cashiers = signal([]);
 
-    displayedColumns: string[] = ['operador', 'valorAbertura','valorDinheiro', "saldoTotal", 'Actions'];
+    displayedColumns: string[] = ['operador', 'valorAbertura','valorDinheiro','estado', "saldoTotal", 'Actions'];
     eventStatus = EventStatus;
 
     constructor(
         private readonly dialog: MatDialog,
         private readonly dialogRef: MatDialogRef<CashierEventDetailComponent>,
-        private readonly snackbar: SnackbarService,
+        private readonly snackbarService: SnackbarService,
+        private readonly confirmationService: ConfirmationService,
+
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
         this.event = data;
@@ -79,7 +85,68 @@ export class CashierEventDetailComponent {
     }
 
     endCashier(cashier: any) {
-        // End cashier
+        this.confirmationService.confirm(`Confirmar`, `Tem certeza de que deseja encerrar as vendas ${cashier.operador}?`).subscribe(result => {
+            if (result) {
+              this._httpClient.request('POST', `${environment.API_URL}caixa/AlterarCaixaParaAguardandoFechamento/${cashier.id}`, {
+                headers: {
+                  "Authorization": `Bearer ${this._authService.accessToken}`,
+                  "Content-Type": "application/json" // Ensure JSON is sent properly
+                },
+              }).subscribe({
+                next: (response : ApiResponse<any>) => {
+                  console.log(response)
+                  if(response.success){
+
+
+                    this.snackbarService.success("Caixa encerrado com sucesso !");
+                    this.fetchCashierList();
+
+                  }
+
+                  if (response.error) {
+                    this.snackbarService.error(response.errors.join(", "))
+                  }
+                },
+                error: (error) => {
+                  console.error('Error:', error);
+                }
+              });
+
+            }
+          })
+    }
+
+
+    reOpenCashier(cashier: any) {
+        this.confirmationService.confirm(`Confirmar`, `Tem certeza de que deseja reabrir as vendas ${cashier.operador}?`).subscribe(result => {
+            if (result) {
+              this._httpClient.request('POST', `${environment.API_URL}caixa/ReabrirCaixa/${cashier.id}`, {
+                headers: {
+                  "Authorization": `Bearer ${this._authService.accessToken}`,
+                  "Content-Type": "application/json" // Ensure JSON is sent properly
+                },
+              }).subscribe({
+                next: (response : ApiResponse<any>) => {
+                  console.log(response)
+                  if(response.success){
+
+
+                    this.snackbarService.success("Caixa reaberto com sucesso !");
+                    this.fetchCashierList();
+
+                  }
+
+                  if (response.error) {
+                    this.snackbarService.error(response.errors.join(", "))
+                  }
+                },
+                error: (error) => {
+                  console.error('Error:', error);
+                }
+              });
+
+            }
+          })
     }
 
     cashierDetails(cashier: any) {
@@ -122,6 +189,8 @@ export class CashierEventDetailComponent {
                 );
 
                 this.cashiers.set(sortedCashiers);
+
+                console.log(data.result);
 
             }
         })

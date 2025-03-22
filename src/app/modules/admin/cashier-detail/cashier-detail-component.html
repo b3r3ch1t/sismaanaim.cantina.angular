@@ -93,7 +93,7 @@
                     </ng-container>
 
                     <ng-container matColumnDef="AceitaEstorno">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estorno </th>
+                        <th mat-header-cell class="border border-gray-300 p-2"  *matHeaderCellDef mat-sort-header> Estorno </th>
                         <td mat-cell *matCellDef="let moeda">
                           <mat-checkbox disableRipple  checked="{{ moeda.aceitaEstorno }}" />
                         </td>
