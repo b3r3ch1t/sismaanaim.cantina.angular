@@ -5,5 +5,6 @@ export interface ApiResponse<K> {
     result: K;
     success : boolean;
     totalRecords : number;
+    message: string;
 }
 

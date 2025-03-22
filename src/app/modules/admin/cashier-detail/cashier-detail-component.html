@@ -1,0 +1,115 @@
+<h2 mat-dialog-title>Detalhe do Caixa - {{cashier.operador}}</h2>
+<mat-dialog-content>
+    <p><strong>Nome:</strong> {{ cashier.operador }}</p>
+    <p><strong>Valor Abertura :</strong> {{ cashier.valorAbertura | customCurrency }}</p>
+    <p><strong>Saldo em dinheiro:</strong> {{ cashier.saldoDinheiro | customCurrency}}</p>
+    <p><strong>Status:</strong> {{ cashier.estadoCaixa}}</p>
+
+
+    <mat-tab-group>
+        <mat-tab label="Saldo por Moeda">
+
+            <div>
+                <table mat-table matSort #moedaSort="matSort" [dataSource]="totalPorMoedasDataSource"
+                    class="border border-gray-300 w-full mt-2">
+
+
+                    <ng-container matColumnDef="Descrição">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef class="border border-gray-300 p-2">
+                            Descrição </th>
+                        <td mat-cell class="border border-gray-300 p-2" *matCellDef="let moeda"> {{ moeda.descricao }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Valor">
+                        <th mat-header-cell mat-sort-header class="border border-gray-300 p-2" *matHeaderCellDef> Valor
+                        </th>
+                        <td mat-cell class="border border-gray-300 p-2" *matCellDef="let moeda"> {{ moeda.valor |
+                            customCurrency }} </td>
+                    </ng-container>
+
+
+                    <!-- Table Headers and Rows -->
+                    <thead>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border border-gray-300 p-2" mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </mat-tab>
+        <mat-tab label="Histórico">
+
+            <div>
+                <mat-paginator [pageSize]="5" [pageSizeOptions]="[5,25, 50, 100]" showFirstLastButtons></mat-paginator>
+
+
+                <table mat-table #historySort="matSort" matSort  [dataSource]="historyDatasource" class="border border-gray-300 w-full mt-2">
+
+
+                    <ng-container matColumnDef="Horario">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="border border-gray-300 p-2">
+                            Horário </th>
+                        <td mat-cell class="border border-gray-300 p-2" *matCellDef="let moeda"> {{ moeda.horario |
+                            customDate }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ClienteNome">
+                        <th mat-header-cell mat-sort-header class="border border-gray-300 p-2" *matHeaderCellDef> Nome
+                        </th>
+                        <td mat-cell class="border border-gray-300 p-2" *matCellDef="let moeda"> {{ moeda.clienteNome }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="TipoOperacao">
+                        <th mat-header-cell mat-sort-header class="border border-gray-300 p-2" *matHeaderCellDef>
+                            Operação </th>
+                        <td mat-cell class="border border-gray-300 p-2" *matCellDef="let moeda"> {{ moeda.tipoOperacao
+                            }}
+                        </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="Valor">
+                        <th mat-header-cell mat-sort-header class="border border-gray-300 p-2" *matHeaderCellDef> Valor
+                        </th>
+                        <td mat-cell class="border border-gray-300 p-2" *matCellDef="let moeda"> {{ moeda.valor |
+                            customCurrency }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Actions">
+                        <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Ações </th>
+                        <td mat-cell class="border border-gray-300 p-2" *matCellDef="let moeda"> </td>
+                    </ng-container>
+
+
+                    <!-- Table Headers and Rows -->
+                    <thead>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorico"></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border border-gray-300 p-2" mat-row
+                            *matRowDef="let row; columns: displayedColumnsHistorico;"></tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+
+
+
+
+
+
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>

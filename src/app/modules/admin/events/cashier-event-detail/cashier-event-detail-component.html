@@ -1,0 +1,60 @@
+<h2 mat-dialog-title>Caixas</h2>
+<mat-dialog-content>
+
+    @if(eventStatus.Aberto == event.estadoEvento){
+    <div class="max-w-128">
+        <button class="mb-5 bg-blue-500 text-white" mat-stroked-button (click)="addCaixa()">Adicionar</button>
+    </div>
+    }
+
+    <table mat-table [dataSource]="cashiers()" class="border border-gray-300 w-full mt-2">
+
+
+        <ng-container matColumnDef="operador">
+            <th mat-header-cell *matHeaderCellDef class="border border-gray-300 p-2"> Operador </th>
+            <td mat-cell class="border border-gray-300 p-2" *matCellDef="let cashier"> {{ cashier.operador }} </td>
+        </ng-container>
+
+        <!-- Claim Value Column -->
+        <ng-container matColumnDef="valorAbertura">
+            <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Valor abertura </th>
+            <td mat-cell class="border border-gray-300 p-2" *matCellDef="let cashier"> {{ cashier.valorAbertura |
+                customCurrency }} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="Actions">
+            <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Ações </th>
+            <td mat-cell *matCellDef="let cashier">
+                <div class="flex flex-wrap gap-2 py-2">
+                    <button class="text-white bg-teal-500" (click)="cashierDetails(cashier)" mat-flat-button>Detalhe do
+                        Caixa</button>
+
+
+                    @if(eventStatus.Aberto == event.estadoEvento){
+
+                    <button mat-flat-button (click)="endCashier(cashier)"
+                        class="text-white bg-red-500">Fechar Caixa</button>
+                    }
+
+
+                </div>
+            </td>
+        </ng-container>
+
+        <thead>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        </thead>
+        <tbody>
+            <tr class="border border-gray-300 p-2" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </tbody>
+
+    </table>
+
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>

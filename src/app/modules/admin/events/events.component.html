@@ -44,9 +44,13 @@
                             }
 
                             @if(eventStatus.Aberto == Event.estadoEvento){
-                            <button mat-flat-button (click)="endEventSelling(Event)" class="text-white bg-blue-500">Encerrar vendas Evento</button>
+
+                            <button mat-flat-button (click)="endEventSelling(Event)" class="text-white bg-blue-500">Encerrar vendas</button>
                             <button mat-flat-button (click)="endEvent(Event)" class="text-white bg-blue-500">Encerar evento</button>
                             }
+
+                            <button mat-flat-button (click)="showCashier(Event)" class="text-white bg-green-500">Caixas</button>
+
                         </div>
                     </td>
                 </ng-container>

@@ -66,7 +66,7 @@ export class UsersComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 if (result.response.success) {
-                    this.snackbarService.success("Forma de pagamento criado com sucesso")
+                    this.snackbarService.success("Usuário adicionado com sucesso")
                     this.fetchUsers()
                 }
             }
@@ -94,7 +94,7 @@ export class UsersComponent implements OnInit {
                     body: user.id
                 }).subscribe({
                     next: (response: ApiResponse<any>) => {
-                        console.log(response)
+
                         if (response.success) {
                             this.snackbarService.success("Senha alterada com sucesso")
                             this.fetchUsers()
@@ -156,8 +156,10 @@ export class UsersComponent implements OnInit {
             }))
             .subscribe((data: ApiResponse<any>) => {
                 if (data.success) {
+
                     this.users.set(data.result)
-                    console.log(this.users())
+
+
                     const dataSource = new MatTableDataSource(this.users())
                     if (dataSource) {
 

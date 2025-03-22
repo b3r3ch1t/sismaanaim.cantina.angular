@@ -15,6 +15,7 @@ import { ConfirmationService } from 'app/services/confirmation.service';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { EventFormComponent } from './event-form/event-form.component';
 import { EventStatus } from './event-status.enum';
+import { CashierEventDetailComponent } from './cashier-event-detail/cashier-event-detail-component';
 
 @Component({
   selector: 'app-events',
@@ -182,7 +183,7 @@ export class EventsComponent implements OnInit {
       .subscribe((data: ApiResponse<Array<{ id: string, descricao: string, aceitaEstorno: boolean }>>) => {
         if (data.success) {
           this.events.set(data.result)
-          console.log(this.events())
+
           const dataSource = new MatTableDataSource(this.events())
           if (dataSource) {
             dataSource.sortingDataAccessor = (item: any, property) => {
@@ -204,5 +205,14 @@ export class EventsComponent implements OnInit {
           }
         }
       });
+  }
+
+
+  showCashier(event){
+
+    this.dialog.open(CashierEventDetailComponent, {
+        data: event,
+        width: "700px"
+    })
   }
 }
