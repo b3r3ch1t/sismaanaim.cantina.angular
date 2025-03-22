@@ -5,7 +5,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { environment } from 'app/environments/environment';
 import { catchError, forkJoin, of } from 'rxjs';
 import { ApiResponse } from 'app/core/api/api-response.types';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CurrencyPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -19,9 +19,9 @@ import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 
 
 interface Operator {
-    userId: number;
-    name: string;
-    id:string;
+    userId: string;
+    nome: string;
+    operadorId: string;
     // Outras propriedades relevantes
 }
 
@@ -57,10 +57,11 @@ export class AddCashierComponent implements OnInit {
 
 
     constructor(
-        private fb: FormBuilder,
-        private http: HttpClient,
-        private authService: AuthService,
+        private readonly fb: FormBuilder,
+        private readonly http: HttpClient,
+        private readonly authService: AuthService,
 
+        private readonly dialogRef: MatDialogRef<AddCashierComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
         this.cashierForm = this.fb.group({
@@ -108,17 +109,18 @@ export class AddCashierComponent implements OnInit {
 
 
     filterAvailableOperators(): void {
-        const eventOperatorIds = new Set(this.eventOperators.map(op => String(op.id)));
+        const eventOperatorIds = new Set(this.eventOperators.map(op => op.operadorId));
         console.log('IDs dos operadores do evento:', Array.from(eventOperatorIds));
 
         this.availableOperators = this.allOperators.filter(op => {
-          const isInEvent = eventOperatorIds.has(String(op.userId));
-          console.log(`Operador ${op.userId} está no evento? ${isInEvent}`);
-          return !isInEvent;
-        });
+            const isInEvent = eventOperatorIds.has(op.userId);
+            console.log(`Operador ${op.userId} está no evento? ${isInEvent}`);
+            return !isInEvent;
+        })
+            .sort((a, b) => a.nome.localeCompare(b.nome));
 
         console.log('Operadores disponíveis para seleção:', this.availableOperators);
-      }
+    }
 
 
     addCashier(): void {
@@ -132,6 +134,6 @@ export class AddCashierComponent implements OnInit {
     }
 
     closeDialog(): void {
-        // Lógica para fechar o modal
+        this.dialogRef.close();
     }
 }
