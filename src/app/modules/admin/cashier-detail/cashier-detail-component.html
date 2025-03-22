@@ -92,6 +92,13 @@
                             customCurrency }} </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="AceitaEstorno">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estorno </th>
+                        <td mat-cell *matCellDef="let moeda">
+                          <mat-checkbox disableRipple  checked="{{ moeda.aceitaEstorno }}" />
+                        </td>
+                      </ng-container>
+
                     <ng-container matColumnDef="Actions">
                         <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Ações </th>
                         <td mat-cell class="border border-gray-300 p-2" *matCellDef="let moeda"> </td>

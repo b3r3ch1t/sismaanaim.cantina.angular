@@ -54,7 +54,7 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
     @ViewChild('moedaSort') moedaSort!: MatSort;
 
     displayedColumns: string[] = ['Descrição', 'Valor'];
-    displayedColumnsHistorico: string[] = ['Horario', 'ClienteNome', 'TipoOperacao', 'Valor', 'Actions'];
+    displayedColumnsHistorico: string[] = ['Horario', 'ClienteNome', 'TipoOperacao', 'Valor','AceitaEstorno', 'Actions'];
     historyDatasource = new MatTableDataSource([]);
 
     totalPorMoedasDataSource = new MatTableDataSource<any>([]);
@@ -95,6 +95,8 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
                     return item.tipoOperacao?.toLowerCase();
                 case 'Valor':
                     return item.valor;
+                    case 'Estorno':
+                        return item.aceitaEstorno;
                 default:
                     return item[property];
             }
