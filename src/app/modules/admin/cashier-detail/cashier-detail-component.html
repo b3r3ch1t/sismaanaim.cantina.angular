@@ -43,6 +43,18 @@
         </mat-tab>
         <mat-tab label="Histórico">
 
+            <div class="inventory-header">
+                <mat-form-field appearance="fill" class="search-field">
+                    <mat-label>Filtro</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="filtro">
+                </mat-form-field>
+
+                <button *ngIf="usuarioAdministrador" class="ml-4" mat-flat-button [color]="'primary'" (click)="createEvento()">
+                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                    <span class="ml-2 mr-1">Adicionar Evento</span>
+                </button>
+            </div>
+
             <div>
                 <mat-paginator [pageSize]="5" [pageSizeOptions]="[5,25, 50, 100]" showFirstLastButtons></mat-paginator>
 
@@ -96,6 +108,7 @@
                     </tbody>
 
                 </table>
+
 
             </div>
         </mat-tab>

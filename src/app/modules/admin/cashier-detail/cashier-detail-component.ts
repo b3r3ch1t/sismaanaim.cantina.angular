@@ -47,6 +47,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
     ],
 })
 export class CashierDetailComponent implements OnInit, AfterViewInit {
+
     public cashier: any;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('historySort') historySort!: MatSort;
@@ -116,6 +117,11 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
 
     closeDialog() {
         this.dialogRef.close();
+    }
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.historyDatasource.filter = filterValue.trim().toLowerCase();
     }
 }
 
