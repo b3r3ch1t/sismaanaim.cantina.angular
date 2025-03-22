@@ -14,7 +14,7 @@ import { environment } from 'app/environments/environment';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { catchError } from 'rxjs';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgLocaleLocalization } from '@angular/common';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { EventStatus } from '../event-status.enum';
 import { CashierDetailComponent } from '../../cashier-detail/cashier-detail-component';
@@ -48,7 +48,7 @@ export class CashierEventDetailComponent {
     public event: any;
     cashiers = signal([]);
 
-    displayedColumns: string[] = ['operador', 'valorAbertura', 'Actions'];
+    displayedColumns: string[] = ['operador', 'valorAbertura','valorDinheiro', "saldoTotal", 'Actions'];
     eventStatus = EventStatus;
 
     constructor(
@@ -83,11 +83,21 @@ export class CashierEventDetailComponent {
     }
 
     cashierDetails(cashier: any) {
-        this.dialog.open(CashierDetailComponent, {
-            data: cashier,
-            width: "95%"
-        })
-    }
+        const dialogRef = this.dialog.open(CashierDetailComponent, {
+          data: cashier,
+          width: "95%"
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            // Aqui você pode executar sua lógica após o fechamento
+                this.fetchCashierList();
+          } else {
+            console.log('O diálogo foi fechado sem resultado');
+          }
+        });
+      }
+
 
     fetchCashierList() {
         this._httpClient.get(`${environment.API_URL}caixa/listacaixasbyeventoid/${this.event.id}`, {
@@ -99,8 +109,20 @@ export class CashierEventDetailComponent {
         })).subscribe((data: ApiResponse<any>) => {
 
             if (data.success) {
+                const cashiersWithTotal = data.result.map(cashier => ({
+                  ...cashier,
+                  saldoTotal: cashier.totalCaixaFormaPagamentoDto?.reduce(
+                    (sum, item) => sum + item.valor,
+                    0
+                  ) || 0
+                }));
 
-                this.cashiers.set(data.result);
+                const sortedCashiers = cashiersWithTotal.sort((a, b) =>
+                  a.operador.localeCompare(b.operador)
+                );
+
+                this.cashiers.set(sortedCashiers);
+
             }
         })
     }

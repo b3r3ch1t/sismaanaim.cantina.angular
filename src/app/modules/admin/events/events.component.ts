@@ -212,7 +212,7 @@ export class EventsComponent implements OnInit {
 
     this.dialog.open(CashierEventDetailComponent, {
         data: event,
-        width: "700px"
+        width: "99%"
     })
   }
 }

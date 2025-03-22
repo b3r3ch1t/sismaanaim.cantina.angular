@@ -1,0 +1,30 @@
+.w-full {
+    width: 100%;
+  }
+
+  .bg-primary {
+    background-color: #03a9f4;
+    color: white;
+  }
+
+  .bg-accent {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  .bg-warn {
+    background-color: #ff9800;
+    color: white;
+  }
+
+  .mat-card {
+    padding: 16px;
+  }
+
+  .mat-card h2 {
+    margin: 0;
+  }
+
+  .mat-card p {
+    margin: 4px 0 0 0;
+  }

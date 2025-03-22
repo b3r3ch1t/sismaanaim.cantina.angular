@@ -3,29 +3,47 @@
 <mat-dialog-content>
 
     <div class="flex justify-between flex-col mb-6">
-        <h3 class="text-lg font-bold">Claims</h3>
+        <h3 class="text-lg font-bold">Operador</h3>
         <form [formGroup]="cashierForm" (ngSubmit)="addCashier()">
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Selecionar Operador</mat-label>
-            <mat-select formControlName="selectedOperator">
-              @for (cashier of availableOperators; track $index) {
-                <mat-option [value]="cashier">
-                  {{ cashier.nome }}
-                </mat-option>
-              }
-            </mat-select>
-            @if (cashierForm.controls['selectedOperator'].hasError('required')) {
-              <mat-error>
-                Selecione o operador
-              </mat-error>
-            }
-          </mat-form-field>
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Selecionar Operador</mat-label>
+                <mat-select formControlName="selectedOperator" #paymentMethodDropdown="matSelect">
+                    @for (cashier of availableOperators; track $index) {
+                    <mat-option [value]="cashier">
+                        {{ cashier.nome }}
+                    </mat-option>
+                    }
+                </mat-select>
+                @if (cashierForm.controls['selectedOperator'].hasError('required')) {
+                <mat-error>
+                    Selecione o operador
+                </mat-error>
+                }
+            </mat-form-field>
 
-          <button mat-flat-button color="primary" type="submit" [disabled]="cashierForm.invalid">
-            Abrir operador
-          </button>
+
+            <!-- Valor da Recarga -->
+            <mat-form-field class="w-full">
+                <mat-label>Valor da Recarga</mat-label>
+                <span matPrefix>R$&nbsp;</span>
+                <input formControlName="valor" matInput currencyMask
+                    [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value" type="text"
+                    placeholder="Informe o valor da abertura do caixa" (keypress)="handleRechargeValueInput($event)">
+            </mat-form-field>
+
+            <mat-error *ngIf="cashierForm.get('valor')?.hasError('required')">
+                Valor é obrigatório
+            </mat-error>
+            <mat-error *ngIf="cashierForm.get('valor')?.hasError('min')">
+                Valor deve ser maior que zero
+            </mat-error>
+
+            <button mat-flat-button color="primary" type="submit" [disabled]="cashierForm.invalid"
+                (click)="handleSubmit()">
+                Abrir caixa
+            </button>
         </form>
-      </div>
+    </div>
 
 </mat-dialog-content>
 

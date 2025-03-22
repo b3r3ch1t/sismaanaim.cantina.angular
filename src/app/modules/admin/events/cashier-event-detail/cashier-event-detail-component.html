@@ -16,13 +16,25 @@
             <td mat-cell class="border border-gray-300 p-2" *matCellDef="let cashier"> {{ cashier.operador }} </td>
         </ng-container>
 
-        <!-- Claim Value Column -->
+
         <ng-container matColumnDef="valorAbertura">
             <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Valor abertura </th>
             <td mat-cell class="border border-gray-300 p-2" *matCellDef="let cashier"> {{ cashier.valorAbertura |
                 customCurrency }} </td>
         </ng-container>
 
+
+        <ng-container matColumnDef="valorDinheiro">
+            <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Saldo em dinheiro </th>
+            <td mat-cell class="border border-gray-300 p-2" *matCellDef="let cashier"> {{ cashier.saldoDinheiro |
+                customCurrency }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="saldoTotal">
+            <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Saldo Total </th>
+            <td mat-cell class="border border-gray-300 p-2" *matCellDef="let cashier"> {{ cashier.saldoTotal |
+                customCurrency }} </td>
+        </ng-container>
 
         <ng-container matColumnDef="Actions">
             <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Ações </th>
