@@ -18,6 +18,7 @@ import { CurrencyPipe } from '@angular/common';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { EventStatus } from '../event-status.enum';
 import { CashierDetailComponent } from '../../cashier-detail/cashier-detail-component';
+import { AddCashierComponent } from '../add-cashier/add-cashier.component';
 @Component({
     selector: 'app-cashier-event-detail-component',
     templateUrl: './cashier-event-detail-component.html',
@@ -69,7 +70,12 @@ export class CashierEventDetailComponent {
     }
 
     addCaixa() {
-        // Add caixa
+
+
+        this.dialog.open(AddCashierComponent, {
+            data:  this.event,
+            width: "95%"
+        })
     }
 
     endCashier(cashier: any) {
