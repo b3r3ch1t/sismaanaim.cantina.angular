@@ -74,7 +74,7 @@ export class SummaryOperationsGraphicComponent {
                 type: "line"
             },
             stroke: {
-                width: [0, 2, 5, 3],
+                width: [2, 2, 5, 5],
             },
             title: {
                 text: "Resumo"

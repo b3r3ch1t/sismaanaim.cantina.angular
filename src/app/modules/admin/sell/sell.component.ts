@@ -126,7 +126,6 @@ export class AttendantSellComponent implements OnInit {
     ).subscribe((response: ApiResponse<any>) => {
       if (response.success) {
         this.currentAttendant.set(response.result)
-        console.log(this.currentAttendant())
         this.inputDisabled.set(false)
       }
 

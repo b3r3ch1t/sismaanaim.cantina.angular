@@ -14,18 +14,11 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                <tr>
-                    <td class="px-4 py-2 text-sm font-medium text-gray-600">Cantina</td>
-                    <td class="px-4 py-2 text-sm font-semibold text-gray-900">R$ 234.132,00</td>
-                    <td class="px-4 py-2 text-sm font-semibold text-green-600">R$ 234.132,00</td>
+                <tr *ngFor="let p of permissionaries()">
+                    <td class="px-4 py-2 text-sm font-medium text-gray-600">{{ p.permissionarioNome }}</td>
+                    <td class="px-4 py-2 text-sm font-semibold text-gray-900">{{ p.consumo | customCurrency }}</td>
+                    <td class="px-4 py-2 text-sm font-semibold text-green-600">{{ p.reembolso | customCurrency }}</td>
                 </tr>
-                <!-- Adicione mais linhas conforme necessário -->
-                <!--
-          <tr>
-            <td class="px-4 py-2 text-sm font-medium text-gray-600">Outro</td>
-            <td class="px-4 py-2 text-sm font-semibold text-blue-600">R$ 100.000,00</td>
-          </tr>
-          -->
             </tbody>
         </table>
     </div>

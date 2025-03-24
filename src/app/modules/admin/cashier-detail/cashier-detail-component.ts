@@ -68,8 +68,6 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
         this.cashier = data;
         this.totalPorMoedasDataSource = new MatTableDataSource(data.totalCaixaFormaPagamentoDto);
 
-        console.log(this.cashier);
-        console.log(data.historicoCaixaDto);
 
         this.historicoCaixaDto = data.historicoCaixaDto;
 
