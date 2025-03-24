@@ -35,8 +35,8 @@ export class MoneyComponent implements OnInit {
   displayedColumns = [
     "Descricao",
     "Aceita Estorno",
-    "Ordem débito",
-    "Ações"
+    "Ordem debito",
+    "Acoes"
   ]
 
   constructor(
