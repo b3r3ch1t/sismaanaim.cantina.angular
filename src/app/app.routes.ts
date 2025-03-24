@@ -326,7 +326,7 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'permissionary/attendant', loadChildren: () => import('app/modules/admin/permissionary-attendant/permissionary-attendant.routes') },
+            { path: 'permissionary/attendant', loadChildren: () => import('app/modules/admin/permissionary-attendant/attendants.routes') },
         ]
     },
 
