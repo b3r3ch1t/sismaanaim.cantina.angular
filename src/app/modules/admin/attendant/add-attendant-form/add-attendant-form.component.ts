@@ -54,7 +54,7 @@ export class AddAttendantFormComponent {
   updateAvailableUsers() {
     // Extract claim IDs the user already has
     const attendants = new Set(this.attendants().map(user => user.userId));
-  
+
     // Filter out claims that the user already has
     const available = this.users().filter(user => {
       return !attendants.has(user.userId);

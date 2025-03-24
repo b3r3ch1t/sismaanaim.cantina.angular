@@ -15,8 +15,9 @@ import { SnackbarService } from 'app/services/snackbar.service';
 import { ConfirmationService } from 'app/services/confirmation.service';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { UserProfile } from 'app/core/user/user-profile.enum';
-import { UserDetailComponent } from '../users/user-detail/user-detail.component'; 
-import { AddAttendantFormComponent } from './add-attendant-form/add-attendant-form.component';
+import { UserDetailComponent } from '../users/user-detail/user-detail.component';
+import { AddAttendantFormComponent } from '../attendant/add-attendant-form/add-attendant-form.component';
+import { AddOperatorFormComponent } from './add-operators-form/add-operators-form.component';
 
 @Component({
   selector: 'app-operators',
@@ -55,15 +56,15 @@ export class OperatorsComponent implements OnInit {
   }
 
 
-  addAttendant() {
-    const dialogRef = this.dialog.open(AddAttendantFormComponent, {
+  addOperator() {
+    const dialogRef = this.dialog.open(AddOperatorFormComponent, {
       width: '400px',
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.response.success) {
-          this.snackbarService.success("Forma de pagamento criado com sucesso")
+          this.snackbarService.success("Operador adicionado com sucesso!")
           this.fetchUsers()
         }
       }
@@ -79,20 +80,23 @@ export class OperatorsComponent implements OnInit {
   }
 
   removeUser(user) {
-    this.confirmationService.confirm("Confirmar", "Tem certeza de que deseja remover este usuário?").subscribe(result => {
+
+    this.confirmationService.confirm("Confirmar", "Tem certeza de que deseja remover este operador?").subscribe(result => {
       if (result) {
-        this._httpClient.request('DELETE', `${environment.API_URL}account/deleteuser`, {
+        this._httpClient.request('DELETE', `${environment.API_URL}account/deleteprofile`, {
           headers: {
             "Authorization": `Bearer ${this._authService.accessToken}`,
             "Content-Type": "application/json" // Ensure JSON is sent properly
           },
-          body: user.id
+          body:{
+            userId:user.userId,
+            valorPerfil: 1
+          }
         }).subscribe({
           next: (response: ApiResponse<any>) => {
             console.log(response)
             if (response.success) {
-              console.log('Deleted Successfully:', response);
-              this.snackbarService.success("Usuário removido com sucesso")
+              this.snackbarService.success("Operador removido com sucesso !")
               this.fetchUsers()
             }
 

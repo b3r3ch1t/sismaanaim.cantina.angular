@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Adicionar Operador </h2>
+<mat-dialog-content>
+  <form [formGroup]="addUserForm" (submit)="submitForm()" class="space-y-4">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Selecione o usuário</mat-label>
+      <mat-select formControlName="user">
+        @for (user of availableUsers(); track $index) {
+          <mat-option [value]="user">
+            {{ user.nome }}
+          </mat-option>
+        }
+      </mat-select>
+      @if (addUserForm.controls['user'].hasError('required')) {
+        <mat-error>User is required</mat-error>
+      }
+    </mat-form-field>
+
+
+    <div class="flex justify-end">
+      <button mat-button type="button" (click)="closeModal()">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="addUserForm.invalid">Adicionar</button>
+    </div>
+  </form>
+
+</mat-dialog-content>
+
+
