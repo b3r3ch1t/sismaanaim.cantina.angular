@@ -1,6 +1,6 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ApiResponse } from 'app/core/api/api-response.types';
 import { AuthService } from 'app/core/auth/auth.service';
 import { environment } from 'app/environments/environment';
@@ -34,12 +34,15 @@ interface SummaryBalanceClients {
     templateUrl: './summary-balance-clients.component.html',
     styleUrl: './summary-balance-clients.component.scss'
 })
-export class SummaryBalanceClientsComponent {
+export class SummaryBalanceClientsComponent implements OnInit, OnDestroy {
     private readonly _httpClient = inject(HttpClient)
     private readonly _authService = inject(AuthService)
 
     public summaryBalanceClients = signal<SummaryBalanceClients>(null);
     private _intervalId?: any;
+
+
+
 
 
     ngOnInit(): void {

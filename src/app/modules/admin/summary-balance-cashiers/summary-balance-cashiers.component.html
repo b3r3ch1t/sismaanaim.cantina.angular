@@ -1,6 +1,6 @@
 <div class="flex items-start justify-between">
-    <div class="truncate text-lg font-medium leading-6 tracking-tight">
-        Caixas
+    <div class="text-4xl font-bold leading-none tracking-tight text-orange-500 sm:text-3xl">
+       Resumo Caixas
     </div>
 </div>
 <div class="mt-2 flex flex-col items-left">
@@ -15,33 +15,21 @@
                     <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">PIX</th>
                     <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Total</th>
                 </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                <tr>
-                    <td class="px-4 py-2 text-sm font-medium text-gray-600">Joe Doe</td>
-                    <td class="px-4 py-2 text-sm  text-gray-900">R$ 4.132,00</td>
-                    <td class="px-4 py-2 text-sm  text-gray-900">R$ 4.132,00</td>
-                    <td class="px-4 py-2 text-sm  font-semibold  text-green-600">R$ 4.132,00</td>
-                <tr>
-                    <td class="px-4 py-2 text-sm font-medium text-gray-600">Jane Doe</td>
-                    <td class="px-4 py-2 text-sm text-gray-900">R$ 4.132,00</td>
-                    <td class="px-4 py-2 text-sm text-gray-900">R$ 4.132,00</td>
-                    <td class="px-4 py-2 text-sm font-semibold text-green-600">R$ 4.132,00</td>
+            </thead><tbody class="divide-y divide-gray-200">
+                <tr *ngFor="let item of summaryBalanceCashies">
+                  <td class="px-4 py-2 text-sm font-medium text-gray-600">{{ item.operador }}</td>
+                  <td class="px-4 py-2 text-sm text-gray-900">R$ {{ item.saldoDinheiro | customCurrency }}</td>
+                  <td class="px-4 py-2 text-sm text-gray-900">R$ {{ item.saldoPix | customCurrency }}</td>
+                  <td class="px-4 py-2 text-sm font-semibold text-green-600">R$ {{ item.saldoTotal | customCurrency }}</td>
                 </tr>
-                <!-- Adicione mais linhas conforme necessário -->
-                <!--
-                <tr>
-                  <td class="px-4 py-2 text-sm font-medium text-gray-600">Outro</td>
-                  <td class="px-4 py-2 text-sm font-semibold text-blue-600">R$ 100.000,00</td>
-                </tr>
-                -->
-            </tbody>
+              </tbody>
+
             <tfoot class="bg-gray-100 font-bold">
                 <tr>
                     <th class="px-4 py-2 text-left text-sm text-gray-700">Total</th>
-                    <th class="px-4 py-2 text-left text-sm text-gray-700">R$ 4.132,00</th>
-                    <th class="px-4 py-2 text-left text-sm text-gray-700">R$ 4.132,00</th>
-                    <th class="px-4 py-2 text-left text-sm text-green-600">R$ 4.132,00</th>
+                    <th class="px-4 py-2 text-left text-sm text-gray-700">{{ totalDinheiro | customCurrency }}</th>
+                    <th class="px-4 py-2 text-left text-sm text-gray-700">{{ totalPix | customCurrency }}</th>
+                    <th class="px-4 py-2 text-left text-sm text-green-600">{{ totalGeral | customCurrency }}</th>
                 </tr>
             </tfoot>
 
