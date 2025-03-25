@@ -70,93 +70,74 @@ export class SummarySellGraphicComponent implements OnInit, OnDestroy {
 
 
     fetchSummary() {
-         const now = new Date().toLocaleTimeString();
+        this._httpClient.get(`${environment.API_URL}dashboard/getresumovendas`, {
+            headers: {
+                "Authorization": `Bearer ${this._authService.accessToken}`
+            }
+        })
+        .pipe(catchError((error) => {
+            console.error(error);
+            throw error;
+        }))
+        .subscribe((data: ApiResponse<any>) => {
+            if (data.success) {
+                const result = data.result;
 
+                // Ordenar por data e hora
+                const sorted = result.sort((a, b) => new Date(a.periodoInicio).getTime() - new Date(b.periodoInicio).getTime());
 
-                this._httpClient.get(`${environment.API_URL}dashboard/getresumovendaseabastecimento`, {
-                    headers: {
-                        "Authorization": `Bearer ${this._authService.accessToken}`
-                    }
-                })
-                    .pipe(catchError((error) => {
-                        console.log(error);
-                        throw error;
-                    }))
-                    .subscribe((data: ApiResponse<any>) => {
-                        if (data.success) {
-                            const result = data.result;
+                const labels = sorted.map(item => item.periodoInicio); // formato ISO (datetime)
+                const vendaTotal = sorted.map(item => item.total);
+                const vendaQtd = sorted.map(item => item.contagem);
 
-                            const labelsSet = new Set<string>();
-
-                            // Combinar todos os períodos únicos
-                            [...result.vendas, ...result.abastecimentos].forEach(item =>
-                                labelsSet.add(item.periodoInicio)
-                            );
-
-                            const labels = Array.from(labelsSet).sort();
-
-                            const mapByPeriod = (collection: any[]) =>
-                                labels.map(label => {
-                                    const item = collection.find((x: any) => x.periodoInicio === label);
-                                    return item ? item.total : 0;
-                                });
-
-                            const mapByCount = (collection: any[]) =>
-                                labels.map(label => {
-                                    const item = collection.find((x: any) => x.periodoInicio === label);
-                                    return item ? item.contagem : 0;
-                                });
-
-                            const vendidoTotal = mapByPeriod(result.vendas);
-                            const vendidoQtd = mapByCount(result.vendas);
-
-                            this.chartOptions = {
-                                series: [
-                                    {
-                                        name: "Vendido-R$",
-                                        type: "column",
-                                        data: vendidoTotal
-                                    },
-                                    {
-                                        name: "Vendido-Qtd",
-                                        type: "line",
-                                        data: vendidoQtd
-                                    },
-                                ],
-                                chart: {
-                                    height: 350,
-                                    type: "line"
-                                },
-                                stroke: {
-                                    width: [2, 2, 5, 5],
-                                },
-                                title: {
-                                    text: "Resumo"
-                                },
-                                dataLabels: {
-                                    enabled: true,
-                                    enabledOnSeries: [1]
-                                },
-                                labels: labels,
-                                xaxis: {
-                                    type: "datetime",
-                                    labels: {
-                                        format: "HH:mm"
-                                    }
-                                },
-                                yaxis: [
-                                    {
-                                        title: {
-                                            text: "Vendido"
-                                        }
-                                    },
-                                ]
-                            };
+                this.chartOptions = {
+                    series: [
+                        {
+                            name: "Venda-R$",
+                            type: "column",
+                            data: vendaTotal
+                        },
+                        {
+                            name: "Venda-Qtd",
+                            type: "line",
+                            data: vendaQtd
                         }
-                    });
-
+                    ],
+                    chart: {
+                        height: 350,
+                        type: "line"
+                    },
+                    stroke: {
+                        width: [2, 5],
+                    },
+                    title: {
+                        text: "Resumo"
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        enabledOnSeries: [1]
+                    },
+                    labels: labels, // formato ISO compatível com type: datetime
+                    xaxis: {
+                        type: "datetime",
+                        labels: {
+                            datetimeFormatter: {
+                                hour: "HH:mm"
+                            }
+                        }
+                    },
+                    yaxis: [
+                        {
+                            opposite: true,
+                            title: {
+                                text: "Venda"
+                            }
+                        }
+                    ]
+                };
+            }
+        });
     }
-
 
     ngOnDestroy(): void {
         if (this._intervalId) {

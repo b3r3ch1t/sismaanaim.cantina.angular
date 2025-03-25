@@ -106,9 +106,18 @@ export class AttendantSellComponent implements OnInit {
         console.log(error)
         throw error
       })).subscribe((response: ApiResponse<any>) => {
-        this.snackbar.success("Venda Realizada com sucesso!", 1000 * 10)
-        this.clearInputs()
-        console.log(response)
+
+        if(response.success){
+
+            this.snackbar.success("Venda Realizada com sucesso!", 1000 * 10);
+            this.clearInputs();
+
+            return;
+
+        }
+
+        this.snackbar.error(response.message, 1000 * 10);
+
       })
 
   }

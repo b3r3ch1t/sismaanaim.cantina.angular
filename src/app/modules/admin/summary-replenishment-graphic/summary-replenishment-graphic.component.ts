@@ -53,7 +53,7 @@ export class SummaryReplenishmentGraphicComponent implements OnInit, OnDestroy {
     chartMonthlyExpenses: ApexOptions = {};
     chartYearlyExpenses: ApexOptions = {};
 
-    public chartOptions: Partial<ChartOptions>;
+    public chartOptions: Partial<ChartOptions> = {};
 
     constructor() {
 
@@ -71,95 +71,75 @@ export class SummaryReplenishmentGraphicComponent implements OnInit, OnDestroy {
 
 
     fetchSummary() {
-        const now = new Date().toLocaleTimeString();
-
-
-        this._httpClient.get(`${environment.API_URL}dashboard/getresumovendaseabastecimento`, {
+        this._httpClient.get(`${environment.API_URL}dashboard/getresumoabastecimento`, {
             headers: {
                 "Authorization": `Bearer ${this._authService.accessToken}`
             }
         })
-            .pipe(catchError((error) => {
-                console.log(error);
-                throw error;
-            }))
-            .subscribe((data: ApiResponse<any>) => {
-                if (data.success) {
-                    const result = data.result;
+        .pipe(catchError((error) => {
+            console.error(error);
+            throw error;
+        }))
+        .subscribe((data: ApiResponse<any>) => {
+            if (data.success) {
+                const result = data.result;
 
-                    const labelsSet = new Set<string>();
+                // Ordenar por data e hora
+                const sorted = result.sort((a, b) => new Date(a.periodoInicio).getTime() - new Date(b.periodoInicio).getTime());
 
-                    // Combinar todos os períodos únicos
-                    [...result.vendas, ...result.abastecimentos].forEach(item =>
-                        labelsSet.add(item.periodoInicio)
-                    );
+                const labels = sorted.map(item => item.periodoInicio); // formato ISO (datetime)
+                const abastecidoTotal = sorted.map(item => item.total);
+                const abastecidoQtd = sorted.map(item => item.contagem);
 
-                    const labels = Array.from(labelsSet).sort();
-
-                    const mapByPeriod = (collection: any[]) =>
-                        labels.map(label => {
-                            const item = collection.find((x: any) => x.periodoInicio === label);
-                            return item ? item.total : 0;
-                        });
-
-                    const mapByCount = (collection: any[]) =>
-                        labels.map(label => {
-                            const item = collection.find((x: any) => x.periodoInicio === label);
-                            return item ? item.contagem : 0;
-                        });
-
-
-                    const abastecidoTotal = mapByPeriod(result.abastecimentos);
-                    const abastecidoQtd = mapByCount(result.abastecimentos);
-
-                    this.chartOptions = {
-                        series: [
-
-                            {
-                                name: "Abastecido-R$",
-                                type: "column",
-                                data: abastecidoTotal
-                            },
-                            {
-                                name: "Abastecido-Qtd",
-                                type: "line",
-                                data: abastecidoQtd
+                this.chartOptions = {
+                    series: [
+                        {
+                            name: "Abastecido-R$",
+                            type: "column",
+                            data: abastecidoTotal
+                        },
+                        {
+                            name: "Abastecido-Qtd",
+                            type: "line",
+                            data: abastecidoQtd
+                        }
+                    ],
+                    chart: {
+                        height: 350,
+                        type: "line"
+                    },
+                    stroke: {
+                        width: [2, 5],
+                    },
+                    title: {
+                        text: "Resumo"
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        enabledOnSeries: [1]
+                    },
+                    labels: labels, // formato ISO compatível com type: datetime
+                    xaxis: {
+                        type: "datetime",
+                        labels: {
+                            datetimeFormatter: {
+                                hour: "HH:mm"
                             }
-                        ],
-                        chart: {
-                            height: 350,
-                            type: "line"
-                        },
-                        stroke: {
-                            width: [2, 5],
-                        },
-                        title: {
-                            text: "Resumo"
-                        },
-                        dataLabels: {
-                            enabled: true,
-                            enabledOnSeries: [1]
-                        },
-                        labels: labels,
-                        xaxis: {
-                            type: "datetime",
-                            labels: {
-                                format: "HH:mm"
+                        }
+                    },
+                    yaxis: [
+                        {
+                            opposite: true,
+                            title: {
+                                text: "Abastecido"
                             }
-                        },
-                        yaxis: [
-                            {
-                                opposite: true,
-                                title: {
-                                    text: "Abastecido"
-                                }
-                            }
-                        ]
-                    };
-                }
-            });
-
+                        }
+                    ]
+                };
+            }
+        });
     }
+
 
 
     ngOnDestroy(): void {
