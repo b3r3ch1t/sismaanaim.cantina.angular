@@ -18,7 +18,20 @@
 
     <br>
 
-    <div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl p-6 shadow sm:col-span-2 md:col-span-3">
-        <app-summary-operations-graphic></app-summary-operations-graphic>
-    </div>
+
+    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+        <mat-tab label="Resumo Vendas">
+            <div class="bg-card ...">
+                <app-summary-sell-graphic *ngIf="activeTabIndex === 0"></app-summary-sell-graphic>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Resumo Abastecimentos">
+            <div class="bg-card ...">
+                <app-summary-replenishment-graphic *ngIf="activeTabIndex === 1"></app-summary-replenishment-graphic>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+
+
 </div>

@@ -67,8 +67,6 @@ export class SummaryBalanceCashiersComponent {
             }))
             .subscribe((data: ApiResponse<any>) => {
 
-                console.log(data);
-
                 if (data.success) {
 
                     this.summaryBalanceCashies = data.result as any[];

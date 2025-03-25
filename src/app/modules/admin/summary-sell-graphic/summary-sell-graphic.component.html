@@ -1,0 +1,14 @@
+
+<div class="mt-8 grid w-full grid-flow-row grid-cols-1 gap-6 sm:mt-4 lg:grid-cols-1">
+    <!-- New vs. Closed -->
+    <div class="flex flex-auto flex-col">
+        <div class="flex flex-auto flex-col">
+            <apx-chart class="h-80 w-full flex-auto" [series]="chartOptions.series" [chart]="chartOptions.chart"
+                [yaxis]="chartOptions.yaxis" [xaxis]="chartOptions.xaxis" [labels]="chartOptions.labels"
+                [stroke]="chartOptions.stroke" [title]="chartOptions.title"
+                [dataLabels]="chartOptions.dataLabels" [fill]="chartOptions.fill"
+                [tooltip]="chartOptions.tooltip"></apx-chart>
+        </div>
+    </div>
+
+</div>
