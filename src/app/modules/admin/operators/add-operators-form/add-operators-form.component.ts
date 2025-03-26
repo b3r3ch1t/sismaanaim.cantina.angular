@@ -117,7 +117,7 @@ export class AddOperatorFormComponent {
             }))
             .subscribe((data: ApiResponse<any>) => {
                 if (data.success) {
-                    this.operators.set(data.result)
+                    this.operators.set(data.result);
                     this.updateAvailableUsers()
                 }
             });
@@ -135,9 +135,8 @@ export class AddOperatorFormComponent {
             }))
             .subscribe((data: ApiResponse<any>) => {
                 if (data.success) {
-                    this.users.set(data.result)
-                    console.log(this.users())
-                    this.updateAvailableUsers()
+                    this.users.set(data.result);
+                    this.updateAvailableUsers();
                 }
             });
     }

@@ -269,13 +269,6 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         link: '/reviewer/reviewers'
                     },
 
-                    {
-                        id: 'reviewer-permissionary',
-                        title: 'Permissionários',
-                        type: 'basic',
-                        icon: 'heroicons_outline:user',
-                        link: '/reviewer/permissionario'
-                    },
 
                 ]
 
@@ -284,6 +277,15 @@ export const reviewerNavigation: FuseNavigationItem[] = [
 
 
             },
+
+            {
+                id: 'permissionary',
+                title: 'Permissionários',
+                type: 'basic',
+                icon: 'heroicons_outline:user-plus',
+                link: '/reviewer/permissionario'
+            },
+
 
         ]
 

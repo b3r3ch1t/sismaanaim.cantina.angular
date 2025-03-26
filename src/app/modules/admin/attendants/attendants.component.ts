@@ -15,7 +15,7 @@ import { SnackbarService } from 'app/services/snackbar.service';
 import { ConfirmationService } from 'app/services/confirmation.service';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { UserProfile } from 'app/core/user/user-profile.enum';
-import { UserDetailComponent } from '../users/user-detail/user-detail.component'; 
+import { UserDetailComponent } from '../users/user-detail/user-detail.component';
 import { AddAttendantFormComponent } from './add-attendant-form/add-attendant-form.component';
 
 @Component({
@@ -44,9 +44,9 @@ export class AttendantsComponent implements OnInit {
   ]
 
   constructor(
-    private dialog: MatDialog,
-    private snackbarService: SnackbarService,
-    private confirmationService: ConfirmationService
+    private readonly dialog: MatDialog,
+    private  readonly  snackbarService: SnackbarService,
+    private  readonly  confirmationService: ConfirmationService
   ) { }
 
 

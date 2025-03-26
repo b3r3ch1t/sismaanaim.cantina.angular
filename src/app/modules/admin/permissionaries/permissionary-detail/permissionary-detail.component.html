@@ -1,0 +1,73 @@
+<div class="max-w-128">
+    <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Permissionários</h1>
+
+</div>
+<mat-dialog-content>
+    <p><strong>Name:</strong> {{ permissionary.nome }}</p>
+
+
+    <div class="flex justify-between flex-col mb-6">
+
+
+        <h3 class="text-lg font-bold">Usuários</h3>
+        <form [formGroup]="permissionaryForm" (ngSubmit)="addUser()">
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Selecione um usuário</mat-label>
+                <mat-select formControlName="selectedUser">
+                    @for (user of availableUsers(); track $index) {
+                    <mat-option [value]="user">
+                        {{ user.nome }}
+                    </mat-option>
+                    }
+                </mat-select>
+
+                <mat-error>
+                    Por favor selecione um usuário
+                </mat-error>
+            </mat-form-field>
+
+            <button mat-flat-button color="primary" type="submit" [disabled]="permissionaryForm.invalid">
+                Adicionar Usuário
+            </button>
+        </form>
+    </div>
+
+    <table mat-table [dataSource]="userPermissionary()" class="border border-gray-300 w-full mt-2">
+
+
+        <ng-container matColumnDef="nome">
+            <th mat-header-cell *matHeaderCellDef class="border border-gray-300 p-2"> Nome </th>
+            <td mat-cell class="border border-gray-300 p-2" *matCellDef="let userPermissionary"> {{
+                userPermissionary.nome }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cpf">
+            <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> CPF </th>
+            <td mat-cell class="border border-gray-300 p-2" *matCellDef="let userPermissionary"> {{
+                userPermissionary.cpf }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Ações </th>
+            <td mat-cell *matCellDef="let user">
+                <button (click)="removeUser(user)" class="bg-red-500" mat-flat-button>
+                    <mat-icon color="white">delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+
+        <thead>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        </thead>
+        <tbody>
+            <tr class="border border-gray-300 p-2" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </tbody>
+
+    </table>
+
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>
