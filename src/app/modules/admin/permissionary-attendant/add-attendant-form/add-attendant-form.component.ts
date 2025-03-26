@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,135 +12,163 @@ import { throwError } from 'rxjs';
 import { ApiResponse } from 'app/core/api/api-response.types';
 import { FuseUtilsService } from '@fuse/services/utils';
 import { MatSelectModule } from '@angular/material/select';
+import { SnackbarService } from 'app/services/snackbar.service';
+import { ConfirmationService } from 'app/services/confirmation.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-add-attendant-form',
-  templateUrl: './add-attendant-form.component.html',
-  styleUrls: ['./add-attendant-form.component.scss'],
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatSelectModule
-  ]
+    selector: 'app-add-attendant-form',
+    templateUrl: './add-attendant-form.component.html',
+    styleUrls: ['./add-attendant-form.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatSelectModule
+    ]
 })
 export class AddAttendantFormComponent {
-  addUserForm: FormGroup;
+    addUserForm: FormGroup;
 
-  private _httpClient = inject(HttpClient);
-  private _authService = inject(AuthService);
-  private _fuseUtils = inject(FuseUtilsService);
+    private readonly _httpClient = inject(HttpClient);
+    private readonly _authService = inject(AuthService);
+    private readonly _fuseUtils = inject(FuseUtilsService);
 
-  users = signal([])
-  attendants = signal([])
-  availableUsers = signal([])
+    // Signals
+    users = signal<any[]>([]);
+    attendants = signal<any[]>([]);
+    evento = signal<any | null>(null);
 
-  constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<AddAttendantFormComponent>
-  ) {
-    this.fetchAttendants()
-    this.fetchUsers()
-    this.addUserForm = this.fb.group({
-      user: ['', [Validators.required]],
+    // Computed signal: available users
+    availableUsers = computed(() => {
+        const allUsers = this.users();
+        const assignedUserIds = new Set(this.attendants().map(u => u.id));
+
+        const available = allUsers
+        .filter(user => !assignedUserIds.has(user.userId))
+        .sort((a, b) => a.nome.localeCompare(b.nome));
+
+
+        return available;
     });
-  }
 
+    constructor(
+        private readonly fb: FormBuilder,
+        private readonly dialogRef: MatDialogRef<AddAttendantFormComponent>,
+        private readonly snackbarService: SnackbarService,
+        private readonly confirmationService: ConfirmationService,
+        private readonly router: Router,
+    ) {
+        this.addUserForm = this.fb.group({
+            user: ['', [Validators.required]],
+        });
 
-  updateAvailableUsers() {
-    // Extract claim IDs the user already has
-    const attendants = new Set(this.attendants().map(user => user.userId));
-  
-    // Filter out claims that the user already has
-    const available = this.users().filter(user => {
-      return !attendants.has(user.userId);
-    })
-
-    console.log(available)
-    this.availableUsers.set(available)
-  }
-
-  validateCPF(control: any) {
-    if (!this._fuseUtils.validarCPF(control.value)) {
-      return { invalidCPF: true };
+        this.fetchEvent();
+        this.fetchUsers();
     }
-    return null;
-  }
 
-  submitForm(): void {
-    console.log("HELLO WORLD")
-    if (this.addUserForm.valid) {
-      console.log("HELLO WORLD @")
-      const payload = {
-        userId : this.addUserForm.value.user.userId,
-        claimType : "Profile",
-        claimValue : "3"
-      };
-
-      this._httpClient.post<ApiResponse<any>>(`${environment.API_URL}account/addclaimaousuario`, payload, {
-        headers: {
-          "Authorization": `Bearer ${this._authService.accessToken}`
-        }
-      }).pipe(
-        catchError((error) => {
-          console.error("Error submitting form:", error);
-          return throwError(() => error);
+    fetchEvent() {
+        this._httpClient.get<ApiResponse<any>>(`${environment.API_URL}evento/getcurrentevent`, {
+            headers: {
+                "Authorization": `Bearer ${this._authService.accessToken}`
+            }
         })
-      ).subscribe((response) => {
-        if (response.success) {
-          this.dialogRef.close({
-            response,
-            value: this.addUserForm.value
-          });
-        }
-      });
+        .pipe(
+            catchError((error) => {
+                console.error(error);
+                throw error;
+            })
+        )
+        .subscribe((data) => {
+            if (data.code === 3) {
+                this.snackbarService.info("Não existe evento aberto.");
+                this.router.navigate(['/permissionary-dashboard']);
+                return;
+            }
+
+            if (data.success) {
+                this.evento.set(data.result);
+                this.fetchAttendants();
+            }
+        });
     }
-  }
 
-  fetchAttendants() {
-    this._httpClient.get(`${environment.API_URL}account/gettodosatendentes`, {
-      headers: {
-        "Authorization": `Bearer ${this._authService.accessToken}`
-      }
-    })
-      .pipe(catchError((error) => {
-        console.log(error);
-        throw error;
-      }))
-      .subscribe((data: ApiResponse<any>) => {
-        if (data.success) {
-          this.attendants.set(data.result)
-          console.log(this.attendants())
-          this.updateAvailableUsers()
+    fetchUsers() {
+        this._httpClient.get<ApiResponse<any>>(`${environment.API_URL}account/gettodosatendentes`, {
+            headers: {
+                "Authorization": `Bearer ${this._authService.accessToken}`
+            }
+        })
+        .pipe(catchError((error) => {
+            console.error(error);
+            throw error;
+        }))
+        .subscribe((data) => {
+
+            if (data.success) {
+                this.users.set(data.result);
+            }
+        });
+    }
+
+    fetchAttendants() {
+        const eventoId = this.evento()?.id;
+        if (!eventoId) return;
+
+        this._httpClient.get<ApiResponse<any>>(`${environment.API_URL}permissionario/getatendentesporeventoporpermissionario/${eventoId}`, {
+            headers: {
+                "Authorization": `Bearer ${this._authService.accessToken}`
+            }
+        })
+        .pipe(catchError((error) => {
+            console.error(error);
+            throw error;
+        }))
+        .subscribe((data) => {
+
+            if (data.success) {
+                this.attendants.set(data.result);
+            }
+        });
+    }
+
+    validateCPF(control: any) {
+        if (!this._fuseUtils.validarCPF(control.value)) {
+            return { invalidCPF: true };
         }
-      });
-  }
+        return null;
+    }
 
-  fetchUsers() {
-    this._httpClient.get(`${environment.API_URL}account/gettodosusuarios`, {
-      headers: {
-        "Authorization": `Bearer ${this._authService.accessToken}`
-      }
-    })
-      .pipe(catchError((error) => {
-        console.log(error);
-        throw error;
-      }))
-      .subscribe((data: ApiResponse<any>) => {
-        if (data.success) {
-          this.users.set(data.result)
-          console.log(this.users())
-          this.updateAvailableUsers()
+    submitForm(): void {
+        if (this.addUserForm.valid) {
+
+            const atendenteId = this.addUserForm.value.user.userId;
+
+            this._httpClient.post<ApiResponse<any>>(`${environment.API_URL}account/addatendenteaopermissionario/${atendenteId}`, null, {
+                headers: {
+                    "Authorization": `Bearer ${this._authService.accessToken}`
+                }
+            }).pipe(
+                catchError((error) => {
+                    console.error("Error submitting form:", error);
+                    return throwError(() => error);
+                })
+            ).subscribe((response) => {
+                if (response.success) {
+                    this.dialogRef.close({
+                        response,
+                        value: this.addUserForm.value
+                    });
+                }
+            });
         }
-      });
-  }
+    }
 
-
-  closeModal(): void {
-    this.dialogRef.close();
-  }
+    closeModal(): void {
+        this.dialogRef.close();
+    }
 }

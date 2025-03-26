@@ -83,7 +83,7 @@ export class PermissionaryAttendantComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 if (result.response.success) {
-                    this.snackbarService.success("Forma de pagamento criado com sucesso")
+                    this.snackbarService.success("Atendente adicionado com sucesso!");
                     this.fetchUsers()
                 }
             }
@@ -175,9 +175,8 @@ export class PermissionaryAttendantComponent implements OnInit {
             }))
             .subscribe((data: ApiResponse<any>) => {
                 if (data.success) {
-                    this.users.set(data.result);
+                    this.users.set(data.result.sort((a, b) => a.nome.localeCompare(b.nome)));
 
-                    console.log(data.result);
 
                     const dataSource = new MatTableDataSource(this.users());
                     if (dataSource) {
