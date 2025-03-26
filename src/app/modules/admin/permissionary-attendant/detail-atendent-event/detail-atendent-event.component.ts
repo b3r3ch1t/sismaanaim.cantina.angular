@@ -77,7 +77,7 @@ export class DetailAtendentEventComponent implements OnInit {
         console.log(this.user);
 
 
-        this._httpClient.get(`${environment.API_URL}atendente/gethistoricoatendentebyid/${this.user.id}`, {
+        this._httpClient.get(`${environment.API_URL}atendente/gethistoricoatendenteEventoAtualbyid/${this.user.id}`, {
             headers: {
                 Authorization: `Bearer ${this._authService.accessToken}`
             }
