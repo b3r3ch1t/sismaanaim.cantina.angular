@@ -5,22 +5,21 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { environment } from 'app/environments/environment';
 import { catchError } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import { AddUserFormComponent } from '../users/add-user-form/add-user-form.component';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { ConfirmationService } from 'app/services/confirmation.service';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { UserProfile } from 'app/core/user/user-profile.enum';
-import { UserDetailComponent } from '../users/user-detail/user-detail.component';
 import { AddAttendantFormComponent } from './add-attendant-form/add-attendant-form.component';
 import { Router } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { CurrencyPipe } from '@angular/common';
+import { DetailAtendentEventComponent } from './detail-atendent-event/detail-atendent-event.component';
 
 @Component({
     selector: 'app-permissionary-attendants',
@@ -92,9 +91,9 @@ export class PermissionaryAttendantComponent implements OnInit {
 
 
     detailUser(user) {
-
-        this.snackbarService.info("Em construção !");
-
+        this.dialog.open(DetailAtendentEventComponent, {
+            data: user,
+        })
     }
 
     removeUser(user) {
