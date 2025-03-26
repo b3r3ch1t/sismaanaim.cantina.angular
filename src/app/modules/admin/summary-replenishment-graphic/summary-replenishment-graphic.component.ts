@@ -1,8 +1,10 @@
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ApiResponse } from 'app/core/api/api-response.types';
 import { AuthService } from 'app/core/auth/auth.service';
 import { environment } from 'app/environments/environment';
+import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import {
     ApexAxisChartSeries,
     ApexChart,
@@ -32,8 +34,11 @@ export type ChartOptions = {
 @Component({
     selector: 'app-summary-replenishment-graphic',
     imports: [
-
-        NgApexchartsModule,
+    NgApexchartsModule,
+    CommonModule,
+],
+    providers: [
+        CurrencyPipe,
     ],
     templateUrl: './summary-replenishment-graphic.component.html',
     styleUrl: './summary-replenishment-graphic.component.scss'
@@ -53,6 +58,9 @@ export class SummaryReplenishmentGraphicComponent implements OnInit, OnDestroy {
     chartMonthlyExpenses: ApexOptions = {};
     chartYearlyExpenses: ApexOptions = {};
 
+
+    lastUpdate: Date = new Date();
+
     public chartOptions: Partial<ChartOptions> = {};
 
     constructor() {
@@ -67,6 +75,8 @@ export class SummaryReplenishmentGraphicComponent implements OnInit, OnDestroy {
         this._intervalId = setInterval(() => {
             this.fetchSummary();
         }, 60000);
+
+        this.lastUpdate = new Date();
     }
 
 

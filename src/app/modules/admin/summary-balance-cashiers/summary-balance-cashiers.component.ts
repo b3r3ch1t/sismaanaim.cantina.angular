@@ -5,7 +5,6 @@ import { ApiResponse } from 'app/core/api/api-response.types';
 import { AuthService } from 'app/core/auth/auth.service';
 import { environment } from 'app/environments/environment';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
-import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { catchError } from 'rxjs';
 
 
@@ -15,7 +14,6 @@ import { catchError } from 'rxjs';
     imports: [
 
         CommonModule,
-        CustomDatePipe,
         CustomCurrencyPipe,
     ],
     providers: [
@@ -36,6 +34,8 @@ export class SummaryBalanceCashiersComponent {
     public summaryBalanceCashies: any[] = [];
     private _intervalId?: any;
 
+    lastUpdate: Date = new Date();
+
     ngOnInit(): void {
         this.fetchSummaryBalanceClient()
 
@@ -43,6 +43,8 @@ export class SummaryBalanceCashiersComponent {
         this._intervalId = setInterval(() => {
             this.fetchSummaryBalanceClient();
         }, 60000);
+
+        this.lastUpdate = new Date();
     }
 
     ngOnDestroy(): void {

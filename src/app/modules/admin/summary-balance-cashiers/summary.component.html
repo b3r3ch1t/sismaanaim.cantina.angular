@@ -1,0 +1,57 @@
+<div class="mt-2 flex flex-col items-center  mb-10">
+    <!-- Título -->
+    <div class="text-4xl sm:text-3xl font-bold leading-none tracking-tight text-blue-500">
+        Resumo Permissionários
+    </div>
+
+    <!-- Tabela -->
+    <div class="mt-5 w-full max-w-md overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 border border-gray-300">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Permissionário</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Consumido</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Reembolso</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                <tr *ngFor="let p of permissionaries()">
+                    <td class="px-4 py-2 text-sm font-medium text-gray-600">{{ p.permissionarioNome }}</td>
+                    <td class="px-4 py-2 text-sm font-semibold text-gray-900">{{ p.consumo | customCurrency }}</td>
+                    <td class="px-4 py-2 text-sm font-semibold text-blue-600">{{ p.reembolso | customCurrency }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-2 flex flex-col items-center">
+    <!-- Título -->
+    <div class="text-4xl sm:text-3xl font-bold leading-none tracking-tight text-green-500">
+        Saldo Clientes
+    </div>
+    <div class="mt-5 w-full max-w-md overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 border border-gray-300">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Total</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Clientes</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Max</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Med</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                <tr>
+                    <td class="px-4 py-2 text-sm font-medium text-gray-600">{{summaryBalanceClients.saldoTotal | customCurrency }}</td>
+                    <td class="px-4 py-2 text-sm font-medium text-gray-600">{{summaryBalanceClients.totalClients}}</td>
+                    <td class="px-4 py-2 text-sm font-medium text-gray-600">{{summaryBalanceClients.saldoMaximo | customCurrency }}</td>
+                    <td class="px-4 py-2 text-sm font-medium text-gray-600">{{summaryBalanceClients.saldoMedio | customCurrency }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Data de atualização -->
+    <p class="mt-6 text-sm text-gray-500">
+        Atualizado em {{ lastUpdate | date:'short' }}
+    </p>
+</div>

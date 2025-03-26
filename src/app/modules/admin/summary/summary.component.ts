@@ -9,7 +9,7 @@ import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { catchError } from 'rxjs';
 
 @Component({
-    selector: 'app-summary-pemissionaries',
+    selector: 'app-summary',
     imports: [
 
         CommonModule,
@@ -19,20 +19,27 @@ import { catchError } from 'rxjs';
     providers: [
         CurrencyPipe,
     ],
-    templateUrl: './summary-pemissionaries.component.html',
-    styleUrl: './summary-pemissionaries.component.scss'
+    templateUrl: './summary.component.html',
+    styleUrl: './summary.component.scss'
 })
-export class SummaryPemissionariesComponent implements OnInit, OnDestroy {
+export class SummaryComponent implements OnInit, OnDestroy {
 
     private readonly _httpClient = inject(HttpClient)
     private readonly _authService = inject(AuthService)
-
+    lastUpdate: Date = new Date();
     permissionaries = signal([]);
+
+
+    summaryBalanceClients:any ;
+
     private _intervalId?: any;
 
 
     ngOnInit(): void {
+
+        this.lastUpdate = new Date();
         this.fetchSummaryPermissionaries()
+        this.fetchSummaryBalanceClient();
 
 
         this._intervalId = setInterval(() => {
@@ -61,6 +68,31 @@ export class SummaryPemissionariesComponent implements OnInit, OnDestroy {
             }))
             .subscribe((data: ApiResponse<any>) => {
                 this.permissionaries.set(data.result);
+            });
+    }
+
+
+    fetchSummaryBalanceClient() {
+
+
+        this._httpClient.get(`${environment.API_URL}dashboard/getresumosaldoclientes`, {
+            headers: {
+                "Authorization": `Bearer ${this._authService.accessToken}`
+            }
+        })
+            .pipe(catchError((error) => {
+                console.log(error);
+                throw error;
+            }))
+            .subscribe((data: ApiResponse<any>) => {
+
+                console.log(data);
+
+                if (data.success) {
+
+                    this.summaryBalanceClients =data.result;
+
+                }
             });
     }
 

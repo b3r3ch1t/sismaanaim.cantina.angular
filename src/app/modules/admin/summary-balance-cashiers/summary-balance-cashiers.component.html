@@ -1,10 +1,8 @@
-<div class="flex items-start justify-between">
-    <div class="text-4xl font-bold leading-none tracking-tight text-orange-500 sm:text-3xl">
-       Resumo Caixas
+<div class="mt-2 flex flex-col items-center  mb-10">
+    <!-- Título -->
+    <div class="text-4xl sm:text-3xl font-bold leading-none tracking-tight text-orange-500">
+        Resumo Caixa
     </div>
-</div>
-<div class="mt-2 flex flex-col items-left">
-
 
     <div class="mt-5 w-full max-w-md overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 border border-gray-300">
@@ -35,4 +33,9 @@
 
         </table>
     </div>
+
+
+    <p class="mt-6 text-sm text-gray-500">
+        Atualizado em {{ lastUpdate | date:'short' }}
+    </p>
 </div>

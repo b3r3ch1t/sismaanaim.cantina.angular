@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { SummaryPemissionariesComponent } from '../summary-pemissionaries/summary-pemissionaries.component';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { SummarySellGraphicComponent } from "../summary-sell-graphic/summary-sell-graphic.component";
+import { SummaryComponent } from '../summary/summary.component';
 
 @Component({
     imports: [
     MatTabsModule,
-    SummaryPemissionariesComponent,
+    SummaryComponent,
     SummarySellGraphicComponent
 ],
     selector: 'app-permissionary-dashboard',

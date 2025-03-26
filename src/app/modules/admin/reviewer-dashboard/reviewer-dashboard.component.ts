@@ -10,11 +10,11 @@ import { FuseCardComponent } from '@fuse/components/card';
 
 
 
-import { SummaryPemissionariesComponent } from '../summary-pemissionaries/summary-pemissionaries.component';
-import { SummaryBalanceClientsComponent } from '../summary-balance-clients/summary-balance-clients.component';
+
 import { SummaryBalanceCashiersComponent } from '../summary-balance-cashiers/summary-balance-cashiers.component';
 import { SummarySellGraphicComponent } from '../summary-sell-graphic/summary-sell-graphic.component';
 import { SummaryReplenishmentGraphicComponent } from '../summary-replenishment-graphic/summary-replenishment-graphic.component';
+import { SummaryComponent } from '../summary/summary.component';
 
 @Component({
     selector: 'app-reviewer-dashboard',
@@ -31,8 +31,7 @@ import { SummaryReplenishmentGraphicComponent } from '../summary-replenishment-g
         FuseCardComponent,
         MatButtonModule,
         MatIcon,
-        SummaryPemissionariesComponent,
-        SummaryBalanceClientsComponent,
+        SummaryComponent,
         SummaryBalanceCashiersComponent,
         SummarySellGraphicComponent,
         SummaryReplenishmentGraphicComponent

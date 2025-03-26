@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ApiResponse } from 'app/core/api/api-response.types';
@@ -32,7 +33,7 @@ export type ChartOptions = {
 @Component({
     selector: 'app-summary-sell-graphic',
     imports: [
-
+        CommonModule,
         NgApexchartsModule,
     ],
     templateUrl: './summary-sell-graphic.component.html',
@@ -55,17 +56,18 @@ export class SummarySellGraphicComponent implements OnInit, OnDestroy {
 
     public chartOptions: Partial<ChartOptions>;
 
+    lastUpdate: Date = new Date();
+
     constructor() {
 
 
     }
     ngOnInit(): void {
-        this.fetchSummary()
-
-
+        this.fetchSummary();
         this._intervalId = setInterval(() => {
             this.fetchSummary();
         }, 60000);
+        this.lastUpdate = new Date();
     }
 
 

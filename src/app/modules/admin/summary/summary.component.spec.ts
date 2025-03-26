@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SummaryPemissionariesComponent } from './summary-pemissionaries.component';
+import { SummaryPemissionariesComponent } from './summary.component';
 
 describe('SummaryPemissionariesComponent', () => {
   let component: SummaryPemissionariesComponent;
