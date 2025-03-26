@@ -92,10 +92,9 @@ export class PermissionaryAttendantComponent implements OnInit {
 
 
     detailUser(user) {
-        this.dialog.open(UserDetailComponent, {
-            data: user,
-            width: "700px"
-        })
+
+        this.snackbarService.info("Em construção !");
+
     }
 
     removeUser(user) {
