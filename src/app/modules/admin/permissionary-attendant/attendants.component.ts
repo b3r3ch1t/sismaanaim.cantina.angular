@@ -15,146 +15,208 @@ import { SnackbarService } from 'app/services/snackbar.service';
 import { ConfirmationService } from 'app/services/confirmation.service';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { UserProfile } from 'app/core/user/user-profile.enum';
-import { UserDetailComponent } from '../users/user-detail/user-detail.component'; 
+import { UserDetailComponent } from '../users/user-detail/user-detail.component';
 import { AddAttendantFormComponent } from './add-attendant-form/add-attendant-form.component';
+import { Router } from '@angular/router';
+import { UserService } from 'app/core/user/user.service';
+import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-permissionary-attendants',
-  templateUrl: './attendants.component.html',
-  styleUrls: ['./attendants.component.css'],
-  imports: [MatTableModule, MatPaginator, MatSortModule, MatButtonModule, MatIconModule, MatCheckboxModule]
+    selector: 'app-permissionary-attendants',
+    templateUrl: './attendants.component.html',
+    styleUrls: ['./attendants.component.css'],
+    imports: [
+        MatTableModule,
+        MatPaginator,
+        MatSortModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCheckboxModule,
+
+        CustomDatePipe],
+    providers: [
+        CurrencyPipe,
+    ],
 })
 
 export class PermissionaryAttendantComponent implements OnInit {
-  private _httpClient = inject(HttpClient)
-  private _authService = inject(AuthService)
+    private readonly _httpClient = inject(HttpClient);
+    private readonly _authService = inject(AuthService);
+    private readonly _userService = inject(UserService);
 
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort!: MatSort;
+    @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+    @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
-  users = signal([])
-  usersDataSource = signal(new MatTableDataSource([]))
-  userProfiles = UserProfile
-
-  displayedColumns = [
-    "Nome",
-    "Email",
-    "Ativo",
-    "Ações"
-  ]
-
-  constructor(
-    private dialog: MatDialog,
-    private snackbarService: SnackbarService,
-    private confirmationService: ConfirmationService
-  ) { }
+    users = signal([]);
+    usersDataSource = signal(new MatTableDataSource([]))
+    userProfiles = UserProfile
 
 
-  ngOnInit(): void {
-    this.fetchUsers()
-  }
+    displayedColumns = [
+        "Nome",
+        "CPF",
+        "DataAlteracao",
+        "Ações"
+    ]
+    evento: any;
+
+    constructor(
+        private readonly dialog: MatDialog,
+        private readonly snackbarService: SnackbarService,
+        private readonly confirmationService: ConfirmationService,
+        private readonly router: Router
+    ) { }
 
 
-  addAttendant() {
-    const dialogRef = this.dialog.open(AddAttendantFormComponent, {
-      width: '400px',
-    });
+    ngOnInit(): void {
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        if (result.response.success) {
-          this.snackbarService.success("Forma de pagamento criado com sucesso")
-          this.fetchUsers()
-        }
-      }
-    });
-  }
+        this.fetchEvent();
+    }
 
 
-  detailUser(user){
-    this.dialog.open(UserDetailComponent, {
-      data : user,
-      width : "700px"
-    })
-  }
-
-  removeUser(user) {
-    this.confirmationService.confirm("Confirmar", "Tem certeza de que deseja remover este attendente?").subscribe(result => {
-      if (result) {
-        this._httpClient.request('DELETE', `${environment.API_URL}permissionario/deleteAtendent/${user.id}`, {
-          headers: {
-            "Authorization": `Bearer ${this._authService.accessToken}`,
-            "Content-Type": "application/json" // Ensure JSON is sent properly
-          }
-        }).subscribe({
-          next: (response: ApiResponse<any>) => {
-            console.log(response)
-            if (response.success) {
-              console.log('Deleted Successfully:', response);
-              this.snackbarService.success("Usuário removido com sucesso")
-              this.fetchUsers()
-            }
-
-            if (response.error) {
-              this.snackbarService.error(response.errors.join(", "))
-            }
-          },
-          error: (error) => {
-            console.error('Error:', error);
-          }
+    addAttendant() {
+        const dialogRef = this.dialog.open(AddAttendantFormComponent, {
+            width: '400px',
         });
 
-      }
-    })
-  }
-
-  fetchUsers() {
-    this._httpClient.get(`${environment.API_URL}account/gettodosatendentes`, {
-      headers: {
-        "Authorization": `Bearer ${this._authService.accessToken}`
-      }
-    })
-      .pipe(catchError((error) => {
-        console.log(error);
-        throw error;
-      }))
-      .subscribe((data: ApiResponse<any>) => {
-        if (data.success) {
-          this.users.set(data.result)
-          console.log(this.users())
-          const dataSource = new MatTableDataSource(this.users())
-          if (dataSource) {
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                if (result.response.success) {
+                    this.snackbarService.success("Forma de pagamento criado com sucesso")
+                    this.fetchUsers()
+                }
+            }
+        });
+    }
 
 
+    detailUser(user) {
+        this.dialog.open(UserDetailComponent, {
+            data: user,
+            width: "700px"
+        })
+    }
 
-            dataSource.sortingDataAccessor = (item: any, property) => {
-              switch (property) {
-                case 'Nome':
-                  return item.nome;
-                case 'Email':
-                  return item.email;
-                case 'Ativo':
-                  return item.ativo;
-                case 'CPF':
-                  return item.cpf;
-                default:
-                  return item[property];
-              }
-            };
+    removeUser(user) {
+        this.confirmationService.confirm("Confirmar", "Tem certeza de que deseja remover este atendente?").subscribe(result => {
+            if (result) {
+                this._httpClient.request('DELETE', `${environment.API_URL}permissionario/RemoverAtendentePermissionarioEvento/`, {
+                    headers: {
+                        "Authorization": `Bearer ${this._authService.accessToken}`,
+                        "Content-Type": "application/json" // Ensure JSON is sent properly
+                    },
+                    body: {
+                        eventoId: this.evento.id,
+                        userId: user.id,
+                    }
+                }).subscribe({
+                    next: (response: ApiResponse<any>) => {
+                        if (response.success) {
+                            console.log('Deleted Successfully:', response);
+                            this.snackbarService.success("Usuário removido com sucesso")
+                            this.fetchUsers()
+                        }
 
-            dataSource.paginator = this.paginator;
-            dataSource.sort = this.sort;
-            this.usersDataSource.set(dataSource);
-          }
-        }
-      });
-  }
+                        if (response.error) {
+                            this.snackbarService.error(response.errors.join(", "))
+                        }
+                    },
+                    error: (error) => {
+                        console.error('Error:', error);
+                    }
+                });
 
-  handleCheckbox(e: MatCheckboxChange) {
-    e.source.toggle()
-  }
+            }
+        })
+    }
 
-  hasClaim(user: any, perfil: number): boolean {
-    return user.claims?.some(claim => claim.perfilUsuario === perfil);
-  }
+    fetchEvent() {
+        this._httpClient.get(`${environment.API_URL}evento/getcurrentevent`, {
+            headers: {
+                "Authorization": `Bearer ${this._authService.accessToken}`
+            }
+        })
+            .pipe(catchError((error) => {
+                console.log(error);
+                throw error;
+            }))
+            .subscribe((data: ApiResponse<any>) => {
+
+                if (data.code == 3) {
+
+                    this.snackbarService.info("Não existe evento aberto.");
+
+                    this.router.navigate(['/permissionary-dashboard']);
+                    return;
+                }
+
+
+                if (data.success) {
+                    this.evento = data.result;
+
+
+                    this.fetchUsers();
+                }
+            });
+    }
+
+    fetchUsers() {
+
+        const eventoId = this.evento.id;
+        this._httpClient.get(`${environment.API_URL}permissionario/getatendentesporeventoporpermissionario/${eventoId}/`, {
+            headers: {
+                "Authorization": `Bearer ${this._authService.accessToken}`
+            }
+        })
+            .pipe(catchError((error) => {
+                console.log(error);
+                throw error;
+            }))
+            .subscribe((data: ApiResponse<any>) => {
+                if (data.success) {
+                    this.users.set(data.result);
+
+                    console.log(data.result);
+
+                    const dataSource = new MatTableDataSource(this.users());
+                    if (dataSource) {
+
+
+
+                        dataSource.sortingDataAccessor = (item: any, property) => {
+
+
+                            console.log(property);
+                            switch (property) {
+                                case 'Nome':
+                                    return item.nome;
+                                case 'Email':
+                                    return item.email;
+                                case 'Ativo':
+                                    return item.ativo;
+                                case 'CPF':
+                                    return item.cpf;
+                                case 'DataAlteracao':
+                                    return item.dataAlteracao;
+                                default:
+                                    return item.nome;
+                            }
+                        };
+
+                        dataSource.paginator = this.paginator;
+                        dataSource.sort = this.sort;
+                        this.usersDataSource.set(dataSource);
+                    }
+                }
+            });
+    }
+
+    handleCheckbox(e: MatCheckboxChange) {
+        e.source.toggle()
+    }
+
+    hasClaim(user: any, perfil: number): boolean {
+        return user.claims?.some(claim => claim.perfilUsuario === perfil);
+    }
 }

@@ -44,9 +44,9 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
 })
 
 export class AttendantSellComponent implements OnInit {
-  private _httpClient = inject(HttpClient)
-  private _authService = inject(AuthService)
-  private _userService = inject(UserService);
+  private readonly _httpClient = inject(HttpClient)
+  private readonly  _authService = inject(AuthService)
+  private readonly  _userService = inject(UserService);
 
   noClientFound = signal(false)
   clients = signal([]);
