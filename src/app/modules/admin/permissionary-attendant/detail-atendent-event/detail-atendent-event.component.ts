@@ -13,8 +13,6 @@ import { UserService } from 'app/core/user/user.service';
 import { environment } from 'app/environments/environment';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
-import { ConfirmationService } from 'app/services/confirmation.service';
-import { SnackbarService } from 'app/services/snackbar.service';
 import { catchError } from 'rxjs';
 
 @Component({
@@ -47,8 +45,6 @@ export class DetailAtendentEventComponent implements OnInit {
 
     constructor(
         private readonly dialogRef: MatDialogRef<DetailAtendentEventComponent>,
-        private readonly snackbarService: SnackbarService,
-        private readonly confirmationService: ConfirmationService,
         @Inject(MAT_DIALOG_DATA) public user: any // Receive user data
     ) { }
 

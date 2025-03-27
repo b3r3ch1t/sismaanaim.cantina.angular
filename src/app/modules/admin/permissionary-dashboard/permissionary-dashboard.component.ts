@@ -17,6 +17,7 @@ export class PermissionaryDashboardComponent implements OnInit {
 
     constructor() { }
 
+    lastUpdate: Date = new Date();
 
     activeTabIndex = 0;
 
@@ -25,6 +26,7 @@ export class PermissionaryDashboardComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.lastUpdate = new Date();
     }
 
 }
