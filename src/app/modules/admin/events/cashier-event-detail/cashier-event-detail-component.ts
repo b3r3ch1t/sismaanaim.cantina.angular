@@ -14,7 +14,7 @@ import { environment } from 'app/environments/environment';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { catchError } from 'rxjs';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
-import { CurrencyPipe, NgLocaleLocalization } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { EventStatus } from '../event-status.enum';
 import { CashierDetailComponent } from '../../cashier-detail/cashier-detail-component';

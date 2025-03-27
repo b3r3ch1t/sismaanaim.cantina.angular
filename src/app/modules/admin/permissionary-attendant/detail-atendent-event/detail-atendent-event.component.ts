@@ -25,7 +25,8 @@ import { catchError } from 'rxjs';
         CustomCurrencyPipe,
         CustomDatePipe,
         MatFormFieldModule,
-        MatInputModule
+        MatInputModule,
+        MatPaginator, MatSortModule,
     ],
     providers: [CurrencyPipe],
     templateUrl: './detail-atendent-event.component.html',

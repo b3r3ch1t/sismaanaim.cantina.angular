@@ -1,0 +1,52 @@
+<h1 class="text-2xl lg:text-3xl font-bold leading-tight tracking-tight mb-8">Atendentes</h1>
+
+<mat-dialog-content>
+
+    <mat-form-field appearance="fill" class="w-full">
+        <input matInput (keyup)="applyFilter($event)" placeholder="filtro" class="w-full" />
+      </mat-form-field>
+
+
+    <table mat-table [dataSource]="attendants()" matSort class="border border-gray-300 w-full mt-2">
+
+        <ng-container matColumnDef="nome">
+            <th mat-header-cell *matHeaderCellDef  mat-sort-header class="border border-gray-300 p-2"> Atendente </th>
+            <td mat-cell class="border border-gray-300 p-2" *matCellDef="let attendant">{{attendant.nome}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cpf">
+            <th mat-header-cell mat-sort-header class="border border-gray-300 p-2" *matHeaderCellDef> CPF </th>
+            <td mat-cell class="border border-gray-300 p-2" *matCellDef="let attendant"> {{attendant.cpf}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="Actions">
+            <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Ações </th>
+            <td mat-cell class="border border-gray-300 p-2" *matCellDef="let attendant">
+                <div class="flex flex-wrap gap-2 py-2">
+                    <button class="text-white bg-teal-500" (click)="cashierDetails(attendant)" mat-flat-button>Detalhe
+                        do Atendente</button>
+
+                </div>
+            </td>
+        </ng-container>
+
+        <thead>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        </thead>
+        <tbody>
+            <tr class="border border-gray-300 p-2" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </tbody>
+
+
+
+    </table>
+    <mat-paginator [pageSize]="5" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
+
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>
