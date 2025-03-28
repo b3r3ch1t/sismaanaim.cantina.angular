@@ -15,7 +15,7 @@ import { SnackbarService } from 'app/services/snackbar.service';
 import { ConfirmationService } from 'app/services/confirmation.service';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { UserProfile } from 'app/core/user/user-profile.enum';
-import { UserDetailComponent } from '../users/user-detail/user-detail.component'; 
+import { UserDetailComponent } from '../users/user-detail/user-detail.component';
 import { AddAttendantFormComponent } from './add-reviewer-form/add-attendant-form.component';
 
 @Component({
@@ -63,7 +63,7 @@ export class ReviewersComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.response.success) {
-          this.snackbarService.success("Forma de pagamento criado com sucesso")
+          this.snackbarService.success("Atendente adicionado com sucesso")
           this.fetchUsers()
         }
       }
