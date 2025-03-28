@@ -64,7 +64,7 @@ export class PermissionariesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.response.success) {
-          this.snackbarService.success("Forma de pagamento criado com sucesso")
+          this.snackbarService.success("Usuário adicionado com sucesso")
           this.fetchUsers()
         }
       }

@@ -72,9 +72,7 @@ export class AddPermissionaryComponent {
   }
 
   submitForm(): void {
-    console.log("HELLO WORLD")
     if (this.addUserForm.valid) {
-      console.log("HELLO WORLD @")
       const payload = {
         userId: this.addUserForm.value.user.userId,
         claimType: "Profile",

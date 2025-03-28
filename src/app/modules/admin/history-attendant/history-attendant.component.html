@@ -1,0 +1,68 @@
+<h1 class="text-2xl lg:text-3xl font-bold leading-tight tracking-tight mb-8">Detalhe do Atendente - {{attendant.nome}}</h1>
+
+
+<mat-dialog-content>
+
+    <div class="inventory-header">
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Filtro</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="filtro">
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5,25, 50, 100]" showFirstLastButtons></mat-paginator>
+
+
+        <table mat-table #historySort="matSort" matSort [dataSource]="historyDatasource"
+            class="border border-gray-300 w-full mt-2">
+
+
+            <ng-container matColumnDef="Horario">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="border border-gray-300 p-2">
+                    Horário </th>
+                <td mat-cell class="border border-gray-300 p-2" *matCellDef="let attendant"> {{ attendant.data |
+                    customDate }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="clienteNome">
+                <th mat-header-cell mat-sort-header class="border border-gray-300 p-2" *matHeaderCellDef> Nome
+                </th>
+                <td mat-cell class="border border-gray-300 p-2" *matCellDef="let attendant"> {{ attendant.clienteNome }}
+                </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="valor">
+                <th mat-header-cell mat-sort-header class="border border-gray-300 p-2" *matHeaderCellDef> Valor
+                </th>
+                <td mat-cell class="border border-gray-300 p-2" *matCellDef="let attendant"> {{ attendant.valor |
+                    customCurrency }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="permissionarioNome">
+                <th mat-header-cell mat-sort-header class="border border-gray-300 p-2" *matHeaderCellDef> Permissionário
+                </th>
+                <td mat-cell class="border border-gray-300 p-2" *matCellDef="let attendant"> {{ attendant.permissionarioNome }} </td>
+            </ng-container>
+
+
+            <!-- Table Headers and Rows -->
+            <thead>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorico"></tr>
+            </thead>
+            <tbody>
+                <tr class="border border-gray-300 p-2" mat-row
+                    *matRowDef="let row; columns: displayedColumnsHistorico;"></tr>
+            </tbody>
+
+        </table>
+
+
+    </div>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>

@@ -17,12 +17,11 @@ import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { ConfirmationService } from 'app/services/confirmation.service';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { catchError } from 'rxjs';
-import { CashierDetailComponent } from '../../cashier-detail/cashier-detail-component';
-import { AddCashierComponent } from '../add-cashier/add-cashier.component';
 import { CashierEventDetailComponent } from '../cashier-event-detail/cashier-event-detail-component';
 import { EventStatus } from '../event-status.enum';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { HistoryAttendantComponent } from '../../history-attendant/history-attendant.component';
 
 @Component({
     selector: 'app-attendants-event-detail',
@@ -87,8 +86,8 @@ export class AttendantsEventDetailComponent {
 
 
 
-    cashierDetails(cashier: any) {
-        const dialogRef = this.dialog.open(CashierDetailComponent, {
+    attendantDetails(cashier: any) {
+        const dialogRef = this.dialog.open(HistoryAttendantComponent, {
             data: cashier,
             width: "95%"
         });
@@ -97,8 +96,6 @@ export class AttendantsEventDetailComponent {
             if (result) {
                 // Aqui você pode executar sua lógica após o fechamento
                 this.fetchAttendantsList();
-            } else {
-                console.log('O diálogo foi fechado sem resultado');
             }
         });
     }
@@ -119,8 +116,6 @@ export class AttendantsEventDetailComponent {
                 const sortedAttendants = data.result.sort((a, b) =>
                     a.nome.localeCompare(b.nome)
                 );
-
-
 
                 const dataSource = new MatTableDataSource(sortedAttendants)
                 if (dataSource) {
