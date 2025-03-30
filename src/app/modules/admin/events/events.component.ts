@@ -17,6 +17,7 @@ import { EventFormComponent } from './event-form/event-form.component';
 import { EventStatus } from './event-status.enum';
 import { CashierEventDetailComponent } from './cashier-event-detail/cashier-event-detail-component';
 import { AttendantsEventDetailComponent } from './attendants-event-detail/attendants-event-detail.component';
+import { DetailEventComponent } from './detail-event/detail-event.component';
 
 @Component({
   selector: 'app-events',
@@ -65,7 +66,11 @@ export class EventsComponent implements OnInit {
   }
 
   eventDetails(event){
-    console.log(event)
+    const dialogRef = this.dialog.open(DetailEventComponent, {
+        data : event,
+        width : "600px"
+      })
+
   }
 
   editEvent(event){

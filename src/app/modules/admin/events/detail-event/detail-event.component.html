@@ -1,0 +1,12 @@
+<h1 class="text-2xl lg:text-3xl font-bold leading-tight tracking-tight mb-8">Detalhe do Evento</h1>
+<mat-dialog-content>
+    <p><strong>Nome : </strong>{{evento.nome}} </p>
+    <p><strong>Início :</strong> {{evento.dataInicial | date: 'dd/MM/yyyy HH:mm'}} </p>
+    <p><strong>Fim :</strong> {{evento.dataFinal | date: 'dd/MM/yyyy HH:mm'}}  </p>
+    <p><strong>Status:</strong> {{evento.descriptionStateEvento}} </p>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>
