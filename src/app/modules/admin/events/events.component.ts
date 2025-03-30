@@ -151,17 +151,27 @@ export class EventsComponent implements OnInit {
     }
 
     endEvent(event) {
-        this.confirmationService.confirm("Confirmar", "Confirme se deseja alterar o status do evento").subscribe(result => {
+        this.confirmationService.confirm("Confirmar", "Tem certeza que deseja fechar o evento ?").subscribe(result => {
             if (result) {
-                this._httpClient.put(`${environment.API_URL}evento/encerrarevento`, event.id, {
+                this._httpClient.put(`${environment.API_URL}evento/encerrarevento/${event.id}`, null , {
                     headers: {
                         Authorization: `Bearer ${this._authService.accessToken}`
                     }
                 }).pipe(catchError((error) => {
                     console.log(error)
                     throw error
-                })).subscribe(result => {
-                    console.log(result)
+                })).subscribe((result: ApiResponse<any>) => {
+
+                    if (result.error) {
+
+                        console.log(result);
+                        this.snackbarService.error(result.message);
+                        return;
+                    }
+
+                    this.snackbarService.success("Evento reaberto com sucesso");
+                    this.fetchEvents();
+
                 })
             }
         })
