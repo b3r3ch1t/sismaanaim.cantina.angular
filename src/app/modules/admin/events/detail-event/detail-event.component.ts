@@ -25,7 +25,6 @@ export class DetailEventComponent {
     ) {
         this.evento = data;
 
-        console.log(this.evento);
 
     }
 

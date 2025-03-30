@@ -20,213 +20,250 @@ import { AttendantsEventDetailComponent } from './attendants-event-detail/attend
 import { DetailEventComponent } from './detail-event/detail-event.component';
 
 @Component({
-  selector: 'app-events',
-  imports: [
-    MatTableModule,
-    MatPaginator,
-    MatSortModule,
-    MatButtonModule,
-    MatIconModule,
-    CustomDatePipe,
-    MatDialogModule
-  ],
-  templateUrl: './events.component.html',
-  styleUrl: './events.component.scss',
-  providers : []
+    selector: 'app-events',
+    imports: [
+        MatTableModule,
+        MatPaginator,
+        MatSortModule,
+        MatButtonModule,
+        MatIconModule,
+        CustomDatePipe,
+        MatDialogModule
+    ],
+    templateUrl: './events.component.html',
+    styleUrl: './events.component.scss',
+    providers: []
 })
 
 export class EventsComponent implements OnInit {
-  private _httpClient = inject(HttpClient)
-  private _authService = inject(AuthService)
+    private _httpClient = inject(HttpClient)
+    private _authService = inject(AuthService)
 
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort!: MatSort;
+    @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+    @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
-  events = signal([])
-  eventsDataSource = signal(new MatTableDataSource([]))
-  isEventModalOpen = signal(false)
-  eventStatus = EventStatus
+    events = signal([])
+    eventsDataSource = signal(new MatTableDataSource([]))
+    isEventModalOpen = signal(false)
+    eventStatus = EventStatus
 
-  displayedColumns = [
-    "nome",
-    "dataInicial",
-    "dataFinal",
-    "dataAlteracao",
-    "Ações"
-  ]
+    displayedColumns = [
+        "nome",
+        "dataInicial",
+        "dataFinal",
+        "dataAlteracao",
+        "Ações"
+    ]
 
-  constructor(
-    private dialog: MatDialog,
-    private snackbarService: SnackbarService,
-    private confirmationService: ConfirmationService
-  ) { }
+    constructor(
+        private readonly dialog: MatDialog,
+        private readonly snackbarService: SnackbarService,
+        private readonly confirmationService: ConfirmationService,
 
-  ngOnInit(): void {
-    this.fetchEvents()
-  }
+    ) { }
 
-  eventDetails(event){
-    const dialogRef = this.dialog.open(DetailEventComponent, {
-        data : event,
-        width : "600px"
-      })
+    ngOnInit(): void {
+        this.fetchEvents()
+    }
 
-  }
-
-  editEvent(event){
-    const dialogRef = this.dialog.open(EventFormComponent, {
-      data : event,
-      width : "400px"
-    })
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        if (result.response.success) {
-          this.snackbarService.success("Evento atualizado com sucesso")
-          this.fetchEvents()
-        }else{
-          this.snackbarService.error(result.response.errors.join(", "))
-        }
-      }
-    });
-  }
-
-  confirmEvent(event){
-    this.confirmationService.confirm("Confirmar", "Confirme se deseja alterar o status do evento").subscribe(result => {
-      if (result) {
-        this._httpClient.put(`${environment.API_URL}evento/confirmarevento`, event.id, {
-          headers: {
-            Authorization : `Bearer ${this._authService.accessToken}`
-          }
-        }).pipe(catchError((error) => {
-          console.log(error)
-          throw error
-        })).subscribe(result => {
-          console.log(result)
+    eventDetails(event) {
+        const dialogRef = this.dialog.open(DetailEventComponent, {
+            data: event,
+            width: "600px"
         })
-      }
-    })
-  }
 
-  cancelEvent(event){
-    this.confirmationService.confirm("Confirmar", "Confirme se deseja alterar o status do evento").subscribe(result => {
-      if (result) {
-        this._httpClient.put(`${environment.API_URL}evento/cancelarevento`, event.id, {
-          headers: {
-            Authorization : `Bearer ${this._authService.accessToken}`
-          }
-        }).pipe(catchError((error) => {
-          console.log(error)
-          throw error
-        })).subscribe(result => {
-          console.log(result)
+    }
+
+    editEvent(event) {
+        const dialogRef = this.dialog.open(EventFormComponent, {
+            data: event,
+            width: "400px"
         })
-      }
-    })
-  }
 
-  endEventSelling(event){
-    this.confirmationService.confirm("Confirmar", "Confirme se deseja alterar o status do evento").subscribe(result => {
-      if (result) {
-        this._httpClient.put(`${environment.API_URL}evento/encerrarvendasevento`, event.id, {
-          headers: {
-            Authorization : `Bearer ${this._authService.accessToken}`
-          }
-        }).pipe(catchError((error) => {
-          console.log(error)
-          throw error
-        })).subscribe(result => {
-          console.log(result)
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                if (result.response.success) {
+                    this.snackbarService.success("Evento atualizado com sucesso")
+                    this.fetchEvents()
+                } else {
+                    this.snackbarService.error(result.response.errors.join(", "))
+                }
+            }
+        });
+    }
+
+    confirmEvent(event) {
+        this.confirmationService.confirm("Confirmar", "Confirme se deseja alterar o status do evento").subscribe(result => {
+            if (result) {
+                this._httpClient.put(`${environment.API_URL}evento/confirmarevento`, event.id, {
+                    headers: {
+                        Authorization: `Bearer ${this._authService.accessToken}`
+                    }
+                }).pipe(catchError((error) => {
+                    console.log(error)
+                    throw error
+                })).subscribe(result => {
+                    console.log(result)
+                })
+            }
         })
-      }
-    })
-  }
+    }
 
-  endEvent(event){
-    this.confirmationService.confirm("Confirmar", "Confirme se deseja alterar o status do evento").subscribe(result => {
-      if (result) {
-        this._httpClient.put(`${environment.API_URL}evento/encerrarevento`, event.id, {
-          headers: {
-            Authorization : `Bearer ${this._authService.accessToken}`
-          }
-        }).pipe(catchError((error) => {
-          console.log(error)
-          throw error
-        })).subscribe(result => {
-          console.log(result)
+    cancelEvent(event) {
+        this.confirmationService.confirm("Confirmar", "Confirme se deseja alterar o status do evento").subscribe(result => {
+            if (result) {
+                this._httpClient.put(`${environment.API_URL}evento/cancelarevento`, event.id, {
+                    headers: {
+                        Authorization: `Bearer ${this._authService.accessToken}`
+                    }
+                }).pipe(catchError((error) => {
+                    console.log(error)
+                    throw error
+                })).subscribe(result => {
+                    console.log(result)
+                })
+            }
         })
-      }
-    })
-  }
+    }
 
-  addEvent() {
-    const dialogRef = this.dialog.open(EventFormComponent, {
-      width: '400px',
-    });
+    endEventSelling(event) {
+        this.confirmationService.confirm("Confirmar", "Tem certeza que deseja encerrar as vendas para o evento?").subscribe(result => {
+            if (result) {
+                this._httpClient.put(`${environment.API_URL}evento/encerrarvendasevento/${event.id}`, null, {
+                    headers: {
+                        Authorization: `Bearer ${this._authService.accessToken}`
+                    }
+                }).pipe(catchError((error) => {
+                    console.log(error)
+                    throw error
+                })).subscribe((data: ApiResponse<any>) => {
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        if (result.response.success) {
-          this.snackbarService.success("Evento Criado com sucesso")
-          this.fetchEvents()
-        }else{
-          this.snackbarService.error(result.response.errors.join(", "))
-        }
-      }
-    });
-  }
+                    if (data.error) {
+                        this.snackbarService.error(data.message);
+                        return;
+                    }
 
-  fetchEvents() {
-    this._httpClient.get(`${environment.API_URL}evento/gettodoseventos`, {
-      headers: {
-        "Authorization": `Bearer ${this._authService.accessToken}`
-      }
-    })
-      .pipe(catchError((error) => {
-        console.log(error);
-        throw error;
-      }))
-      .subscribe((data: ApiResponse<Array<{ id: string, descricao: string, aceitaEstorno: boolean }>>) => {
-        if (data.success) {
-          this.events.set(data.result)
+                    this.snackbarService.success("Evento encerrado com sucesso");
+                    this.fetchEvents();
+                })
+            }
+        })
+    }
 
-          const dataSource = new MatTableDataSource(this.events())
-          if (dataSource) {
-            dataSource.sortingDataAccessor = (item: any, property) => {
-              switch (property) {
-                // case 'Descricao':
-                //   return item.descricao;
-                // case 'Aceita Estorno':
-                //   return item.aceitaEstorno;
-                // case 'Ordem débito':
-                //   return Number(item.ordemDebito);
-                default:
-                  return item[property];
-              }
-            };
+    endEvent(event) {
+        this.confirmationService.confirm("Confirmar", "Confirme se deseja alterar o status do evento").subscribe(result => {
+            if (result) {
+                this._httpClient.put(`${environment.API_URL}evento/encerrarevento`, event.id, {
+                    headers: {
+                        Authorization: `Bearer ${this._authService.accessToken}`
+                    }
+                }).pipe(catchError((error) => {
+                    console.log(error)
+                    throw error
+                })).subscribe(result => {
+                    console.log(result)
+                })
+            }
+        })
+    }
 
-            dataSource.paginator = this.paginator;
-            dataSource.sort = this.sort;
-            this.eventsDataSource.set(dataSource);
-          }
-        }
-      });
-  }
+    addEvent() {
+        const dialogRef = this.dialog.open(EventFormComponent, {
+            width: '400px',
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                if (result.response.success) {
+                    this.snackbarService.success("Evento Criado com sucesso")
+                    this.fetchEvents()
+                } else {
+                    this.snackbarService.error(result.response.errors.join(", "))
+                }
+            }
+        });
+    }
+
+    fetchEvents() {
+        this._httpClient.get(`${environment.API_URL}evento/gettodoseventos`, {
+            headers: {
+                "Authorization": `Bearer ${this._authService.accessToken}`
+            }
+        })
+            .pipe(catchError((error) => {
+                console.log(error);
+                throw error;
+            }))
+            .subscribe((data: ApiResponse<Array<{ id: string, descricao: string, aceitaEstorno: boolean }>>) => {
+                if (data.success) {
+
+                    console.log(data.result);
 
 
-  showCashier(event){
+                    this.events.set(data.result)
 
-    this.dialog.open(CashierEventDetailComponent, {
-        data: event,
-        width: "99%"
-    })
-  }
+                    const dataSource = new MatTableDataSource(this.events())
+                    if (dataSource) {
+                        dataSource.sortingDataAccessor = (item: any, property) => {
+                            switch (property) {
+                                // case 'Descricao':
+                                //   return item.descricao;
+                                // case 'Aceita Estorno':
+                                //   return item.aceitaEstorno;
+                                // case 'Ordem débito':
+                                //   return Number(item.ordemDebito);
+                                default:
+                                    return item[property];
+                            }
+                        };
+
+                        dataSource.paginator = this.paginator;
+                        dataSource.sort = this.sort;
+                        this.eventsDataSource.set(dataSource);
+                    }
+                }
+            });
+    }
 
 
-  showAttendants(event){
-    this.dialog.open(AttendantsEventDetailComponent, {
-        data: event,
-        width: "99%"
-    })
-  }
+    showCashier(event) {
+
+        this.dialog.open(CashierEventDetailComponent, {
+            data: event,
+            width: "99%"
+        })
+    }
+
+
+    showAttendants(event) {
+        this.dialog.open(AttendantsEventDetailComponent, {
+            data: event,
+            width: "99%"
+        })
+    }
+
+    reopenEvent(event) {
+
+        this.confirmationService.confirm("Confirmar", "Tem certeza que deseja reabrir as vendas para o evento?").subscribe(result => {
+            if (result) {
+                this._httpClient.put(`${environment.API_URL}evento/reabrirvendasevento/${event.id}`, null, {
+                    headers: {
+                        Authorization: `Bearer ${this._authService.accessToken}`
+                    }
+                }).pipe(catchError((error) => {
+                    console.log(error)
+                    throw error
+                })).subscribe((data: ApiResponse<any>) => {
+
+                    if (data.error) {
+                        this.snackbarService.error(data.message);
+                        return;
+                    }
+
+                    this.snackbarService.success("Evento reaberto com sucesso");
+                    this.fetchEvents();
+                })
+            }
+        })
+    }
 }

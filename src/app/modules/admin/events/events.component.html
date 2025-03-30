@@ -35,23 +35,36 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Ações </th>
                     <td mat-cell *matCellDef="let Event">
                         <div class="flex flex-wrap gap-2 py-2">
-                            <button class="text-white bg-teal-500" (click)="eventDetails(Event)" mat-flat-button>Detalhe do Evento</button>
+                            <button class="text-white bg-teal-500" (click)="eventDetails(Event)" mat-flat-button>Detalhe
+                                do Evento</button>
 
                             @if(eventStatus.Criado == Event.estadoEvento){
-                            <button mat-flat-button (click)="editEvent(Event)" class="text-white bg-blue-500">Editar evento</button>
-                            <button mat-flat-button (click)="confirmEvent(Event)" class="text-white bg-blue-500">Confirmar Evento</button>
-                            <button mat-flat-button (click)="cancelEvent(Event)" class="text-white bg-blue-500">Cancelar Evento</button>
+                            <button mat-flat-button (click)="editEvent(Event)" class="text-white bg-blue-500">Editar
+                                evento</button>
+                            <button mat-flat-button (click)="confirmEvent(Event)"
+                                class="text-white bg-blue-500">Confirmar Evento</button>
+                            <button mat-flat-button (click)="cancelEvent(Event)" class="text-white bg-blue-500">Cancelar
+                                Evento</button>
                             }
+
+
+                            <button mat-flat-button (click)="showCashier(Event)"
+                                class="text-white bg-green-500">Caixas</button>
+
+                            <button mat-flat-button (click)="showAttendants(Event)"
+                                class="text-white bg-orange-500">Atendentes</button>
+
 
                             @if(eventStatus.Aberto == Event.estadoEvento){
 
-                            <button mat-flat-button (click)="endEventSelling(Event)" class="text-white bg-blue-500">Encerrar vendas</button>
-                            <button mat-flat-button (click)="endEvent(Event)" class="text-white bg-blue-500">Encerar evento</button>
+                            <button mat-flat-button (click)="endEventSelling(Event)" class="text-white bg-red-500">Encerar
+                                vendas</button>
                             }
 
-                            <button mat-flat-button (click)="showCashier(Event)" class="text-white bg-green-500">Caixas</button>
-
-                            <button mat-flat-button (click)="showAttendants(Event)" class="text-white bg-orange-500">Atendentes</button>
+                            @if(eventStatus.VendasEncerradas == Event.estadoEvento){
+                            <button mat-flat-button (click)="reopenEvent(Event)" class="text-white bg-blue-500">Reabrir
+                                evento</button>
+                            }
 
                         </div>
                     </td>
