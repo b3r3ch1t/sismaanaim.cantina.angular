@@ -1,3 +1,11 @@
-<p>
-  client-loading works!
-</p>
+<div class="upload-container">
+    <input type="file" (change)="onFileSelected($event)" />
+    <button (click)="uploadFile()" [disabled]="!selectedFile">Enviar Arquivo</button>
+    <div *ngIf="uploadProgress > 0">
+      Progresso: {{ uploadProgress }}%
+    </div>
+    <div *ngIf="message">
+      {{ message }}
+    </div>
+  </div>
+
