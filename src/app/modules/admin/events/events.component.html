@@ -65,7 +65,9 @@
                             @if(eventStatus.VendasEncerradas == Event.estadoEvento){
                             <button mat-flat-button (click)="endEvent(Event)" class="text-white bg-red-500">Fechar
                                 evento</button>
+                            }
 
+                            @if(eventStatus.Fechado == Event.estadoEvento){
                             <button mat-flat-button (click)="reopenEvent(Event)" class="text-white bg-blue-500">Reabrir
                                 evento</button>
                             }
