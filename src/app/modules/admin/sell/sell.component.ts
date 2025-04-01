@@ -166,7 +166,8 @@ export class AttendantSellComponent implements OnInit {
 
   handleCpfInput(event: InputEvent) {
 
-    this.noClientFound.set(false)
+    this.noClientFound.set(false);
+    this.totalClientBalance.set(0);
 
     const input = event.target as HTMLInputElement;
     if (input.value.length >= 4) {
