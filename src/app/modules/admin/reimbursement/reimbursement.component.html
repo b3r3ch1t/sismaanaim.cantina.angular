@@ -66,13 +66,19 @@
                 <span>{{ selectedClient().saldo | customCurrency}}</span>
             </p>
 
+
+            <p>
+                <span class="font-bold">Saldo estornável:</span>
+                <span>{{ selectedClient().saldoEstornavel | customCurrency}}</span>
+            </p>
+
             <div class="border-t my-6"></div>
 
             <div class="mb-6">
                 <p class="font-bold text-lg">Recarga</p>
             </div>
 
-            <mat-form-field class="w-full">
+            <!-- <mat-form-field class="w-full">
                 <mat-label>Forma de Pagamento*</mat-label>
                 <div class="flex gap-4 items-center">
                     <mat-select (selectionChange)="handlePaymentMethodSelection()"
@@ -91,19 +97,20 @@
                     Por favor, selecione um método de pagamento válido.
                 </mat-error>
                 }
-            </mat-form-field>
+            </mat-form-field> -->
 
             <!-- Valor Devolvido -->
             <mat-form-field class="w-full">
                 <mat-label>Valor Devolvido</mat-label>
                 <span matPrefix>R$&nbsp;</span>
-                <!-- <app-currency-input #returnAmountValueInput [disabled]="selectedPaymentMethod() === null"
-                placeholder="Informe o Valor Devolvido" (change)="onChangeReturnValue($event)" (keypress)="handleReturnAmountValue($event)"
-                ></app-currency-input> -->
-                <input matInput [disabled]="selectedPaymentMethod() === null" type="text" #returnAmountValueInput
+
+                <input matInput [disabled]="selectedClient() === null" type="text" #returnAmountValueInput
                     placeholder="Informe o Valor Devolvido" currencyMask
                     [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value"
-                    (keypress)="handleReturnAmountValue($event)">
+                   >
+
+
+
                 @if (validRechargeInput() === false) {
                 <mat-error>
                     Por favor, insira apenas números.

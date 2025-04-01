@@ -21,343 +21,278 @@ import { CurrencyMaskDirective } from 'app/directives/currency-mask.directive';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @Component({
-  selector: 'app-reimbursement',
-  imports: [
-    MatButtonModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSelectModule,
-    CustomCurrencyPipe,
-    MatRadioModule,
-    CurrencyMaskDirective,
-    CurrencyMaskModule
-  ],
-  providers: [CurrencyPipe, CustomCurrencyPipe],
-  templateUrl: './reimbursement.component.html',
-  styleUrl: './reimbursement.component.scss'
+    selector: 'app-reimbursement',
+    imports: [
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatSelectModule,
+        CustomCurrencyPipe,
+        MatRadioModule,
+        CurrencyMaskDirective,
+        CurrencyMaskModule
+    ],
+    providers: [CurrencyPipe, CustomCurrencyPipe],
+    templateUrl: './reimbursement.component.html',
+    styleUrl: './reimbursement.component.scss'
 })
 
 export class ReimbursementComponent implements OnInit {
 
-  private _httpClient = inject(HttpClient)
-  private _authService = inject(AuthService)
-  private _userService = inject(UserService);
-  private _customCurrencyPipe = inject(CustomCurrencyPipe)
+    private _httpClient = inject(HttpClient)
+    private _authService = inject(AuthService)
+    private _userService = inject(UserService);
+    private _customCurrencyPipe = inject(CustomCurrencyPipe)
 
-  noClientFound = signal(false);
-  clients = signal([]);
-  paymentMethods = signal([]);
-  showClearButton = signal(false);
-  inputDisabled = signal(false);
-  selectedClient = signal(null);
-  selectedPaymentMethod = signal(null);
-  disableClientDropdown = signal(false);
-  disablePaymentMethodDropdown = signal(false);
-  validPaidInput = signal(null);
-  validRechargeInput = signal(null);
-  validPaymentMethod = signal(null);
-  currentEvent = signal(null);
-  selectedClientBalance = signal([])
-  balanceAgainstPaymentMethod = signal(null)
+    noClientFound = signal(false);
+    clients = signal([]);
+    paymentMethods = signal([]);
+    showClearButton = signal(false);
+    inputDisabled = signal(false);
+    selectedClient = signal(null);
+    disableClientDropdown = signal(false);
+    disablePaymentMethodDropdown = signal(false);
+    validPaidInput = signal(null);
+    validRechargeInput = signal(null);
+    validPaymentMethod = signal(null);
+    currentEvent = signal(null);
+    selectedClientBalance = signal([])
+    balanceAgainstPaymentMethod = signal(null)
 
 
-  @ViewChild('nameInput', { static: true }) nameInput: ElementRef;
-  @ViewChild('cpfInput', { static: true }) cpfInput: ElementRef;
-  @ViewChild('clientDropdown', { static: false }) clientDropdown: MatRadioGroup;
-  @ViewChild('paymentMethodDropdown', { static: false }) paymentMethodDropdown: MatSelect;
-  @ViewChild('returnAmountValueInput', { static: false }) returnAmountValueInput: ElementRef;
+    @ViewChild('nameInput', { static: true }) nameInput: ElementRef;
+    @ViewChild('cpfInput', { static: true }) cpfInput: ElementRef;
+    @ViewChild('clientDropdown', { static: false }) clientDropdown: MatRadioGroup;
+    @ViewChild('paymentMethodDropdown', { static: false }) paymentMethodDropdown: MatSelect;
+    @ViewChild('returnAmountValueInput', { static: false }) returnAmountValueInput: ElementRef;
 
-  constructor(
-    private snackbar: SnackbarService,
-    private confirmationService: ConfirmationService
-  ) { }
+    constructor(
+        private snackbar: SnackbarService,
+        private confirmationService: ConfirmationService
+    ) { }
 
-  ngOnInit(): void {
-    this.loadCashRegister()
-    this.fetchPaymentMethods()
-  }
-
-  handleSubmit() {
-    if (this.selectedPaymentMethod() == null) {
-      console.log("invalid value ", this.selectedPaymentMethod())
-      this.validPaymentMethod.set(false)
-      return
+    ngOnInit(): void {
+        this.loadCashRegister();
     }
 
-    if (this.returnAmountValueInput.nativeElement.value == null) {
-      console.log("invalid value ", this.returnAmountValueInput.nativeElement.value)
-      this.validRechargeInput.set(false)
-      return
-    }
+    handleSubmit() {
 
-    console.log("validation passed")
 
-    if (this.currentEvent() === null) {
-      console.log('current event (cash register) is null')
-      return
-    }
-
-    this.confirmationService.confirm('Reembolso', 'Deseja realmente estornar o reembolso para o cliente?').subscribe((result) => {
-      if (result) {
-        this._httpClient.get(`${environment.API_URL}clientes/getsaldoclientebyclientid/${this.selectedClient().id}`, {
-          headers: {
-            "Authorization": `Bearer ${this._authService.accessToken}`
-          }
-        }).pipe(
-          catchError((error) => {
-            console.log(error);
-            throw error
-          })
-        ).subscribe((response: ApiResponse<any>) => {
-          const value = parseFloat(this.returnAmountValueInput.nativeElement.value.replace(".", "").replace(",", "."))
-          console.log(response.result)
-          let saldo = 0
-          response.result.forEach(item => {
-            item.formaPagamentoId === this.selectedPaymentMethod().id ? saldo = item.saldo : null
-          });
-
-          if (saldo < value) {
-            this.snackbar.error("Saldo insuficiente", 30 * 1000)
+        if (this.returnAmountValueInput.nativeElement.value == null) {
+            this.validRechargeInput.set(false);
             return
-          }
+        }
 
-          this._httpClient.post(`${environment.API_URL}caixa/estornarvalorcliente`, {
-            "caixaId": this.currentEvent().id,
-            "valor": value,
-            "formaPagamentoId": this.selectedPaymentMethod().id,
-            "clienteId": this.selectedClient().id
-          }).pipe(
+
+        if (this.currentEvent() === null) {
+            console.log('current event (cash register) is null')
+            return
+        }
+
+        console.log(this.selectedClient())
+
+        if (this.selectedClient() === null) {
+            console.log('selected client is null');
+        }
+
+        const value = parseFloat(this.returnAmountValueInput.nativeElement.value.replace(".", "").replace(",", "."));
+        const amount = this._customCurrencyPipe.transform(value);
+
+
+        console.log("valor", value);
+        console.log("valor formatado", amount);
+
+
+        this.confirmationService.confirm('Reembolso', 'Deseja realmente estornar o reembolso para o cliente?').subscribe((result) => {
+            if (result) {
+
+
+                this._httpClient.post(`${environment.API_URL}caixa/estornarvalorcliente`, {
+                    "caixaId": this.currentEvent().id,
+                    "valor": value,
+                    "clienteId": this.selectedClient().id
+                }).pipe(
+                    catchError((error) => {
+                        console.log(error);
+                        throw error
+                    })
+                ).subscribe((response: ApiResponse<any>) => {
+
+
+                    if(response.success) {
+
+                    const value = parseFloat(this.returnAmountValueInput.nativeElement.value.replace(".", "").replace(",", "."))
+                    const amount = this._customCurrencyPipe.transform(value)
+                    this.snackbar.success(`*O Reembolso para o cliente ‘${this.selectedClient().nome}’ no valor de ‘${amount}’ foi feito com sucesso`, 30 * 1000)
+                    this.clearInputs();
+
+                    }
+
+                    if (response.error) {
+                        this.snackbar.error(response.message, 30 * 1000)
+                    }
+                })
+
+            }
+        }
+
+
+        );
+
+    }
+
+    loadCashRegister() {
+        this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
+            headers: {
+                Authorization: `Bearer ${this._authService.accessToken}`
+            }
+        }).pipe(
             catchError((error) => {
-              console.log(error);
-              throw error
+                console.log(error);
+                throw error
             })
-          ).subscribe((response: ApiResponse<any>) => {
-            const value = parseFloat(this.returnAmountValueInput.nativeElement.value.replace(".", "").replace(",", "."))
-            const amount = this._customCurrencyPipe.transform(value)
-            this.snackbar.success(`*O Reembolso para o cliente ‘${this.selectedClient().nome}’ no valor de ‘${amount}’ foi feito com sucesso`, 30 * 1000)
-            this.clearInputs()
-            console.log(response)
-          })
-
-        })
-
-
-      }
-    })
-
-  }
-
-  loadCashRegister() {
-    this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
-      headers: {
-        Authorization: `Bearer ${this._authService.accessToken}`
-      }
-    }).pipe(
-      catchError((error) => {
-        console.log(error);
-        throw error
-      })
-    ).subscribe((response: ApiResponse<any>) => {
-      if (response.success) {
-        this.currentEvent.set(response.result)
-        console.log(this.currentEvent())
-      }
-
-    });
-  }
-
-  handleReturnAmountValue(event: KeyboardEvent) {
-    this.onKeyPress(event)
-  }
-
-  onKeyPress(event: KeyboardEvent) {
-    console.log(event.key)
-
-    if (event.key === 'Enter' || event.key === '-' || event.key === ',') {
-      return
-    }
-
-    const allowedChars = /[0-9\.]/; // Allow numbers and a single decimal point
-    const inputChar = String.fromCharCode(event.keyCode || event.which);
-
-    if (!allowedChars.test(inputChar)) {
-      event.preventDefault();
-    }
-  }
-
-  handleNameInput(event: InputEvent) {
-    this.noClientFound.set(false)
-    const input = event.target as HTMLInputElement;
-    if (input.value.length >= 4) {
-      // this.inputDisabled.set(true);
-      // TODO : Move this to an API service
-      this._httpClient.get(`${environment.API_URL}clientes/getclientesbynome/${input.value}`, {
-        headers: {
-          "Authorization": `Bearer ${this._authService.accessToken}`
-        }
-      })
-        .pipe(catchError((error) => {
-          console.log(error);
-          throw error;
-        }))
-        // TODO : Create datatype for Client
-        .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
-          if (data.result) {
-            const clients = data.result
-            this.clients.set(clients)
-
-            if(this.clients().length === 1){
-              this.selectedClient.set(this.clients()[0])
+        ).subscribe((response: ApiResponse<any>) => {
+            if (response.success) {
+                this.currentEvent.set(response.result);
             }
 
-            if (!this.clients().length) {
-              this.noClientFound.set(true)
-            }
-
-          }
-          this.showClearButton.set(true)
         });
-
-    } else {
-      this.showClearButton.set(false)
     }
-  }
-
-  handleCpfInput(event: InputEvent) {
-    this.noClientFound.set(false)
-    const input = event.target as HTMLInputElement;
-    if (input.value.length >= 4) {
-      // this.inputDisabled.set(true);
-
-      this._httpClient.get(`${environment.API_URL}clientes/getclientesbycpf/${input.value}`, {
-        headers: {
-          "Authorization": `Bearer ${this._authService.accessToken}`
-        }
-      })
-        .pipe(catchError((error) => {
-          console.log(error);
-          throw error;
-        }))
-        .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
-          if (data.success) {
-            const clients = data.result
-            this.clients.set(clients)
-
-            if(this.clients().length === 1){
-              this.selectedClient.set(this.clients()[0])
-            }
-
-            if (!this.clients().length) {
-              this.noClientFound.set(true)
-            }
-
-          }
-          this.showClearButton.set(true)
-        });
-
-    } else {
-      this.showClearButton.set(false)
-    }
-  }
-
-  clearInputs() {
-    // const nameInput = this.nameInput.nativeElement as HTMLInputElement;
-    // const cpfInput = this.cpfInput.nativeElement as HTMLInputElement;
-
-    // nameInput.value = '';
-    // cpfInput.value = '';
-    this.showClearButton.set(false)
-    this.inputDisabled.set(false)
-    this.clients.set([])
-    this.selectedClient.set(null)
-    // this.clientDropdown.value = null
-  }
 
 
-  handleClientSelection(clientId: string) {
-    if (clientId) {
-      this.disableClientDropdown.set(true)
 
-      this._httpClient.get(`${environment.API_URL}clientes/getsaldoclientebyclientid/${clientId}`, {
-        headers: {
-          "Authorization": `Bearer ${this._authService.accessToken}`
-        }
-      }).pipe(
-        catchError((error) => {
-          console.log(error);
-          throw error
-        })
-      ).subscribe((response: ApiResponse<any>) => {
-        if (response.success) {
-          this.selectedClientBalance.set(response.result)
-          console.log(this.selectedClientBalance())
-        }
-      })
 
-      this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
-        headers: {
-          "Authorization": `Bearer ${this._authService.accessToken}`
-        }
-      })
-        .pipe(catchError((error) => {
-          console.log(error);
-          throw error;
-        }))
-        // TODO : Create a datatype for Client
-        // TODO : Move this to an API service
-        .subscribe((data: ApiResponse<object>) => {
-          console.log(data)
-          this.disableClientDropdown.set(false)
-          if (data.success) {
-            this.selectedClient.set(data.result)
-            console.log(this.selectedClient())
-          }
-        });
+    handleNameInput(event: InputEvent) {
+        this.noClientFound.set(false)
+        const input = event.target as HTMLInputElement;
+        if (input.value.length >= 4) {
+            // this.inputDisabled.set(true);
+            // TODO : Move this to an API service
+            this._httpClient.get(`${environment.API_URL}clientes/getclientesbynome/${input.value}`, {
+                headers: {
+                    "Authorization": `Bearer ${this._authService.accessToken}`
+                }
+            })
+                .pipe(catchError((error) => {
+                    console.log(error);
+                    throw error;
+                }))
+                // TODO : Create datatype for Client
+                .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
+                    if (data.result) {
+                        const clients = data.result
+                        this.clients.set(clients)
 
-    }
-  }
+                        if (this.clients().length === 1) {
+                            this.selectedClient.set(this.clients()[0])
+                        }
 
-  fetchPaymentMethods() {
-    this._httpClient.get(`${environment.API_URL}formapagamento/listarformapagamento`, {
-      headers: {
-        "Authorization": `Bearer ${this._authService.accessToken}`
-      }
-    })
-      .pipe(catchError((error) => {
-        console.log(error);
-        throw error;
-      }))
-      .subscribe((data: ApiResponse<Array<{ id: string, descricao: string, aceitaEstorno: boolean }>>) => {
-        if (data.success) {
-          this.paymentMethods.set(data.result.filter(item => item.aceitaEstorno))
-        }
-      });
-  }
+                        if (!this.clients().length) {
+                            this.noClientFound.set(true)
+                        }
 
-  handlePaymentMethodSelection() {
-    if (this.paymentMethodDropdown.value) {
-      const paymentMethodId = this.paymentMethodDropdown.value
-      this.disablePaymentMethodDropdown.set(true)
-      this.paymentMethods().forEach(paymentMethod => {
-        paymentMethod.id === paymentMethodId ? this.selectedPaymentMethod.set(paymentMethod) : null
-      });
-      console.log(this.selectedPaymentMethod())
-      this.selectedClientBalance().some(balance => {
-        if (balance.formaPagamentoId == this.selectedPaymentMethod().id) {
-          console.log(balance.formaPagamentoId, this.selectedPaymentMethod().id)
-          this.balanceAgainstPaymentMethod.set(balance.saldo)
-          return true
+                    }
+                    this.showClearButton.set(true)
+                });
+
         } else {
-          console.log(balance.formaPagamentoId, this.selectedPaymentMethod().id)
-          this.balanceAgainstPaymentMethod.set(null)
-          return false
+            this.showClearButton.set(false)
         }
-      })
-      this.disablePaymentMethodDropdown.set(false)
     }
-  }
+
+    handleCpfInput(event: InputEvent) {
+        this.noClientFound.set(false)
+        const input = event.target as HTMLInputElement;
+        if (input.value.length >= 4) {
+            // this.inputDisabled.set(true);
+
+            this._httpClient.get(`${environment.API_URL}clientes/getclientesbycpf/${input.value}`, {
+                headers: {
+                    "Authorization": `Bearer ${this._authService.accessToken}`
+                }
+            })
+                .pipe(catchError((error) => {
+                    console.log(error);
+                    throw error;
+                }))
+                .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
+                    if (data.success) {
+                        const clients = data.result
+                        this.clients.set(clients)
+
+                        if (this.clients().length === 1) {
+                            this.selectedClient.set(this.clients()[0])
+                        }
+
+                        if (!this.clients().length) {
+                            this.noClientFound.set(true)
+                        }
+
+                    }
+                    this.showClearButton.set(true)
+                });
+
+        } else {
+            this.showClearButton.set(false)
+        }
+    }
+
+    clearInputs() {
+
+        this.showClearButton.set(false)
+        this.inputDisabled.set(false)
+        this.clients.set([])
+        this.selectedClient.set(null)
+    }
+
+
+    handleClientSelection(clientId: string) {
+        if (clientId) {
+            this.disableClientDropdown.set(true)
+
+            this._httpClient.get(`${environment.API_URL}clientes/getsaldoclientebyclientid/${clientId}`, {
+                headers: {
+                    "Authorization": `Bearer ${this._authService.accessToken}`
+                }
+            }).pipe(
+                catchError((error) => {
+                    console.log(error);
+                    throw error
+                })
+            ).subscribe((response: ApiResponse<any>) => {
+                if (response.success) {
+                    this.selectedClientBalance.set(response.result)
+                    console.log(this.selectedClientBalance())
+                }
+            })
+
+            this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
+                headers: {
+                    "Authorization": `Bearer ${this._authService.accessToken}`
+                }
+            })
+                .pipe(catchError((error) => {
+                    console.log(error);
+                    throw error;
+                }))
+                // TODO : Create a datatype for Client
+                // TODO : Move this to an API service
+                .subscribe((data: ApiResponse<object>) => {
+                    console.log(data)
+                    this.disableClientDropdown.set(false)
+                    if (data.success) {
+                        this.selectedClient.set(data.result)
+                        console.log(this.selectedClient())
+                    }
+                });
+
+        }
+    }
+
+
+
 
 }
