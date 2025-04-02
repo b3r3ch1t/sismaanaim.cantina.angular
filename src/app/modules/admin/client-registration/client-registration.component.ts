@@ -37,12 +37,12 @@ export class ClientRegistrationComponent implements OnInit {
   client = signal(null)
 
   constructor(
-    private fb: FormBuilder,
-    private fuseUtils: FuseUtilsService,
-    private http: HttpClient,
-    private _authService : AuthService,
-    private _confirmationService : ConfirmationService,
-    private _snackbarService : SnackbarService
+    private readonly fb: FormBuilder,
+    private readonly  fuseUtils: FuseUtilsService,
+    private readonly  http: HttpClient,
+    private readonly  _authService : AuthService,
+    private readonly  _confirmationService : ConfirmationService,
+    private readonly  _snackbarService : SnackbarService
   ) {
     this.clientForm = this.fb.group({
       cpf: ['', [Validators.required]],
@@ -75,8 +75,13 @@ export class ClientRegistrationComponent implements OnInit {
         if (response.success && response.result.length) {
           this.isUpdate = true;
           this.showAdditionalFields = true;
-          const data = {...response.result[0], telefoneContato: response.result[0].telefoneContato.replace("+55", '')}
+          const data = {...response.result[0], telefoneContato: response.result[0].telefoneContato.replace("+55", '')};
+
+          //isto é um hack para evitar que o cpf oculto seja exibido no form.
+          data.cpf = cpf;
           this.clientForm.patchValue(data);
+
+
         } else {
           this.isUpdate = false;
           this.showAdditionalFields = true;
