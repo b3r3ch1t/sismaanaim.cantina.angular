@@ -220,7 +220,13 @@ export class AttendantSellComponent implements OnInit {
 
 
     handleClientSelection(clientId: string) {
-        this.noClientFound.set(false)
+
+
+
+        this.totalClientBalance.set(0);
+        this.noClientFound.set(false);
+
+
         if (clientId) {
             this.disableClientDropdown.set(true)
             this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
