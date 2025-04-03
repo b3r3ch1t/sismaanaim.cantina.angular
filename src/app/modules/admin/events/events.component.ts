@@ -207,8 +207,6 @@ export class EventsComponent implements OnInit {
             .subscribe((data: ApiResponse<Array<{ id: string, descricao: string, aceitaEstorno: boolean }>>) => {
                 if (data.success) {
 
-                    console.log(data.result);
-
 
                     this.events.set(data.result)
 

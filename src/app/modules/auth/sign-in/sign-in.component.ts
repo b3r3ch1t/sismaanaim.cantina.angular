@@ -120,8 +120,6 @@ export class AuthSignInComponent implements OnInit {
             return;
         }
 
-        console.log("FORM ", this.signInForm.value)
-        // Disable the form
         this.signInForm.disable();
 
         // Hide the alert
