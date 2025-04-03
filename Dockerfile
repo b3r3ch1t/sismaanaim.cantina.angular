@@ -16,8 +16,8 @@ COPY . .
 ARG BUILD_ENV=production
 RUN echo "O valor de BUILD_ENV é: $BUILD_ENV"
 
-# Executar o build
-RUN npm run build -- --configuration=production
+# Executar o build com base no ambiente
+RUN npm run build -- --configuration=$BUILD_ENV
 
 # Estágio final
 FROM nginx:alpine
