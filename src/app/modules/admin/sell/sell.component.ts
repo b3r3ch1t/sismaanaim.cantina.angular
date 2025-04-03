@@ -61,7 +61,7 @@ export class AttendantSellComponent implements OnInit {
     validRechargeInput = signal(null);
     validPaymentMethod = signal(null);
     currentAttendant = signal(null);
-    totalClientBalance = signal(0);
+    totalClientBalance: number = 0;
 
     @ViewChild('cpfInput', { static: false }) cpfInput: ElementRef;
     @ViewChild('clientDropdown', { static: false }) clientDropdown: MatRadioGroup;
@@ -85,8 +85,8 @@ export class AttendantSellComponent implements OnInit {
         }
 
         let sellingAmount = parseFloat(unformatedValue.replace('R$', '').replace('.', '').replace(',', '.'))
-        console.log("Selling Amount", sellingAmount, "total balance", this.totalClientBalance())
-        if (sellingAmount > this.totalClientBalance()) {
+        console.log("Selling Amount", sellingAmount, "total balance", this.totalClientBalance)
+        if (sellingAmount > this.totalClientBalance) {
             this.snackbar.error("O valor de venda deve ser menor que o saldo")
             return
         }
@@ -166,7 +166,7 @@ export class AttendantSellComponent implements OnInit {
     handleCpfInput(event: InputEvent) {
 
         this.noClientFound.set(false);
-        this.totalClientBalance.set(0);
+        this.totalClientBalance = 0;
 
         const input = event.target as HTMLInputElement;
         if (input.value.length >= 4) {
@@ -186,13 +186,15 @@ export class AttendantSellComponent implements OnInit {
                 .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
                     if (data.success) {
                         const clients = data.result
-                        this.clients.set(clients)
+                        this.clients.set(clients);
+
+                        console.log(clients);
 
                         if (this.clients().length === 1) {
                             this.selectedClient.set(this.clients()[0]);
                             this.handleClientSelection(this.selectedClient().id);
 
-                            this.totalClientBalance.set(0);
+                            this.totalClientBalance = 0;
                         }
 
                         if (!this.clients().length) {
@@ -223,7 +225,7 @@ export class AttendantSellComponent implements OnInit {
 
 
 
-        this.totalClientBalance.set(0);
+        this.totalClientBalance = 0;
         this.noClientFound.set(false);
 
 
@@ -244,32 +246,13 @@ export class AttendantSellComponent implements OnInit {
                     console.log(data)
                     this.disableClientDropdown.set(false)
                     if (data.success) {
-                        this.totalClientBalance.set(0);
+                        this.totalClientBalance = data.result['saldo'] || 0;
                         this.selectedClient.set(data.result);
-                        this.loadClientBalance();
                     }
                 });
 
         }
     }
 
-    loadClientBalance() {
-        this._httpClient.get(`${environment.API_URL}clientes/getsaldoclientebyclientid/${this.selectedClient().id}`, {
-            headers: {
-                "Authorization": `Bearer ${this._authService.accessToken}`
-            }
-        })
-            .pipe(catchError((error) => {
-                console.log(error);
-                throw error;
-            }))
-            .subscribe((data: ApiResponse<Array<{ id: string, saldo: number }>>) => {
-                if (data.success) {
-                    data.result.forEach(item => {
-                        this.totalClientBalance.update(old => old + item.saldo)
-                    })
-                }
-            });
-    }
 
 }

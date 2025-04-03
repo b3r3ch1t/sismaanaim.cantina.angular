@@ -10,6 +10,17 @@ export class CustomCurrencyPipe implements PipeTransform {
     constructor() { }
 
     transform(value: number): string {
+
+        if(value === null || value === undefined) {
+
+            return '';
+        }
+
+        if(value === 0) {
+            return 'R$ 0,00';
+
+        }
+
         return this.currencyPipe.transform(value, 'BRL', 'symbol', '1.2-2', 'pt-BR');
     }
 }

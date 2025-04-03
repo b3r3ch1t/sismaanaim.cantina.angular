@@ -56,7 +56,7 @@
           <!-- Saldo -->
           <mat-form-field class="w-full">
               <mat-label>Saldo</mat-label>
-              <input matInput readonly currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" value="{{ totalClientBalance() | customCurrency }}" type="text" placeholder="Informe o Saldo">
+              <input matInput readonly currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" value="{{ totalClientBalance}}" type="text" placeholder="Informe o Saldo">
           </mat-form-field>
 
           <mat-form-field class="w-full">
@@ -65,7 +65,7 @@
             <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" #sellingInput type="text" placeholder="Informe o valor vendido">
           </mat-form-field>
 
-          <button mat-raised-button color="primary" (click)="handleSubmit()">
+          <button  disabled="{{totalClientBalance<=0}}"   mat-raised-button color="primary" (click)="handleSubmit()">
               Efetuar Venda
           </button>
 
