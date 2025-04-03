@@ -84,6 +84,10 @@
                             "sourceMap": true
                         },
                         "staging": {
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractLicenses": true,
                             "fileReplacements": [
                                 {
                                     "replace": "src/app/environments/environment.ts",
@@ -91,7 +95,7 @@
                                 }
                             ]
                         },
-                       "main": {
+                        "main": {
                             "budgets": [
                                 {
                                     "type": "initial",
@@ -123,6 +127,9 @@
                         },
                         "development": {
                             "buildTarget": "fuse:build:development"
+                        },
+                        "staging": {
+                            "buildTarget": "fuse:build:staging"
                         }
                     },
                     "defaultConfiguration": "development"
