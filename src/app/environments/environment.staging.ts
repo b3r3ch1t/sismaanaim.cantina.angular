@@ -2,7 +2,7 @@
 
 export enum BackendURL {
     Local = 'http://localhost:60397/v1/sismaanaimcia/',
-    Staging = '/api/v1/sismaanaimcia/',
+    Staging = '/api/',
   }
 
 
