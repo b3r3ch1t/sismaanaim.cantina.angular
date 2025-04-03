@@ -65,4 +65,4 @@ jobs:
 
       - name: Copy NGINX configuration
         run: |
-          cp ${{ env.NGINX_CONF }} /etc/nginx/conf.d/default.conf
+          sudo cp ${{ env.NGINX_CONF }} /etc/nginx/conf.d/default.conf
