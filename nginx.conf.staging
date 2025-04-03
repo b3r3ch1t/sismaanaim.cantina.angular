@@ -47,7 +47,7 @@ http {
     }
 
         location /api {
-            proxy_pass http://sismaanaim.cantina.local.api.hml;
+            proxy_pass http://sismaanaim.cantina.local.api.hml/v1/sismaanaimcia/;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
