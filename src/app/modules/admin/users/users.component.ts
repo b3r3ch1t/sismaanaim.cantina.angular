@@ -16,17 +16,30 @@ import { ConfirmationService } from 'app/services/confirmation.service';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { UserProfile } from 'app/core/user/user-profile.enum';
 import { UserDetailComponent } from './user-detail/user-detail.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-users',
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.css'],
-    imports: [MatTableModule, MatPaginator, MatSortModule, MatButtonModule, MatIconModule, MatCheckboxModule]
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatPaginator,
+        MatSortModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+    ]
 })
 
 export class UsersComponent implements OnInit {
-    private _httpClient = inject(HttpClient)
-    private _authService = inject(AuthService)
+    private readonly _httpClient = inject(HttpClient)
+    private readonly _authService = inject(AuthService)
 
     @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort!: MatSort;
@@ -48,9 +61,9 @@ export class UsersComponent implements OnInit {
     ]
 
     constructor(
-        private dialog: MatDialog,
-        private snackbarService: SnackbarService,
-        private confirmationService: ConfirmationService
+        private readonly dialog: MatDialog,
+        private readonly snackbarService: SnackbarService,
+        private readonly confirmationService: ConfirmationService
     ) { }
 
     ngOnInit(): void {
@@ -66,8 +79,8 @@ export class UsersComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 if (result.response.success) {
-                    this.snackbarService.success("Usuário adicionado com sucesso")
-                    this.fetchUsers()
+                    this.snackbarService.success("Usuário adicionado com sucesso");
+                    this.fetchUsers();
                 }
             }
         });
@@ -195,4 +208,42 @@ export class UsersComponent implements OnInit {
     hasClaim(user: any, perfil: number): boolean {
         return user.claims?.some(claim => claim.perfilUsuario === perfil);
     }
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+
+
+        const dataSource = new MatTableDataSource(this.users())
+        if (dataSource) {
+
+
+
+            dataSource.sortingDataAccessor = (item: any, property) => {
+                switch (property) {
+                    case 'Nome':
+                        return item.nome;
+                    case 'Email':
+                        return item.email;
+                    case 'Ativo':
+                        return item.ativo;
+                    case 'CPF':
+                        return item.cpf;
+                    default:
+                        return item[property];
+                }
+            };
+
+        }
+        dataSource.filter = filterValue.trim().toLowerCase();
+
+
+        dataSource.paginator = this.paginator;
+        dataSource.sort = this.sort;
+        this.usersDataSource.set(dataSource);
+
+
+
+    }
 }
+
+

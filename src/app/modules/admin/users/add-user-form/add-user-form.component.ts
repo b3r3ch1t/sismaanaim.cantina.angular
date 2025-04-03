@@ -30,19 +30,19 @@ import { SnackbarService } from 'app/services/snackbar.service';
 export class AddUserFormComponent {
     addUserForm: FormGroup;
 
-    private _httpClient = inject(HttpClient);
-    private _authService = inject(AuthService);
-    private _fuseUtils = inject(FuseUtilsService);
+    private readonly _httpClient = inject(HttpClient);
+    private readonly  _authService = inject(AuthService);
+    private readonly  _fuseUtils = inject(FuseUtilsService);
 
     constructor(
-        private fb: FormBuilder,
-        private dialogRef: MatDialogRef<AddUserFormComponent>,
-        private snackbar: SnackbarService,
+        private readonly  fb: FormBuilder,
+        private readonly  dialogRef: MatDialogRef<AddUserFormComponent>,
+        private readonly  snackbar: SnackbarService,
     ) {
         this.addUserForm = this.fb.group({
             nome: ['', [Validators.required, Validators.maxLength(50)]],
             cpf: ['', [Validators.required, this.validateCPF.bind(this)]],
-            email: ['', [Validators.required, Validators.email]]
+            email: ['', [ Validators.email]]
         });
     }
 

@@ -12,7 +12,7 @@
         <mat-error>Max 50 characters</mat-error>
       }
     </mat-form-field>
-  
+
     <!-- CPF -->
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>CPF</mat-label>
@@ -24,14 +24,14 @@
         <mat-error>Invalid CPF</mat-error>
       }
     </mat-form-field>
-  
+
     <!-- Email -->
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Email</mat-label>
       <input matInput formControlName="email" type="email" />
-      @if (addUserForm.controls['email'].hasError('required')) {
+      <!-- @if (addUserForm.controls['email'].hasError('required')) {
         <mat-error>E-mail is required</mat-error>
-      }
+      } -->
       @if (addUserForm.controls['email'].hasError('email')) {
         <mat-error>Invalid e-mail format</mat-error>
       }
@@ -42,7 +42,7 @@
       <button mat-flat-button color="primary" type="submit" [disabled]="addUserForm.invalid">Create User</button>
     </div>
   </form>
-  
+
 </mat-dialog-content>
 
 
