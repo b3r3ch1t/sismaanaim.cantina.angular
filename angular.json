@@ -86,8 +86,8 @@
                         "staging": {
                             "fileReplacements": [
                                 {
-                                    "replace": "/src/app/environments/environment.ts",
-                                    "with": "/src/app/environments/environment.staging.ts"
+                                    "replace": "src/app/environments/environment.ts",
+                                    "with": "src/app/environments/environment.staging.ts"
                                 }
                             ]
                         },
