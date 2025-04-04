@@ -1,56 +1,45 @@
 user  nginx;
 worker_processes  auto;
-pid /run/nginx.pid;
-include /etc/nginx/modules-enabled/*.conf;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
 
 events {
     worker_connections  1024;
 }
 
 http {
-    sendfile on;
-    tcp_nopush on;
-    tcp_nodelay on;
-    keepalive_timeout 65;
-    types_hash_max_size 2048;
-
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
-
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
-
-    gzip on;
-    gzip_disable "msie6";
-
-    include /etc/nginx/conf.d/*.conf;
-    include /etc/nginx/sites-enabled/*;
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
 
     server {
         listen 80;
 
-    root /usr/share/nginx/html/browser/;
-    index index.html;
+        root /usr/share/nginx/html;
 
-    location / {
+        location / {
             try_files $uri $uri/ /index.html;
-    }
+        }
 
-
-
-    error_page 404 /index.html;
-
-    location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|eot|ttf|svg|otf|json)$ {
-        expires 6M;
-        access_log off;
-        add_header Cache-Control "public";
-    }
-
-        location /api {
-            proxy_pass http://sismaanaim.cantina.local.api.hml;
+        location /api/ {
+            proxy_pass http://sismaanaim.cantina.local.api:5000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_cache_bypass $http_upgrade;
         }
+
     }
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+    sendfile        on;
+    keepalive_timeout  65;
 }

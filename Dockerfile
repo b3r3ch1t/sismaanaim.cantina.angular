@@ -20,7 +20,7 @@ RUN echo "O valor de BUILD_ENV é: $BUILD_ENV"
 RUN npm run build -- --configuration=$BUILD_ENV
 
 # Estágio final
-FROM nginx:alpine
+FROM nginx:latest
 
 RUN rm -rf /usr/share/nginx/html/*
 
