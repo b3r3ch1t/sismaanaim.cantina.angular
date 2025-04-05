@@ -84,8 +84,8 @@ export class AttendantSellComponent implements OnInit {
             return
         }
 
-        let sellingAmount = parseFloat(unformatedValue.replace('R$', '').replace('.', '').replace(',', '.'))
-        console.log("Selling Amount", sellingAmount, "total balance", this.totalClientBalance)
+        let sellingAmount = parseFloat(unformatedValue.replace('R$', '').replace('.', '').replace(',', '.'));
+
         if (sellingAmount > this.totalClientBalance) {
             this.snackbar.error("O valor de venda deve ser menor que o saldo")
             return
@@ -245,7 +245,11 @@ export class AttendantSellComponent implements OnInit {
                 .subscribe((data: ApiResponse<object>) => {
                     console.log(data)
                     this.disableClientDropdown.set(false)
+
+
                     if (data.success) {
+
+
                         this.totalClientBalance = data.result['saldo'] || 0;
                         this.selectedClient.set(data.result);
                     }

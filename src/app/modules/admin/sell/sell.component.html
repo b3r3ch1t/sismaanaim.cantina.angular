@@ -50,14 +50,19 @@
               <span>{{ selectedClient().telefoneContato }}</span>
           </p>
 
+          <p>
+            <span class="font-bold">Saldo:</span>
+            <span>{{ totalClientBalance | customCurrency}}</span>
+        </p>
+
 
           <div class="border-t my-6"></div>
 
           <!-- Saldo -->
-          <mat-form-field class="w-full">
+          <!-- <mat-form-field class="w-full">
               <mat-label>Saldo</mat-label>
-              <input matInput readonly currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" value="{{ totalClientBalance}}" type="text" placeholder="Informe o Saldo">
-          </mat-form-field>
+              <input matInput readonly currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" value="{{ totalClientBalance | customCurrency}}" type="text" placeholder="Informe o Saldo">
+          </mat-form-field> -->
 
           <mat-form-field class="w-full">
             <mat-label>Valor vendido</mat-label>
