@@ -23,8 +23,8 @@ import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox
 })
 
 export class MoneyComponent implements OnInit {
-  private _httpClient = inject(HttpClient)
-  private _authService = inject(AuthService)
+  private readonly _httpClient = inject(HttpClient);
+  private  readonly _authService = inject(AuthService);
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort!: MatSort;

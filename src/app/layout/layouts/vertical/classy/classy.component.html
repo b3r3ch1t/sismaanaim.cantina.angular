@@ -21,6 +21,11 @@
                 <user [showAvatar]="false"></user>
             </div>
         </div>
+
+        <div *ngIf="Environment" class="flex w-full flex-col items-center p-4 ">
+            Ambiente : {{ Environment }}<br />
+        </div>
+
         <!-- User -->
         <div class="flex w-full flex-col items-center p-4">
 
