@@ -357,6 +357,8 @@ export const appRoutes: Route[] = [
         ]
     },
 
+
+
     {
         path: '',
         canActivate: [AuthGuard],
@@ -366,9 +368,12 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'reviewer-money', loadChildren: () => import('app/modules/admin/money/money.routes') },
+            { path: 'reviewer/clients-all', loadChildren: () => import('app/modules/admin/clients-all/clients-all.routes') },
         ]
     },
+
+
+
 
     {
         path: '',

@@ -221,8 +221,14 @@ export const reviewerNavigation: FuseNavigationItem[] = [
                         type: 'basic',
                         icon: 'heroicons_outline:user-plus',
                         link: '/reviewer/client-loading'
-                    }
-
+                    },
+                    {
+                        id: 'all-clients',
+                        title: 'Clientes',
+                        type: 'basic',
+                        icon: 'heroicons_outline:identification',
+                        link: '/reviewer/clients-all'
+                    },
 
                 ]
             },

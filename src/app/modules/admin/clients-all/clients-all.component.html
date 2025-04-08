@@ -1,0 +1,41 @@
+<div class="flex min-w-0 flex-auto flex-col">
+    <div class="flex-auto p-6 sm:p-10">
+
+        <div class="max-w-128">
+            <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Clientes</h1>
+        </div>
+
+        <div class="filter-container" style="display: flex; width: 100%;">
+            <mat-form-field style="flex: 1;">
+                <mat-label>Filtro</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="filtro">
+            </mat-form-field>
+        </div>
+
+
+        <div>
+            <table mat-table matSort [dataSource]="clientsDataSource()" class="mat-elevation-z8 full-width">
+
+                <ng-container matColumnDef="Nome">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.nome }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="CPF">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> CPF </th>
+                    <td mat-cell *matCellDef="let cliente">{{ cliente.cpf }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="Saldo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                    <td mat-cell *matCellDef="let cliente">{{ cliente.saldo  | customCurrency}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSize]="25" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
+        </div>
+
+    </div>
+</div>
