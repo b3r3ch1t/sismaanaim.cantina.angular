@@ -70,8 +70,8 @@ export class ReimbursementComponent implements OnInit {
     @ViewChild('returnAmountValueInput', { static: false }) returnAmountValueInput: ElementRef;
 
     constructor(
-        private snackbar: SnackbarService,
-        private confirmationService: ConfirmationService
+        private readonly snackbar: SnackbarService,
+        private readonly  confirmationService: ConfirmationService
     ) { }
 
     ngOnInit(): void {
@@ -92,8 +92,6 @@ export class ReimbursementComponent implements OnInit {
             return
         }
 
-        console.log(this.selectedClient())
-
         if (this.selectedClient() === null) {
             console.log('selected client is null');
         }
@@ -101,9 +99,6 @@ export class ReimbursementComponent implements OnInit {
         const value = parseFloat(this.returnAmountValueInput.nativeElement.value.replace(".", "").replace(",", "."));
         const amount = this._customCurrencyPipe.transform(value);
 
-
-        console.log("valor", value);
-        console.log("valor formatado", amount);
 
 
         this.confirmationService.confirm('Reembolso', 'Deseja realmente estornar o reembolso para o cliente?').subscribe((result) => {
