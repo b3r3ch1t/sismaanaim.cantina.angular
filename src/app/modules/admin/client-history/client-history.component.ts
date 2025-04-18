@@ -131,7 +131,6 @@ export class ClientHistoryComponent implements OnInit {
 
         const input = event.target as HTMLInputElement;
         if (input.value.length >= 4) {
-            // this.inputDisabled.set(true);
 
             this._httpClient.get(`${environment.API_URL}clientes/getclientesbycpf/${input.value}`, {
                 headers: {
@@ -162,13 +161,17 @@ export class ClientHistoryComponent implements OnInit {
     }
 
     clearInputs() {
-        this.showClearButton.set(false)
-        this.clients.set([])
-        this.selectedClient.set(null)
+        this.showClearButton.set(false);
+        this.clients.set([]);
+        this.selectedClient.set(null);
+        this.clientDataSource.set(new MatTableDataSource([]));
     }
 
     handleClientSelection(clientId: string) {
         if (clientId) {
+
+            this.selectedClient.set(null) ;
+
             this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
                 headers: {
                     "Authorization": `Bearer ${this._authService.accessToken}`
@@ -178,13 +181,11 @@ export class ClientHistoryComponent implements OnInit {
                     console.log(error);
                     throw error;
                 }))
-                // TODO : Create a datatype for Client
-                // TODO : Move this to an API service
+
                 .subscribe((data: ApiResponse<object>) => {
-                    console.log(data)
+
                     if (data.success) {
-                        this.selectedClient.set(data.result)
-                        console.log(this.selectedClient())
+                        this.selectedClient.set(data.result);
                         this.updateHistoryTable()
                     }
                 });
@@ -235,5 +236,6 @@ export class ClientHistoryComponent implements OnInit {
                 }
             })
         }
+
     }
 }
