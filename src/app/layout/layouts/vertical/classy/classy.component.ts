@@ -151,7 +151,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             console.log(response)
             if (response.success) {
 
-                if (response.result.environment !='Production') {
+                if (response.result !='Production') {
                     this.Environment = "Homologação"
 
                 }
