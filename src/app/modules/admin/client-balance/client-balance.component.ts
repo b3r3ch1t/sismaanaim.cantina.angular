@@ -36,10 +36,10 @@ import { catchError } from 'rxjs';
 })
 export class ClientBalanceComponent implements OnInit {
 
-  private _httpClient = inject(HttpClient)
-  private _authService = inject(AuthService)
-  private _userService = inject(UserService);
-  private _customCurrencyPipe = inject(CustomCurrencyPipe)
+  private readonly _httpClient = inject(HttpClient)
+  private readonly  _authService = inject(AuthService)
+  private readonly _userService = inject(UserService);
+  private readonly _customCurrencyPipe = inject(CustomCurrencyPipe)
 
   clients = signal([]);
   showClearButton = signal(false);
@@ -47,6 +47,8 @@ export class ClientBalanceComponent implements OnInit {
   clientBalanceDataSource = signal(new MatTableDataSource([]));
   inputDisabled = signal(false);
   noClientFound = signal(false);
+
+  totalClientBalance = 0;
 
   displayedColumns = [
     "Forma Pagamento",
@@ -119,12 +121,14 @@ export class ClientBalanceComponent implements OnInit {
         }))
         // TODO : Create a datatype for Client
         // TODO : Move this to an API service
-        .subscribe((data: ApiResponse<object>) => {
+        .subscribe((data: ApiResponse<any>) => {
           console.log(data)
           if (data.success) {
             this.selectedClient.set(data.result)
             console.log(this.selectedClient())
             this.showClientBalance()
+
+            this. totalClientBalance = data.result.saldo;
           }
         });
     }

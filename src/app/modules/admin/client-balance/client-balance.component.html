@@ -11,13 +11,13 @@
       @if (selectedClient() == null) {
       <mat-form-field class="w-full">
         <mat-label>CPF</mat-label>
-        <input 
-        type="number" 
-        id="cpf" 
-        [disabled]="inputDisabled()" 
-        (input)="handleCpfInput($event)" 
-        placeholder="Insira pelo menos 4 caracteres para pesquisar" 
-        #cpfInput 
+        <input
+        type="number"
+        id="cpf"
+        [disabled]="inputDisabled()"
+        (input)="handleCpfInput($event)"
+        placeholder="Insira pelo menos 4 caracteres para pesquisar"
+        #cpfInput
         matInput />
       </mat-form-field>
       }
@@ -37,7 +37,7 @@
 
 
       <div [classList]="selectedClient() == null ? 'hidden' : ''">
-        <table mat-table matSort [dataSource]="clientBalanceDataSource()" class="mat-elevation-z8">
+        <!-- <table mat-table matSort [dataSource]="clientBalanceDataSource()" class="mat-elevation-z8">
 
           <ng-container matColumnDef="Forma Pagamento">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Forma Pagamento </th>
@@ -54,8 +54,14 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
-        </table>
-      </div>
+        </table> -->
+
+        <p>
+            <span class="font-bold">Saldo:</span>
+            <span>{{ totalClientBalance | customCurrency}}</span>
+        </p>
+
+    </div>
 
 
     </div>
