@@ -51,6 +51,28 @@
 
             <div [classList]="selectedClient() == null ? 'hidden' : 'flex flex-col'">
 
+                @if (selectedClient() != null) {
+                    <p>
+                        <span class="font-bold">Nome:</span>
+                        <span>{{ selectedClient().nome }}</span>
+                    </p>
+
+                    <p>
+                        <span class="font-bold">Email:</span>
+                        <span>{{ selectedClient().email }}</span>
+                    </p>
+
+                    <p>
+                        <span class="font-bold">Telefone Contato:</span>
+                        <span>{{ selectedClient().telefoneContato }}</span>
+                    </p>
+
+                    <p>
+                      <span class="font-bold">Saldo:</span>
+                      <span>{{ totalClientBalance | customCurrency}}</span>
+                  </p>
+                }
+
 
                 <div class="filter-container" style="display: flex; width: 100%;">
                     <mat-form-field style="flex: 1;">
