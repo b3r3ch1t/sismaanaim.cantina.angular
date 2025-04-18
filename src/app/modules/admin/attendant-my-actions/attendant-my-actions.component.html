@@ -1,11 +1,25 @@
 <div class="flex min-w-0 flex-auto flex-col">
   <div class="flex-auto p-6 sm:p-10">
+
+    <div class="filter-container" style="display: flex; width: 100%;">
+        <mat-form-field style="flex: 1;">
+            <mat-label>Filtro</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="filtro">
+        </mat-form-field>
+    </div>
+
+
       <table mat-table matSort [dataSource]="dataSource()" class="mat-elevation-z8">
 
           <ng-container matColumnDef="clienteNome">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome do cliente </th>
               <td mat-cell *matCellDef="let client"> {{client.clienteNome}} </td>
           </ng-container>
+
+          <ng-container matColumnDef="transactionId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> TransactionId </th>
+            <td mat-cell *matCellDef="let client"> {{client.transactionId}} </td>
+        </ng-container>
 
           <ng-container matColumnDef="data">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
