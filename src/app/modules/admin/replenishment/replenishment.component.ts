@@ -46,9 +46,9 @@ import { ConfirmationService } from 'app/services/confirmation.service';
 
 export class ReplenishmentComponent implements OnInit {
 
-    private _httpClient = inject(HttpClient)
-    private _authService = inject(AuthService)
-    private _userService = inject(UserService);
+    private readonly _httpClient = inject(HttpClient)
+    private readonly _authService = inject(AuthService)
+    private readonly _userService = inject(UserService);
     noClientFound = signal(false)
     clients = signal([]);
     paymentMethods = signal([]);

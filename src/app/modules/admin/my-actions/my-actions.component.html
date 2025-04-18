@@ -1,5 +1,15 @@
 <div class="flex min-w-0 flex-auto flex-col">
+
+
+
     <div class="flex-auto p-6 sm:p-10">
+
+        <div class="filter-container" style="display: flex; width: 100%;">
+            <mat-form-field style="flex: 1;">
+                <mat-label>Filtro</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="filtro">
+            </mat-form-field>
+        </div>
         <!-- Client History Table -->
         <table mat-table matSort [dataSource]="dataSource()" class="mat-elevation-z8">
 
