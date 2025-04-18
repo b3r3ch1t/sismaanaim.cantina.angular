@@ -58,7 +58,13 @@ export class ClientRegistrationComponent implements OnInit {
   }
 
   onCpfInput(event: any) {
+
+    console.log(event.target.value);
     const cpf = event.target.value.replace(/\D/g, '');
+
+    this.clientForm.get('cpf')?.setValue(cpf);
+
+
     if (cpf.length === 11) {
       if (this.fuseUtils.validarCPF(cpf)) {
         this.checkExistingClient(cpf);
