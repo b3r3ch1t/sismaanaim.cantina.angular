@@ -71,7 +71,8 @@ export class ReplenishmentComponent implements OnInit {
     @ViewChild('paidValueInput', { static: false }) paidValueInput: ElementRef;
     @ViewChild('rechargeValueInput', { static: false }) rechargeValueInput: ElementRef;
 
-    constructor(private snackbar: SnackbarService) { }
+
+    constructor(private readonly snackbar: SnackbarService) { }
 
     ngOnInit(): void {
         this.loadCashRegister()
@@ -275,10 +276,18 @@ export class ReplenishmentComponent implements OnInit {
     }
 
     clearInputs() {
-        this.showClearButton.set(false)
-        this.inputDisabled.set(false)
-        this.clients.set([])
-        this.selectedClient.set(null)
+        this.showClearButton.set(false);
+        this.inputDisabled.set(false);
+        this.clients.set([]);
+        this.selectedClient.set(null);
+
+        if (this.cpfInput) {
+            this.cpfInput.nativeElement.value = '';
+        }
+
+        if (this.nameInput) {
+            this.nameInput.nativeElement.value = '';
+        }
     }
 
 
