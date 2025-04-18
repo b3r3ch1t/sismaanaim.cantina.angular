@@ -59,7 +59,6 @@ export class ClientRegistrationComponent implements OnInit {
 
   onCpfInput(event: any) {
 
-    console.log(event.target.value);
     const cpf = event.target.value.replace(/\D/g, '');
 
     this.clientForm.get('cpf')?.setValue(cpf);
@@ -70,6 +69,8 @@ export class ClientRegistrationComponent implements OnInit {
         this.checkExistingClient(cpf);
       } else {
         this.clientForm.get('cpf')?.setErrors({ invalidCpf: true });
+        this._snackbarService.error('CPF não é válido !!!');
+        this.clientForm.get('cpf')?.setValue('');
       }
     }
   }
