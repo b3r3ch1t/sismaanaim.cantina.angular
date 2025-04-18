@@ -21,6 +21,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { CurrencyMaskModule } from "ng2-currency-mask";
 import { Router } from '@angular/router';
+import { ConfirmationService } from 'app/services/confirmation.service';
 
 @Component({
     selector: 'app-replenishment',
@@ -72,7 +73,11 @@ export class ReplenishmentComponent implements OnInit {
     @ViewChild('rechargeValueInput', { static: false }) rechargeValueInput: ElementRef;
 
 
-    constructor(private readonly snackbar: SnackbarService) { }
+    constructor(
+        private readonly snackbar: SnackbarService,
+
+        private readonly confirmationService: ConfirmationService,
+    ) { }
 
     ngOnInit(): void {
         this.loadCashRegister()
@@ -80,66 +85,75 @@ export class ReplenishmentComponent implements OnInit {
     }
 
     handleSubmit() {
-        if (this.selectedPaymentMethod() == null) {
-            this.validPaymentMethod.set(false)
-            return
-        }
-
-        if (this.rechargeValueInput.nativeElement.value == "") {
-            this.validRechargeInput.set(false)
-            return
-        }
-
-        if (this.paidValueInput.nativeElement.value == "") {
-            this.validPaidInput.set(false)
-            return
-        }
-
-        console.log(this.rechargeValueInput.nativeElement.value);
-        console.log(this.paidValueInput.nativeElement.value);
 
         const paidValue = parseFloat(this.paidValueInput.nativeElement.value.replace(".", "").replace(",", "."))
         const rechargeValue = parseFloat(this.rechargeValueInput.nativeElement.value.replace(".", "").replace(",", "."))
+        const troco = paidValue - rechargeValue;
 
-        if (rechargeValue > paidValue) {
-            this.snackbar.error("O valor da recarga deve ser igual ou menor que o valor pago", 30 * 1000);
-            this.validRechargeInput.set(false)
-            return
-        }
+        const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+        const confirmationMessage = `
+        Nome: ${this.selectedClient()?.nome} <br>
+        Forma de pagamento: ${this.selectedPaymentMethod().descricao} <br>
+        Valor da Recarga: ${formatter.format(rechargeValue)} <br>
+        Valor Pago: ${formatter.format(paidValue)} <br>
+        Troco: ${formatter.format(troco)} <br>`;
 
-        console.log("validation passed")
-
-        if (this.currentEvent() === null) {
-            console.log('current event (cash register) is null')
-            return
-        }
-
-        this._httpClient.post(`${environment.API_URL}caixa/adicionarcredito`, {
-            "caixaId": this.currentEvent().id,
-            "valor": rechargeValue,
-            "formaPagamentoId": this.selectedPaymentMethod().id,
-            "clienteId": this.selectedClient().id
-        }).pipe(
-            catchError((error) => {
-                console.log(error);
-                throw error
-            })
-        ).subscribe((response: ApiResponse<any>) => {
-            console.log(response)
+        this.confirmationService.confirm("Confirmar", confirmationMessage).subscribe(result => {
+            if (result) {
 
 
+                if (this.selectedPaymentMethod() == null) {
+                    this.validPaymentMethod.set(false)
+                    return
+                }
 
-            // this.snackbar.success(`A recarga foi realizada com sucesso! O valor do troco é {Valor pago ${this.paidValueInput.nativeElement.value} - Valor recarga ${this.rechargeValueInput.nativeElement.value}}`, 30 * 1000);
+                if (this.rechargeValueInput.nativeElement.value == "") {
+                    this.validRechargeInput.set(false)
+                    return
+                }
 
-            const troco = paidValue - rechargeValue;
-
-            this.snackbar.success(
-                `A recarga foi realizada com sucesso! O valor do troco é ${troco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`,
-                30 * 1000
-            );
+                if (this.paidValueInput.nativeElement.value == "") {
+                    this.validPaidInput.set(false)
+                    return
+                }
 
 
-            this.clearInputs()
+                if (rechargeValue > paidValue) {
+                    this.snackbar.error("O valor da recarga deve ser igual ou menor que o valor pago", 30 * 1000);
+                    this.validRechargeInput.set(false)
+                    return
+                }
+
+                if (this.currentEvent() === null) {
+                    console.log('current event (cash register) is null')
+                    return
+                }
+
+                this._httpClient.post(`${environment.API_URL}caixa/adicionarcredito`, {
+                    "caixaId": this.currentEvent().id,
+                    "valor": rechargeValue,
+                    "formaPagamentoId": this.selectedPaymentMethod().id,
+                    "clienteId": this.selectedClient().id
+                }).pipe(
+                    catchError((error) => {
+                        console.log(error);
+                        throw error
+                    })
+                ).subscribe((response: ApiResponse<any>) => {
+                    console.log(response)
+
+
+
+                    this.snackbar.success(
+                        `A recarga foi realizada com sucesso! O valor do troco é ${troco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`,
+                        30 * 1000
+                    );
+
+
+                    this.clearInputs()
+                })
+
+            }
         })
     }
 
@@ -346,7 +360,6 @@ export class ReplenishmentComponent implements OnInit {
             .subscribe((data: ApiResponse<Array<{ id: string, descricao: string }>>) => {
                 if (data.success) {
                     this.paymentMethods.set(data.result)
-                    console.log(data.result)
                 }
             });
     }
