@@ -72,9 +72,12 @@ export class ClientHistoryComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-
+        // Set default sort to 'Data' column in descending order
+        if (this.sort) {
+            this.sort.active = 'Data';
+            this.sort.direction = 'desc';
+        }
     }
-
     handleNameInput(event: InputEvent) {
 
         this.noClientFound.set(false)
@@ -216,6 +219,12 @@ export class ClientHistoryComponent implements OnInit {
                                     return item[property];
                             }
                         };
+                    }
+
+                    // Set default sort to 'Data' column in descending order
+                    if (this.sort) {
+                        this.sort.active = 'Data';
+                        this.sort.direction = 'desc';
                     }
 
                     // Set the paginator and sort
