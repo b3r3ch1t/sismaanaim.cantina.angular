@@ -213,7 +213,8 @@ export class ReplenishmentModalComponent implements OnInit {
                     );
 
 
-                    this.clearInputs()
+                    this.clearInputs();
+                    this.dialogRef.close(true);
                 })
 
             }
