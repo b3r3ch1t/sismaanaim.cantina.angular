@@ -148,17 +148,36 @@ export class ReplenishmentComponent implements OnInit {
                 // TODO : Create datatype for Client
                 .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
                     if (data.result) {
-                        const clients = data.result
-                        this.clients.set(clients)
+
+                        const dataSource = new MatTableDataSource(data.result);
+
+                        // Set default sort to 'Data' column in descending order
+                        if (this.sort) {
+                            this.sort.active = 'nome';
+                            this.sort.direction = 'asc';
+                        }
+
+                        // Set the paginator and sort
+                        dataSource.paginator = this.paginator;
+                        dataSource.sort = this.sort;
+                        // Update the signal
+                        this.clientDataSource.set(dataSource);
+
+
+                        const clients = data.result;
+                        this.clients.set(clients);
 
                         if (this.clients().length === 1) {
-                            this.selectedClient.set(this.clients()[0])
+                            this.selectedClient.set(this.clients()[0]);
                         }
 
                         if (!this.clients().length) {
-                            this.noClientFound.set(true)
-                        }
 
+
+                            this.noClientFound.set(true);
+                            this.snackbar.error("Nenhum cliente encontrado com esse CPF", 30 * 1000);
+
+                        }
                     }
                     this.showClearButton.set(true)
                 });
@@ -268,10 +287,14 @@ export class ReplenishmentComponent implements OnInit {
             console.log(cliente);
 
 
-            this.dialog.open(ReplenishmentModalComponent, {
+            const dialogRef = this.dialog.open(ReplenishmentModalComponent, {
                 data: cliente,
                 width: "99%"
-            })
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                this.clearInputs();
+            });
 
 
 

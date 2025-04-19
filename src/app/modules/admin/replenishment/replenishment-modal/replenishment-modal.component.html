@@ -64,8 +64,8 @@
 
 
 
+<mat-dialog-actions align="center" style="display: flex; justify-content: center; gap: 24px;">
+    <button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
+    <button mat-flat-button color="primary" [disabled]="!validar()" (click)="handleSubmit()">Salvar</button>
+  </mat-dialog-actions>
 
-<mat-dialog-actions align="center" class="justify-between">
-    <button mat-button color="warn" (click)="closeDialog()">Cancelar</button>
-    <button mat-flat-button color="accent" [disabled]="!validar()" (click)="handleSubmit()">Salvar</button>
-</mat-dialog-actions>

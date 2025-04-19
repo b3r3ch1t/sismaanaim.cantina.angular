@@ -8,6 +8,15 @@
             <button class="mb-5 bg-blue-500 text-white" mat-stroked-button (click)="clearInputs()">Limpar</button>
             }
 
+            <mat-form-field class="w-full">
+                <mat-label>Nome</mat-label>
+                <input (input)="handleNameInput($event)" id="name" #nameInput
+                    placeholder="Insira pelo menos 4 caracteres para pesquisar" matInput />
+            </mat-form-field>
+
+            <div class="mb-6">
+                <p class="font-bold text-lg">OU</p>
+            </div>
 
 
             <mat-form-field class="w-full">
