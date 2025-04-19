@@ -8,35 +8,54 @@
             <button class="mb-5 bg-blue-500 text-white" mat-stroked-button (click)="clearInputs()">Limpar</button>
             }
 
-            @if (selectedClient() == null) {
-            <mat-form-field class="w-full">
-                <mat-label>Nome</mat-label>
-                <input [disabled]="inputDisabled()" (input)="handleNameInput($event)" id="name" #nameInput
-                    placeholder="Insira pelo menos 4 caracteres para pesquisar" matInput />
-            </mat-form-field>
 
-            <div class="mb-6">
-                <p class="font-bold text-lg">Ou</p>
-            </div>
 
             <mat-form-field class="w-full">
                 <mat-label>CPF</mat-label>
                 <input [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
                     placeholder="Insira pelo menos 4 caracteres para pesquisar" #cpfInput matInput />
             </mat-form-field>
-            }
+            <!-- } -->
 
             @if(noClientFound()) {
             <p class="text-red-500 font-bold">Cliente não encontrado</p>
             }
 
-            <div class="flex flex-wrap gap-2 mb-8">
-                @for (client of clients(); track $index) {
-                <button mat-stroked-button [class.bg-blue-500]="selectedClient()?.id === client.id"
-                    [class.text-white]="selectedClient()?.id === client.id" (click)="handleClientSelection(client.id)">
-                    {{client.nome}}
-                </button>
-                }
+
+
+            <div [classList]="clientDataSource().data.length>0 ?   'flex flex-col':'hidden'">
+
+                <div class="filter-container" style="display: flex; width: 100%;">
+                    <mat-form-field style="flex: 1;">
+                        <mat-label>Filtro</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" placeholder="filtro">
+                    </mat-form-field>
+                </div>
+
+                <table mat-table matSort [dataSource]="clientDataSource()" class="mat-elevation-z8 full-width">
+
+                    <ng-container matColumnDef="Nome">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
+                        <td mat-cell *matCellDef="let client"> {{client.nome }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="CPF">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> CPF </th>
+                        <td mat-cell *matCellDef="let client"> {{client.cpf}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Abastecer">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Abastecer </th>
+                        <td mat-cell *matCellDef="let client">
+                            <button mat-flat-button (click)="handleClientSelection(client.id)"
+                                class="text-white bg-blue-500">Abastecer</button> </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator class="flex-grow" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
+                    showFirstLastButtons></mat-paginator>
             </div>
 
             @if (selectedClient() != null) {

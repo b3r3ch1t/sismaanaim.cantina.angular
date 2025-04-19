@@ -79,8 +79,17 @@ export class AttendantMyActionsComponent implements OnInit, AfterViewInit {
                     })
                 ).subscribe((response: ApiResponse<any>) => {
                     this.history.set(response.result);
+                    console.log(response.result);
+
                     const dataSource = new MatTableDataSource(this.history());
                     if (dataSource) {
+
+
+                        // Set default sort to 'Data' column in descending order
+                        if (this.sort) {
+                            this.sort.active = 'data';
+                            this.sort.direction = 'desc';
+                        }
 
 
                         dataSource.paginator = this.paginator;

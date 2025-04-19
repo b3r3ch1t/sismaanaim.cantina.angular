@@ -76,8 +76,6 @@ export class ClientBalanceComponent implements OnInit {
 
         const filterValue = (event.target as HTMLInputElement).value;
         this.clientDataSource().filter = filterValue.trim().toLowerCase();
-
-
     }
 
 

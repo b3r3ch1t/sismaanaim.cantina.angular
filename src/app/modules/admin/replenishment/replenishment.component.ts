@@ -22,6 +22,11 @@ import { SnackbarService } from 'app/services/snackbar.service';
 import { CurrencyMaskModule } from "ng2-currency-mask";
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'app/services/confirmation.service';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { ReplenishmentModalComponent } from './replenishment-modal/replenishment-modal.component';
 
 @Component({
     selector: 'app-replenishment',
@@ -37,7 +42,12 @@ import { ConfirmationService } from 'app/services/confirmation.service';
         MatRadioModule,
         MatSnackBarModule,
         MatListModule,
-        CurrencyMaskModule
+        CurrencyMaskModule,
+
+
+        MatTableModule,
+        MatSort,
+        MatPaginator,
     ],
     providers: [CurrencyPipe, CustomCurrencyPipe],
     templateUrl: './replenishment.component.html',
@@ -65,6 +75,14 @@ export class ReplenishmentComponent implements OnInit {
     selectedClientBalance = signal([])
     balanceAgainstPaymentMethod = signal(null)
 
+    clientDataSource = signal(new MatTableDataSource([]));
+
+    displayedColumns = [
+        "Nome",
+        "CPF",
+        "Abastecer"
+    ]
+
     @ViewChild('nameInput', { static: false }) nameInput: ElementRef;
     @ViewChild('cpfInput', { static: false }) cpfInput: ElementRef;
     @ViewChild('clientDropdown', { static: false }) clientDropdown: MatRadioGroup;
@@ -72,17 +90,26 @@ export class ReplenishmentComponent implements OnInit {
     @ViewChild('paidValueInput', { static: false }) paidValueInput: ElementRef;
     @ViewChild('rechargeValueInput', { static: false }) rechargeValueInput: ElementRef;
 
+    @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+    @ViewChild(MatSort, { static: false }) sort!: MatSort;
+
 
     constructor(
         private readonly snackbar: SnackbarService,
-
+        private readonly dialog: MatDialog,
         private readonly confirmationService: ConfirmationService,
     ) { }
 
     ngOnInit(): void {
-        this.loadCashRegister()
-        this.fetchPaymentMethods()
+
     }
+
+    applyFilter(event: Event) {
+
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.clientDataSource().filter = filterValue.trim().toLowerCase();
+    }
+
 
     handleSubmit() {
 
@@ -157,24 +184,7 @@ export class ReplenishmentComponent implements OnInit {
         })
     }
 
-    loadCashRegister() {
-        this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
-            headers: {
-                Authorization: `Bearer ${this._authService.accessToken}`
-            }
-        }).pipe(
-            catchError((error) => {
-                console.log(error);
-                throw error
-            })
-        ).subscribe((response: ApiResponse<any>) => {
-            if (response.success) {
-                this.currentEvent.set(response.result)
-                console.log(this.currentEvent())
-            }
 
-        });
-    }
 
     handleRechargeValueInput(event: KeyboardEvent) {
         this.onKeyPress(event)
@@ -240,6 +250,12 @@ export class ReplenishmentComponent implements OnInit {
     }
 
     handleCpfInput(event: InputEvent) {
+
+        const inputElement = event.target as HTMLInputElement;
+        // Remove qualquer caractere que não seja número
+        inputElement.value = inputElement.value.replace(/\D/g, '');
+
+
         this.noClientFound.set(false)
         const input = event.target as HTMLInputElement;
         if (input.value.length >= 4) {
@@ -258,6 +274,21 @@ export class ReplenishmentComponent implements OnInit {
                 }))
                 .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
                     if (data.success) {
+
+                        const dataSource = new MatTableDataSource(data.result);
+
+                        // Set default sort to 'Data' column in descending order
+                        if (this.sort) {
+                            this.sort.active = 'nome';
+                            this.sort.direction = 'asc';
+                        }
+
+                        // Set the paginator and sort
+                        dataSource.paginator = this.paginator;
+                        dataSource.sort = this.sort;
+                        // Update the signal
+                        this.clientDataSource.set(dataSource);
+
 
                         const clients = data.result;
                         this.clients.set(clients);
@@ -302,88 +333,32 @@ export class ReplenishmentComponent implements OnInit {
         if (this.nameInput) {
             this.nameInput.nativeElement.value = '';
         }
+
+
+        this.clientDataSource.set(new MatTableDataSource([]));
     }
 
 
     handleClientSelection(clientId: string) {
         if (clientId) {
-            this.disableClientDropdown.set(true)
-            this._httpClient.get(`${environment.API_URL}clientes/getsaldoclientebyclientid/${clientId}`, {
-                headers: {
-                    "Authorization": `Bearer ${this._authService.accessToken}`
-                }
-            }).pipe(
-                catchError((error) => {
-                    console.log(error);
-                    throw error
-                })
-            ).subscribe((response: ApiResponse<any>) => {
-                if (response.success) {
-                    this.selectedClientBalance.set(response.result)
-                    console.log(this.selectedClientBalance())
-                }
+
+
+            const cliente = this.clients()
+                .find(cliente => cliente.id === clientId);
+
+            console.log(cliente);
+
+
+            this.dialog.open(ReplenishmentModalComponent, {
+                data: cliente,
+                width: "99%"
             })
 
-            this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
-                headers: {
-                    "Authorization": `Bearer ${this._authService.accessToken}`
-                }
-            })
-                .pipe(catchError((error) => {
-                    console.log(error);
-                    throw error;
-                }))
 
-                .subscribe((data: ApiResponse<object>) => {
-
-                    this.disableClientDropdown.set(false)
-                    if (data.success) {
-                        this.selectedClient.set(data.result)
-                        console.log(this.selectedClient())
-
-                    }
-                });
 
         }
     }
 
-    fetchPaymentMethods() {
-        this._httpClient.get(`${environment.API_URL}formapagamento/listarformapagamento`, {
-            headers: {
-                "Authorization": `Bearer ${this._authService.accessToken}`
-            }
-        })
-            .pipe(catchError((error) => {
-                console.log(error);
-                throw error;
-            }))
-            .subscribe((data: ApiResponse<Array<{ id: string, descricao: string }>>) => {
-                if (data.success) {
-                    this.paymentMethods.set(data.result)
-                }
-            });
-    }
 
-    handlePaymentMethodSelection() {
-        if (this.paymentMethodDropdown.value) {
-            const paymentMethodId = this.paymentMethodDropdown.value
-            this.disablePaymentMethodDropdown.set(true)
-            this.paymentMethods().forEach(paymentMethod => {
-                paymentMethod.id === paymentMethodId ? this.selectedPaymentMethod.set(paymentMethod) : null
-            });
-            console.log(this.selectedPaymentMethod())
-            this.selectedClientBalance().some(balance => {
-                if (balance.formaPagamentoId == this.selectedPaymentMethod().id) {
-                    console.log(balance.formaPagamentoId, this.selectedPaymentMethod().id)
-                    this.balanceAgainstPaymentMethod.set(balance.saldo)
-                    return true
-                } else {
-                    console.log(balance.formaPagamentoId, this.selectedPaymentMethod().id)
-                    this.balanceAgainstPaymentMethod.set(null)
-                    return false
-                }
-            })
-            this.disablePaymentMethodDropdown.set(false)
-        }
-    }
+
 }

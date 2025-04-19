@@ -1,0 +1,71 @@
+<h1 class="text-2xl lg:text-3xl font-bold leading-tight tracking-tight mb-8">Abastecimento </h1>
+<mat-dialog-content>
+    <p>
+        <strong>Nome : </strong>{{cliente.nome}}
+    </p>
+    <p>
+        <strong>CPF : </strong>{{cliente.cpf }}
+    </p>
+    <p>
+        <strong>Email : </strong>{{cliente.email }}
+    </p>
+    <p>
+        <strong>Telefone Contato : </strong>{{cliente.telefoneContato }}
+    </p>
+    <p>
+        <strong>Saldo : </strong>{{cliente.saldo | customCurrency }}
+    </p>
+
+</mat-dialog-content>
+
+<mat-form-field class="w-full">
+    <mat-label>Forma de Pagamento*</mat-label>
+    <mat-select (selectionChange)="handlePaymentMethodSelection()" [disabled]="paymentMethods().length === 0 "  #paymentMethodDropdown="matSelect">
+        @for (payment of paymentMethods(); track $index) {
+        <mat-option [value]="payment.id">{{ payment.descricao }}</mat-option>
+        }
+    </mat-select>
+    @if (validPaymentMethod() === false) {
+    <mat-error>
+        Por favor, selecione um método de pagamento válido.
+    </mat-error>
+    }
+</mat-form-field>
+
+
+
+<!-- Valor da Recarga -->
+<mat-form-field class="w-full">
+    <mat-label>Valor da Recarga</mat-label>
+    <span matPrefix>R$&nbsp;</span>
+    <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }"
+        [disabled]="selectedPaymentMethod() === null" type="text" #rechargeValueInput
+        placeholder="Informe o valor da recarga">
+    @if (validRechargeInput() === false) {
+    <mat-error>
+        Por favor, insira apenas números.
+    </mat-error>
+    }
+</mat-form-field>
+
+<!-- Valor Pago -->
+<mat-form-field class="w-full">
+    <mat-label>Valor Pago</mat-label>
+    <span matPrefix>R$&nbsp;</span>
+    <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }"
+        [disabled]="selectedPaymentMethod() === null" type="text" #paidValueInput
+        (keypress)="handlePaidValueInput($event)" placeholder="Informe o valor pago">
+    @if(validPaidInput() === false){
+    <mat-error>
+        Por favor, insira apenas números.
+    </mat-error>
+    }
+</mat-form-field>
+
+
+
+
+<mat-dialog-actions align="center" class="justify-between">
+    <button mat-button color="warn" (click)="closeDialog()">Cancelar</button>
+    <button mat-flat-button color="accent" [disabled]="!validar()" (click)="handleSubmit()">Salvar</button>
+</mat-dialog-actions>
