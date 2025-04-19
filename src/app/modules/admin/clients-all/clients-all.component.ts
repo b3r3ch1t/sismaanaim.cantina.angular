@@ -73,6 +73,8 @@ export class ClientsAllComponent implements OnInit {
                 if (data.success) {
 
 
+                    console.log(data.result);
+
                     data.result.sort((a, b) => a.nome.localeCompare(b.nome));
                     this.clients.set(data.result);
 
@@ -87,6 +89,9 @@ export class ClientsAllComponent implements OnInit {
                                     return item.nome;
                                 case 'CPF':
                                     return item.cpf;
+
+                                case 'Saldo':
+                                    return item.saldo;
                                 default:
                                     return item[property];
                             }
