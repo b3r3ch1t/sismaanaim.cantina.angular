@@ -88,6 +88,12 @@ export class ClientBalanceComponent implements OnInit {
     }
 
     handleCpfInput(event: InputEvent) {
+
+        const inputElement = event.target as HTMLInputElement;
+        // Remove qualquer caractere que não seja número
+        inputElement.value = inputElement.value.replace(/\D/g, '');
+
+
         this.noClientFound.update(old => false)
         const input = event.target as HTMLInputElement;
         if (input.value.length >= 4) {
