@@ -148,7 +148,6 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             console.log(error)
             throw error
         })).subscribe((response: ApiResponse<any>) => {
-            console.log(response)
             if (response.success) {
 
                 if (response.result !='Production') {
