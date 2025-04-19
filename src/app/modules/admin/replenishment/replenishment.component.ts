@@ -111,78 +111,78 @@ export class ReplenishmentComponent implements OnInit {
     }
 
 
-    handleSubmit() {
+    // handleSubmit() {
 
-        const paidValue = parseFloat(this.paidValueInput.nativeElement.value.replace(".", "").replace(",", "."))
-        const rechargeValue = parseFloat(this.rechargeValueInput.nativeElement.value.replace(".", "").replace(",", "."))
-        const troco = paidValue - rechargeValue;
+    //     const paidValue = parseFloat(this.paidValueInput.nativeElement.value.replace(".", "").replace(",", "."))
+    //     const rechargeValue = parseFloat(this.rechargeValueInput.nativeElement.value.replace(".", "").replace(",", "."))
+    //     const troco = paidValue - rechargeValue;
 
-        const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-        const confirmationMessage = `
-        Nome: ${this.selectedClient()?.nome} <br>
-        Forma de pagamento: ${this.selectedPaymentMethod().descricao} <br>
-        Valor da Recarga: ${formatter.format(rechargeValue)} <br>
-        Valor Pago: ${formatter.format(paidValue)} <br>
-        Troco: ${formatter.format(troco)} <br>`;
+    //     const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+    //     const confirmationMessage = `
+    //     Nome: ${this.selectedClient()?.nome} <br>
+    //     Forma de pagamento: ${this.selectedPaymentMethod().descricao} <br>
+    //     Valor da Recarga: ${formatter.format(rechargeValue)} <br>
+    //     Valor Pago: ${formatter.format(paidValue)} <br>
+    //     Troco: ${formatter.format(troco)} <br>`;
 
-        this.confirmationService.confirm("Confirmar", confirmationMessage).subscribe(result => {
-            if (result) {
-
-
-                if (this.selectedPaymentMethod() == null) {
-                    this.validPaymentMethod.set(false)
-                    return
-                }
-
-                if (this.rechargeValueInput.nativeElement.value == "") {
-                    this.validRechargeInput.set(false)
-                    return
-                }
-
-                if (this.paidValueInput.nativeElement.value == "") {
-                    this.validPaidInput.set(false)
-                    return
-                }
+    //     this.confirmationService.confirm("Confirmar", confirmationMessage).subscribe(result => {
+    //         if (result) {
 
 
-                if (rechargeValue > paidValue) {
-                    this.snackbar.error("O valor da recarga deve ser igual ou menor que o valor pago", 30 * 1000);
-                    this.validRechargeInput.set(false)
-                    return
-                }
+    //             if (this.selectedPaymentMethod() == null) {
+    //                 this.validPaymentMethod.set(false)
+    //                 return
+    //             }
 
-                if (this.currentEvent() === null) {
-                    console.log('current event (cash register) is null')
-                    return
-                }
+    //             if (this.rechargeValueInput.nativeElement.value == "") {
+    //                 this.validRechargeInput.set(false)
+    //                 return
+    //             }
 
-                this._httpClient.post(`${environment.API_URL}caixa/adicionarcredito`, {
-                    "caixaId": this.currentEvent().id,
-                    "valor": rechargeValue,
-                    "formaPagamentoId": this.selectedPaymentMethod().id,
-                    "clienteId": this.selectedClient().id
-                }).pipe(
-                    catchError((error) => {
-                        console.log(error);
-                        throw error
-                    })
-                ).subscribe((response: ApiResponse<any>) => {
-                    console.log(response)
+    //             if (this.paidValueInput.nativeElement.value == "") {
+    //                 this.validPaidInput.set(false)
+    //                 return
+    //             }
 
 
+    //             if (rechargeValue > paidValue) {
+    //                 this.snackbar.error("O valor da recarga deve ser igual ou menor que o valor pago", 30 * 1000);
+    //                 this.validRechargeInput.set(false)
+    //                 return
+    //             }
 
-                    this.snackbar.success(
-                        `A recarga foi realizada com sucesso! O valor do troco é ${troco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`,
-                        30 * 1000
-                    );
+    //             if (this.currentEvent() === null) {
+    //                 console.log('current event (cash register) is null')
+    //                 return
+    //             }
+
+    //             this._httpClient.post(`${environment.API_URL}caixa/adicionarcredito`, {
+    //                 "caixaId": this.currentEvent().id,
+    //                 "valor": rechargeValue,
+    //                 "formaPagamentoId": this.selectedPaymentMethod().id,
+    //                 "clienteId": this.selectedClient().id
+    //             }).pipe(
+    //                 catchError((error) => {
+    //                     console.log(error);
+    //                     throw error
+    //                 })
+    //             ).subscribe((response: ApiResponse<any>) => {
+    //                 console.log(response)
 
 
-                    this.clearInputs()
-                })
 
-            }
-        })
-    }
+    //                 this.snackbar.success(
+    //                     `A recarga foi realizada com sucesso! O valor do troco é ${troco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`,
+    //                     30 * 1000
+    //                 );
+
+
+    //                 this.clearInputs()
+    //             })
+
+    //         }
+    //     })
+    // }
 
 
 

@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { ApiResponse } from 'app/core/api/api-response.types';
 import { AuthService } from 'app/core/auth/auth.service';
+import { UserService } from 'app/core/user/user.service';
 import { environment } from 'app/environments/environment';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { ConfirmationService } from 'app/services/confirmation.service';
@@ -41,6 +42,8 @@ export class ReplenishmentModalComponent implements OnInit {
 
     private readonly _httpClient = inject(HttpClient)
     private readonly _authService = inject(AuthService)
+    private readonly _userService = inject(UserService);
+
 
     paymentMethods = signal([]);
     validPaymentMethod = signal(null);
@@ -49,7 +52,7 @@ export class ReplenishmentModalComponent implements OnInit {
     selectedPaymentMethod = signal(null);
 
     disablePaymentMethodDropdown = signal(false);
-    currentEvent = signal(null);
+    currentCaixaId = signal(null);
 
     @ViewChild('paidValueInput', { static: false }) paidValueInput: ElementRef;
     @ViewChild('rechargeValueInput', { static: false }) rechargeValueInput: ElementRef;
@@ -68,6 +71,7 @@ export class ReplenishmentModalComponent implements OnInit {
 
     ngOnInit(): void {
         this.fetchPaymentMethods();
+        this.loadCashRegister();
     }
 
     closeDialog() {
@@ -89,6 +93,24 @@ export class ReplenishmentModalComponent implements OnInit {
                     this.paymentMethods.set(data.result)
                 }
             });
+    }
+
+    loadCashRegister() {
+        this._httpClient.get(`${environment.API_URL}caixa/getcaixaativosbyoperadorid/${this._userService.user.id}`, {
+            headers: {
+                Authorization: `Bearer ${this._authService.accessToken}`
+            }
+        }).pipe(
+            catchError((error) => {
+                console.log(error);
+                throw error
+            })
+        ).subscribe((response: ApiResponse<any>) => {
+            if (response.success) {
+                this.currentCaixaId.set(response.result)
+            }
+
+        });
     }
 
     handlePaidValueInput(event: KeyboardEvent) {
@@ -116,6 +138,11 @@ export class ReplenishmentModalComponent implements OnInit {
         const rechargeValue = parseFloat(this.rechargeValueInput.nativeElement.value.replace(".", "").replace(",", "."))
         const troco = paidValue - rechargeValue;
 
+        console.log('valor pago', paidValue)
+        console.log('valor recarga', rechargeValue)
+        console.log('troco', troco)
+
+
         if (troco < 0) {
             this.snackbar.error("O valor pago deve ser maior ou igual ao valor da recarga", 30 * 1000);
             this.validRechargeInput.set(false)
@@ -133,7 +160,7 @@ export class ReplenishmentModalComponent implements OnInit {
         const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
         const confirmationMessage = `
         Nome: ${this.cliente?.nome} <br>
-        Forma de pagamento: ${ formaPagamento.descricao} <br>
+        Forma de pagamento: ${formaPagamento.descricao} <br>
         Valor da Recarga: ${formatter.format(rechargeValue)} <br>
         Valor Pago: ${formatter.format(paidValue)} <br>
         Troco: ${formatter.format(troco)} <br>`;
@@ -164,15 +191,11 @@ export class ReplenishmentModalComponent implements OnInit {
                     return
                 }
 
-                if (this.currentEvent() === null) {
-                    console.log('current event (cash register) is null')
-                    return
-                }
 
                 this._httpClient.post(`${environment.API_URL}caixa/adicionarcredito`, {
-                    "caixaId": this.currentEvent().id,
+                    "caixaId": this.currentCaixaId().id,
                     "valor": rechargeValue,
-                    "formaPagamentoId": this.selectedPaymentMethod().id,
+                    "formaPagamentoId": this.selectedPaymentMethod(),
                     "clienteId": this.cliente.id
                 }).pipe(
                     catchError((error) => {
