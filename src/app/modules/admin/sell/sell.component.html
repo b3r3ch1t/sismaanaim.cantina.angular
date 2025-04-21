@@ -1,82 +1,80 @@
 <div class="flex min-w-0 flex-auto flex-col">
-  <div class="flex-auto p-6 sm:p-10">
+    <div class="flex-auto p-6 sm:p-10">
 
-      <div class="max-w-128">
-          <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Realizar  venda</h1>
+        <div class="max-w-128">
+            <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Realizar venda</h1>
 
-          @if (showClearButton()) {
-          <button class="mb-5 text-white bg-blue-500" mat-stroked-button (click)="clearInputs()">Limpar</button>
-          }
+            @if (showClearButton()) {
+            <button class="mb-5 text-white bg-blue-500" mat-stroked-button (click)="clearInputs()">Limpar</button>
+            }
 
-          @if (selectedClient() == null) {
-              <mat-form-field class="w-full">
-                  <mat-label>CPF</mat-label>
-                  <input type="number" [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
-                      placeholder="Insira pelo menos 4 caracteres para pesquisar" #cpfInput matInput />
-              </mat-form-field>
-          }
 
-          <div class="flex flex-wrap gap-2 mb-8">
-              @for (client of clients(); track $index) {
-              <button mat-stroked-button [class.bg-blue-500]="selectedClient()?.id === client.id"
-                  [class.text-white]="selectedClient()?.id === client.id" (click)="handleClientSelection(client.id)">
-                  {{client.nome}}
-              </button>
-              }
-          </div>
+            <mat-form-field class="w-full">
+                <mat-label>CPF</mat-label>
+                <input type="text" [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
+                    placeholder="Insira pelo menos 4 caracteres para pesquisar" #cpfInput matInput />
+            </mat-form-field>
 
-          @if(noClientFound()) {
+
+            @if(noClientFound()) {
             <p class="text-red-500 font-bold">Cliente não encontrado</p>
-          }
-
-          @if (selectedClient() != null) {
-          <p>
-              <span class="font-bold">Nome:</span>
-              <span>{{ selectedClient().nome }}</span>
-          </p>
-
-          <p>
-              <span class="font-bold">CPF:</span>
-              <span>{{ selectedClient().cpf }}</span>
-          </p>
-
-          <p>
-              <span class="font-bold">Email:</span>
-              <span>{{ selectedClient().email }}</span>
-          </p>
-
-          <p>
-              <span class="font-bold">Telefone Contato:</span>
-              <span>{{ selectedClient().telefoneContato }}</span>
-          </p>
-
-          <p>
-            <span class="font-bold">Saldo:</span>
-            <span>{{ totalClientBalance | customCurrency}}</span>
-        </p>
+            }
 
 
-          <div class="border-t my-6"></div>
+            <div [classList]="clientDataSource().data.length>0 ?   'flex flex-col':'hidden'">
 
-          <!-- Saldo -->
-          <!-- <mat-form-field class="w-full">
-              <mat-label>Saldo</mat-label>
-              <input matInput readonly currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" value="{{ totalClientBalance | customCurrency}}" type="text" placeholder="Informe o Saldo">
-          </mat-form-field> -->
 
-          <mat-form-field class="w-full">
-            <mat-label>Valor vendido</mat-label>
-            <span matPrefix>R$&nbsp;</span>
-            <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" #sellingInput type="text" placeholder="Informe o valor vendido">
-          </mat-form-field>
 
-          <button  disabled="{{totalClientBalance<=0}}"   mat-raised-button color="primary" (click)="handleSubmit()">
-              Efetuar Venda
-          </button>
+                <div class="filter-container" style="display: flex; width: 100%;">
+                    <mat-form-field style="flex: 1;">
+                        <mat-label>Filtro</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" placeholder="filtro">
+                    </mat-form-field>
+                </div>
 
-          }
+                <table mat-table matSort [dataSource]="clientDataSource()" class="mat-elevation-z8 full-width">
 
-      </div>
+                    <ng-container matColumnDef="Nome">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+                        <td mat-cell *matCellDef="let client"> {{client.nome  }} </td>
+                    </ng-container>
 
-  </div>
+                    <ng-container matColumnDef="CPF">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> CPF </th>
+                        <td mat-cell *matCellDef="let client"> {{client.cpf}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Saldo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                        <td mat-cell *matCellDef="let client"> {{client.saldo | customCurrency }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Venda">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Venda </th>
+                        <td mat-cell *matCellDef="let client">
+                            <button
+
+                                mat-flat-button
+                                (click)="Venda(client)"
+                                class="text-white bg-blue-500">
+                                Venda
+                            </button>
+                        </td>
+                    </ng-container>
+
+
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator class="flex-grow" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
+                    showFirstLastButtons></mat-paginator>
+            </div>
+
+
+
+
+        </div>
+
+    </div>
 </div>

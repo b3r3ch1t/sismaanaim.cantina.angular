@@ -45,7 +45,6 @@ export class ClientHistoryComponent implements OnInit {
 
 
     showClearButton = signal(false);
-    selectedClient = signal(null);
     clientDataSource = signal(new MatTableDataSource([]));
     noClientFound = signal(false);
 
@@ -63,8 +62,6 @@ export class ClientHistoryComponent implements OnInit {
     @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
     constructor(
-        private readonly snackbar: SnackbarService,
-        private readonly confirmationService: ConfirmationService,
         private readonly dialog: MatDialog,
     ) { }
 
@@ -153,8 +150,6 @@ export class ClientHistoryComponent implements OnInit {
                             this.sort.direction = 'asc';
                         }
 
-                        console.log(data.result);
-
                         dataSource.sortingDataAccessor = (item: any, property) => {
                             switch (property) {
                                 case 'Nome':
@@ -184,7 +179,6 @@ export class ClientHistoryComponent implements OnInit {
 
     clearInputs() {
         this.showClearButton.set(false);
-        this.selectedClient.set(null);
         this.clientDataSource.set(new MatTableDataSource([]));
         this.noClientFound.set(false);
 

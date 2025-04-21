@@ -1,0 +1,38 @@
+<h1 class="text-2xl lg:text-3xl font-bold leading-tight tracking-tight mb-8">Venda - {{cliente.nome}}
+</h1>
+<mat-dialog-content>
+
+    <p>
+        <strong>CPF : </strong>{{cliente.cpf }}
+    </p>
+    <p>
+        <strong>Email : </strong>{{cliente.email }}
+    </p>
+    <p>
+        <strong>Telefone Contato : </strong>{{cliente.telefoneContato }}
+    </p>
+    <p>
+        <strong>Saldo : </strong>{{cliente.saldo | customCurrency }}
+    </p>
+
+
+    <div class="border-t my-6"></div>
+
+
+    <!-- Valor da Recarga -->
+    <mat-form-field class="w-full">
+        <mat-label>Valor vendido</mat-label>
+        <span matPrefix>R$&nbsp;</span>
+        <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" #sellingInput type="text"
+            placeholder="Informe o valor vendido">
+
+    </mat-form-field>
+
+
+
+    <mat-dialog-actions align="center" class="flex justify-between">
+        <button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
+        <button mat-flat-button color="primary" (click)="handleSubmit()">Efetuar Venda</button>
+    </mat-dialog-actions>
+
+</mat-dialog-content>

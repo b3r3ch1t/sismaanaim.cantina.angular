@@ -11,7 +11,7 @@
 
 
 
-            @if (selectedClient() == null) {
+
             <div class="max-w-128">
                 <mat-form-field class="w-full">
                     <mat-label>Nome</mat-label>
@@ -30,7 +30,7 @@
                 </mat-form-field>
             </div>
 
-            }
+
 
 
 
@@ -84,33 +84,7 @@
             </div>
 
 
-            <!-- <div [classList]="selectedClient() == null ? 'hidden' : 'flex flex-col'">
 
-                @if (selectedClient() != null) {
-                    <p>
-                        <span class="font-bold">Nome:</span>
-                        <span>{{ selectedClient().nome }}</span>
-                    </p>
-
-                    <p>
-                        <span class="font-bold">Email:</span>
-                        <span>{{ selectedClient().email }}</span>
-                    </p>
-
-                    <p>
-                        <span class="font-bold">Telefone Contato:</span>
-                        <span>{{ selectedClient().telefoneContato }}</span>
-                    </p>
-
-                    <p>
-                      <span class="font-bold">Saldo:</span>
-                      <span>{{ totalClientBalance | customCurrency}}</span>
-                  </p>
-                }
-
-
-
-            </div> -->
 
 
         </div>

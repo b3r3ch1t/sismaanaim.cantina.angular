@@ -11,7 +11,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { catchError, single } from 'rxjs';
 import { ApiResponse } from 'app/core/api/api-response.types';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { UserService } from 'app/core/user/user.service';
 import { MatRadioChange, MatRadioGroup, MatRadioModule } from "@angular/material/radio"
 import { MatSelectionListChange, MatSelectionList, MatListModule, MatList } from '@angular/material/list';
@@ -20,6 +20,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { CurrencyMaskDirective } from 'app/directives/currency-mask.directive';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { SellModalComponent } from './sell-modal/sell-modal.component';
 
 @Component({
     selector: 'app-sell',
@@ -37,8 +42,11 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
         MatRadioModule,
         MatSnackBarModule,
         MatListModule,
-        CurrencyMaskDirective,
-        CurrencyMaskModule
+        MatTableModule,
+        MatSort,
+        MatSortModule,
+        MatPaginator,
+        CommonModule
     ],
     providers: [CurrencyPipe, CustomCurrencyPipe],
 })
@@ -49,19 +57,17 @@ export class AttendantSellComponent implements OnInit {
     private readonly _userService = inject(UserService);
 
     noClientFound = signal(false)
-    clients = signal([]);
-    paymentMethods = signal([]);
     showClearButton = signal(false);
     inputDisabled = signal(true);
-    selectedClient = signal(null);
-    selectedPaymentMethod = signal(null);
-    disableClientDropdown = signal(false);
-    disablePaymentMethodDropdown = signal(false);
     validPaidInput = signal(null);
     validRechargeInput = signal(null);
     validPaymentMethod = signal(null);
     currentAttendant = signal(null);
     totalClientBalance: number = 0;
+
+
+    clientDataSource = signal(new MatTableDataSource([]));
+
 
     @ViewChild('cpfInput', { static: false }) cpfInput: ElementRef;
     @ViewChild('clientDropdown', { static: false }) clientDropdown: MatRadioGroup;
@@ -69,57 +75,28 @@ export class AttendantSellComponent implements OnInit {
     @ViewChild('paidValueInput', { static: false }) paidValueInput: ElementRef;
     @ViewChild('rechargeValueInput', { static: false }) rechargeValueInput: ElementRef;
 
-    @ViewChild('sellingInput', { static: false }) sellingInput: ElementRef;
 
-    constructor(private snackbar: SnackbarService) { }
+
+    @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+    @ViewChild(MatSort, { static: false }) sort!: MatSort;
+
+
+    displayedColumns = [
+        "Nome",
+        "CPF",
+        "Saldo",
+        "Venda",
+    ]
+
+    constructor(
+        private readonly snackbar: SnackbarService,
+        private readonly dialog: MatDialog,
+    ) { }
 
     ngOnInit(): void {
         this.loadAttendant()
     }
 
-    handleSubmit() {
-        const unformatedValue = this.sellingInput.nativeElement.value
-        if (unformatedValue == "") {
-            this.snackbar.error("O valor de venda é obrigatório")
-            return
-        }
-
-        let sellingAmount = parseFloat(unformatedValue.replace('R$', '').replace('.', '').replace(',', '.'));
-
-        if (sellingAmount > this.totalClientBalance) {
-            this.snackbar.error("O valor de venda deve ser menor que o saldo")
-            return
-        }
-
-        this._httpClient.post(`${environment.API_URL}atendente/realizarvenda`,
-            {
-                eventoId: this.currentAttendant().eventoId,
-                valor: sellingAmount,
-                clienteId: this.selectedClient().id,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${this._authService.accessToken}`
-                },
-            }).pipe(catchError(error => {
-                console.log(error)
-                throw error
-            })).subscribe((response: ApiResponse<any>) => {
-
-                if (response.success) {
-
-                    this.snackbar.success("Venda Realizada com sucesso!", 1000 * 10);
-                    this.clearInputs();
-
-                    return;
-
-                }
-
-                this.snackbar.error(response.message, 1000 * 10);
-
-            })
-
-    }
 
     loadAttendant() {
         this._httpClient.get(`${environment.API_URL}atendente/getatendentebyid/${this._userService.user.id}`, {
@@ -170,8 +147,7 @@ export class AttendantSellComponent implements OnInit {
 
         const input = event.target as HTMLInputElement;
         if (input.value.length >= 4) {
-            this.selectedClient.set(null)
-            this.clients.set([])
+
             this.inputDisabled.set(true);
 
             this._httpClient.get(`${environment.API_URL}clientes/getclientesbycpf/${input.value}`, {
@@ -185,21 +161,34 @@ export class AttendantSellComponent implements OnInit {
                 }))
                 .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
                     if (data.success) {
-                        const clients = data.result
-                        this.clients.set(clients);
+                        const dataSource = new MatTableDataSource(data.result);
 
-                        console.log(clients);
-
-                        if (this.clients().length === 1) {
-                            this.selectedClient.set(this.clients()[0]);
-                            this.handleClientSelection(this.selectedClient().id);
-
-                            this.totalClientBalance = 0;
+                        // Set default sort to 'Data' column in descending order
+                        if (this.sort) {
+                            this.sort.active = 'nome';
+                            this.sort.direction = 'asc';
                         }
 
-                        if (!this.clients().length) {
-                            this.noClientFound.set(false)
-                        }
+
+
+                        dataSource.sortingDataAccessor = (item: any, property) => {
+                            switch (property) {
+                                case 'Nome':
+                                    return item.nome;
+                                case 'CPF':
+                                    return item.cpf;
+                                case 'Saldo':
+                                    return item.saldo;
+                                default:
+                                    return item[property];
+                            }
+                        };
+                        // Set the paginator and sort
+                        dataSource.paginator = this.paginator;
+                        dataSource.sort = this.sort;
+                        // Update the signal
+                        this.clientDataSource.set(dataSource);
+
 
                     }
                     else {
@@ -216,47 +205,74 @@ export class AttendantSellComponent implements OnInit {
     clearInputs() {
         this.showClearButton.set(false)
         this.inputDisabled.set(false)
-        this.clients.set([])
-        this.selectedClient.set(null)
+        this.clientDataSource.set(new MatTableDataSource([]));
+        this.noClientFound.set(false);
+        this.cpfInput.nativeElement.value = '';
     }
 
 
-    handleClientSelection(clientId: string) {
+        applyFilter(event: Event) {
 
+            const filterValue = (event.target as HTMLInputElement).value;
+            this.clientDataSource().filter = filterValue.trim().toLowerCase();
 
-
-        this.totalClientBalance = 0;
-        this.noClientFound.set(false);
-
-
-        if (clientId) {
-            this.disableClientDropdown.set(true)
-            this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
-                headers: {
-                    "Authorization": `Bearer ${this._authService.accessToken}`
-                }
-            })
-                .pipe(catchError((error) => {
-                    console.log(error);
-                    throw error;
-                }))
-                // TODO : Create a datatype for Client
-                // TODO : Move this to an API service
-                .subscribe((data: ApiResponse<object>) => {
-                    console.log(data)
-                    this.disableClientDropdown.set(false)
-
-
-                    if (data.success) {
-
-
-                        this.totalClientBalance = data.result['saldo'] || 0;
-                        this.selectedClient.set(data.result);
-                    }
-                });
 
         }
+
+
+        handleClientSelection(clientId: string) {
+
+
+
+            this.totalClientBalance = 0;
+            this.noClientFound.set(false);
+
+
+            if (clientId) {
+
+                this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
+                    headers: {
+                        "Authorization": `Bearer ${this._authService.accessToken}`
+                    }
+                })
+                    .pipe(catchError((error) => {
+                        console.log(error);
+                        throw error;
+                    }))
+                    // TODO : Create a datatype for Client
+                    // TODO : Move this to an API service
+                    .subscribe((data: ApiResponse<object>) => {
+                        console.log(data)
+
+                        if (data.success) {
+
+
+                            this.totalClientBalance = data.result['saldo'] || 0;
+
+                        }
+                    });
+
+            }
+        }
+
+        Venda(client) {
+
+
+            if (client.saldo <= 0) {
+                this.snackbar.error(`O cliente:${client.nome} não possui saldo para realizar a venda`);
+                return;
+            }
+
+            const dialogRef = this.dialog.open(SellModalComponent, {
+                data: client,
+                width: "98%",
+            })
+
+            dialogRef.afterClosed().subscribe(result => {
+                this.clearInputs();
+            });
+
+        }
+
+
     }
-
-
-}
