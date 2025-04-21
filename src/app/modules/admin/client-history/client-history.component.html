@@ -15,7 +15,7 @@
             <div class="max-w-128">
                 <mat-form-field class="w-full">
                     <mat-label>Nome</mat-label>
-                    <input (input)="handleNameInput($event)" id="name" #nameInput
+                    <input  type="text" (input)="handleNameInput($event)" id="name" #nameInput
                         placeholder="Insira pelo menos 4 caracteres para pesquisar" matInput />
                 </mat-form-field>
 
@@ -25,7 +25,7 @@
 
                 <mat-form-field class="w-full">
                     <mat-label>CPF</mat-label>
-                    <input id="cpf" (input)="handleCpfInput($event)"
+                    <input type="text"  id="cpf" (input)="handleCpfInput($event)"
                         placeholder="Insira pelo menos 4 caracteres para pesquisar" #cpfInput matInput />
                 </mat-form-field>
             </div>
@@ -34,14 +34,6 @@
 
 
 
-            <div class="flex flex-wrap gap-2 mb-8">
-                @for (client of clients(); track $index) {
-                <button mat-stroked-button [class.bg-blue-500]="selectedClient()?.id === client.id"
-                    [class.text-white]="selectedClient()?.id === client.id" (click)="handleClientSelection(client.id)">
-                    {{client.nome}}
-                </button>
-                }
-            </div>
 
 
             @if(noClientFound()) {
@@ -49,7 +41,50 @@
             }
 
 
-            <div [classList]="selectedClient() == null ? 'hidden' : 'flex flex-col'">
+            <div [classList]="clientDataSource().data.length>0 ?   'flex flex-col':'hidden'">
+
+
+
+                <div class="filter-container" style="display: flex; width: 100%;">
+                    <mat-form-field style="flex: 1;">
+                        <mat-label>Filtro</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" placeholder="filtro">
+                    </mat-form-field>
+                </div>
+
+                <table mat-table matSort [dataSource]="clientDataSource()" class="mat-elevation-z8 full-width">
+
+                    <ng-container matColumnDef="Nome">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+                        <td mat-cell *matCellDef="let client"> {{client.nome  }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="CPF">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> CPF </th>
+                        <td mat-cell *matCellDef="let client"> {{client.cpf}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Saldo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                        <td mat-cell *matCellDef="let client"> {{client.saldo | customCurrency }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Historico">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Histórico </th>
+                        <button mat-flat-button *matCellDef="let client" (click)="showHistorico(client)" class="text-white bg-blue-500">Histórico</button>
+                    </ng-container>
+
+
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator class="flex-grow" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
+                    showFirstLastButtons></mat-paginator>
+            </div>
+
+
+            <!-- <div [classList]="selectedClient() == null ? 'hidden' : 'flex flex-col'">
 
                 @if (selectedClient() != null) {
                     <p>
@@ -74,57 +109,8 @@
                 }
 
 
-                <div class="filter-container" style="display: flex; width: 100%;">
-                    <mat-form-field style="flex: 1;">
-                        <mat-label>Filtro</mat-label>
-                        <input matInput (keyup)="applyFilter($event)" placeholder="filtro">
-                    </mat-form-field>
-                </div>
 
-                <table mat-table matSort [dataSource]="clientDataSource()" class="mat-elevation-z8 full-width">
-
-                    <ng-container matColumnDef="Data">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
-                        <td mat-cell *matCellDef="let client"> {{client.data | customDate }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="Tipo">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
-                        <td mat-cell *matCellDef="let client"> {{client.tipoTransacaoClienteNome}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="Valor">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-                        <td mat-cell *matCellDef="let client"> {{client.valor | customCurrency }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="Pagamento">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Pagamento </th>
-                        <td mat-cell *matCellDef="let client"> {{client.formaPagamentoNome }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="Responsável">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Responsável </th>
-                        <td mat-cell *matCellDef="let client"> {{client.responsavelNome }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="Transação">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Transação </th>
-                        <td mat-cell *matCellDef="let client"> {{client.transactionId }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="Evento">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Evento </th>
-                        <td mat-cell *matCellDef="let client"> {{client.eventoNome }} </td>
-                    </ng-container>
-
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-                <mat-paginator class="flex-grow" [pageSize]="25" [pageSizeOptions]="[25, 50, 100]"
-                    showFirstLastButtons></mat-paginator>
-            </div>
+            </div> -->
 
 
         </div>

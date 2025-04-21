@@ -35,9 +35,8 @@ import { catchError } from 'rxjs';
 export class ClientBalanceComponent implements OnInit {
 
 
-    private readonly _httpClient = inject(HttpClient)
-    private readonly _authService = inject(AuthService)
-    private readonly _userService = inject(UserService);
+    private readonly _httpClient = inject(HttpClient);
+    private readonly _authService = inject(AuthService);
     private readonly _customCurrencyPipe = inject(CustomCurrencyPipe)
 
 

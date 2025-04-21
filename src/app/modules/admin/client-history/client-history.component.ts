@@ -2,7 +2,6 @@ import { CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { AuthService } from 'app/core/auth/auth.service';
-import { UserService } from 'app/core/user/user.service';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { ConfirmationService } from 'app/services/confirmation.service';
 import { SnackbarService } from 'app/services/snackbar.service';
@@ -11,10 +10,12 @@ import { environment } from 'app/environments/environment';
 import { catchError } from 'rxjs';
 import { ApiResponse } from 'app/core/api/api-response.types';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
+import { MatDialog } from '@angular/material/dialog';
+import { ClientHistoryModalComponent } from './client-history-modal/client-history-modal.component';
 
 
 @Component({
@@ -33,7 +34,6 @@ import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
         MatSortModule,
         MatSort,
         MatPaginator,
-        CustomDatePipe,
         CustomCurrencyPipe
     ]
 })
@@ -42,39 +42,36 @@ export class ClientHistoryComponent implements OnInit {
 
     private readonly _httpClient = inject(HttpClient)
     private readonly _authService = inject(AuthService)
-    private readonly _userService = inject(UserService);
-    private readonly _customCurrencyPipe = inject(CustomCurrencyPipe)
 
-    clients = signal([]);
+
     showClearButton = signal(false);
     selectedClient = signal(null);
     clientDataSource = signal(new MatTableDataSource([]));
-    noClientFound = signal(false)
+    noClientFound = signal(false);
+
 
     displayedColumns = [
-        "Data",
-        "Tipo",
-        "Valor",
-        "Pagamento",
-        "Responsável",
-        "Transação",
-        "Evento",
+        "Nome",
+        "CPF",
+        "Saldo",
+        "Historico",
     ]
 
-    @ViewChild('nameInput', { static: true }) nameInput: ElementRef;
-    @ViewChild('cpfInput', { static: true }) cpfInput: ElementRef;
+    @ViewChild('nameInput', { static: false }) nameInput: ElementRef;
+    @ViewChild('cpfInput', { static: false }) cpfInput: ElementRef;
     @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
     constructor(
         private readonly snackbar: SnackbarService,
-        private readonly confirmationService: ConfirmationService
+        private readonly confirmationService: ConfirmationService,
+        private readonly dialog: MatDialog,
     ) { }
 
     ngOnInit(): void {
         // Set default sort to 'Data' column in descending order
         if (this.sort) {
-            this.sort.active = 'Data';
+            this.sort.active = 'nome';
             this.sort.direction = 'desc';
         }
     }
@@ -98,14 +95,19 @@ export class ClientHistoryComponent implements OnInit {
                 // TODO : Create datatype for Client
                 .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
                     if (data.result) {
-                        const clients = data.result
-                        this.clients.set(clients)
+                        const dataSource = new MatTableDataSource(data.result);
 
-                        this.clients().length === 1 ? this.selectedClient.set(this.clients()[0]) : this.selectedClient.set(null)
-
-                        if (!this.clients().length) {
-                            this.noClientFound.set(true)
+                        // Set default sort to 'Data' column in descending order
+                        if (this.sort) {
+                            this.sort.active = 'nome';
+                            this.sort.direction = 'asc';
                         }
+
+                        // Set the paginator and sort
+                        dataSource.paginator = this.paginator;
+                        dataSource.sort = this.sort;
+                        // Update the signal
+                        this.clientDataSource.set(dataSource);
 
                     }
                     this.showClearButton.set(true)
@@ -143,14 +145,34 @@ export class ClientHistoryComponent implements OnInit {
                 }))
                 .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
                     if (data.success) {
-                        const clients = data.result
-                        this.clients.set(clients)
+                        const dataSource = new MatTableDataSource(data.result);
 
-                        this.clients().length === 1 ? this.selectedClient.set(this.clients()[0]) : this.selectedClient.set(null)
-
-                        if (!this.clients().length) {
-                            this.noClientFound.set(true)
+                        // Set default sort to 'Data' column in descending order
+                        if (this.sort) {
+                            this.sort.active = 'nome';
+                            this.sort.direction = 'asc';
                         }
+
+                        console.log(data.result);
+
+                        dataSource.sortingDataAccessor = (item: any, property) => {
+                            switch (property) {
+                                case 'Nome':
+                                    return item.nome;
+                                case 'CPF':
+                                    return item.cpf;
+                                case 'Saldo':
+                                    return item.saldo;
+                                default:
+                                    return item[property];
+                            }
+                        };
+
+                        // Set the paginator and sort
+                        dataSource.paginator = this.paginator;
+                        dataSource.sort = this.sort;
+                        // Update the signal
+                        this.clientDataSource.set(dataSource);
                     }
                     this.showClearButton.set(true)
                 });
@@ -162,80 +184,29 @@ export class ClientHistoryComponent implements OnInit {
 
     clearInputs() {
         this.showClearButton.set(false);
-        this.clients.set([]);
         this.selectedClient.set(null);
         this.clientDataSource.set(new MatTableDataSource([]));
-    }
+        this.noClientFound.set(false);
 
-    handleClientSelection(clientId: string) {
-        if (clientId) {
 
-            this.selectedClient.set(null) ;
-
-            this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
-                headers: {
-                    "Authorization": `Bearer ${this._authService.accessToken}`
-                }
-            })
-                .pipe(catchError((error) => {
-                    console.log(error);
-                    throw error;
-                }))
-
-                .subscribe((data: ApiResponse<object>) => {
-
-                    if (data.success) {
-                        this.selectedClient.set(data.result);
-                        this.updateHistoryTable()
-                    }
-                });
-        }
+        this.cpfInput.nativeElement.value = '';
+        this.nameInput.nativeElement.value = '';
     }
 
 
-    updateHistoryTable() {
-        if (this.selectedClient() != null) {
-            const clientId = this.selectedClient().id
-            this._httpClient.get(`${environment.API_URL}clientes/getclienthistorybyclientid/${clientId}`, {
-                headers: {
-                    "Authorization": `Bearer ${this._authService.accessToken}`
-                }
-            }).pipe(catchError((error) => {
-                console.log(error)
-                throw error
-            })).subscribe((response: ApiResponse<any>) => {
-                if (response.success) {
-                    console.log(response.result)
-                    // Create a new MatTableDataSource instance
-                    const dataSource = new MatTableDataSource(response.result);
 
-                    if (dataSource) {
-                        dataSource.sortingDataAccessor = (item: any, property) => {
-                            switch (property) {
-                                case 'Data':
-                                    return new Date(item.data);  // Return the actual date object for sorting
-                                case 'Valor':
-                                    return Number(item.valor);   // Return the numeric value for sorting
-                                default:
-                                    return item[property];
-                            }
-                        };
-                    }
+    showHistorico(client) {
+        const dialogRef = this.dialog.open(ClientHistoryModalComponent, {
+            data: client,
+            width: "98%",
+            height: "98%",
+        })
 
-                    // Set default sort to 'Data' column in descending order
-                    if (this.sort) {
-                        this.sort.active = 'Data';
-                        this.sort.direction = 'desc';
-                    }
-
-                    // Set the paginator and sort
-                    dataSource.paginator = this.paginator;
-                    dataSource.sort = this.sort;
-                    // Update the signal
-                    this.clientDataSource.set(dataSource);
-                }
-            })
-        }
+        dialogRef.afterClosed().subscribe(result => {
+           this.clearInputs();
+        });
 
     }
+
+
 }
