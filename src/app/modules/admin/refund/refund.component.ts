@@ -1,9 +1,10 @@
 import { CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -22,12 +23,14 @@ import { catchError } from 'rxjs';
     imports: [
         MatTableModule,
         MatPaginator,
-        MatSortModule,
         MatButtonModule,
         MatIconModule,
         MatCheckboxModule,
         CustomDatePipe,
-        CustomCurrencyPipe]
+        CustomCurrencyPipe,
+
+        MatInputModule,
+    ]
 
     ,
     providers: [
@@ -38,6 +41,9 @@ import { catchError } from 'rxjs';
 })
 export class RefundComponent implements OnInit, AfterViewInit {
 
+
+
+    showClearButton = signal(false);
     sellsDataSource = signal(new MatTableDataSource([]));
 
     private readonly _httpClient = inject(HttpClient);
@@ -52,8 +58,7 @@ export class RefundComponent implements OnInit, AfterViewInit {
     ]
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild(MatSort) sort!: MatSort;
-
+    @ViewChild('filterInput', { static: false }) filterInput: ElementRef;
 
     constructor(
 
@@ -64,16 +69,28 @@ export class RefundComponent implements OnInit, AfterViewInit {
         // Não chame fetchSells aqui, pois o paginator ainda não está inicializado
     }
 
+    applyFilter(event: Event) {
+
+        const filterValue = (event.target as HTMLInputElement).value;
+
+
+        this.sellsDataSource().filter = filterValue.trim().toLowerCase();
+
+
+    }
+
+
     ngAfterViewInit() {
         this.fetchTotalRecords(); // Primeiro, busca o total de registros
 
         // Configure os eventos de paginação e ordenação
         this.paginator.page.subscribe(() => this.fetchPagedRecords());
-        this.sort.sortChange.subscribe(() => {
-            this.paginator.pageIndex = 0;
-            this.fetchPagedRecords();
-        });
 
+        // Monitore mudanças no campo de filtro
+        this.filterInput.nativeElement.addEventListener('input', () => {
+            const filterValue = this.filterInput.nativeElement.value.trim();
+            this.showClearButton.set(filterValue.length > 0);
+        });
         // Agora que o paginator está inicializado, chame fetchSells
         this.fetchPagedRecords();
     }
@@ -94,6 +111,19 @@ export class RefundComponent implements OnInit, AfterViewInit {
             });
     }
 
+    clearInputs() {
+        this.showClearButton.set(false);
+        this.sellsDataSource().filter = '';
+
+        this.filterInput.nativeElement.value = '';
+        this.sellsDataSource.set(new MatTableDataSource([]));
+
+
+        this.fetchTotalRecords();
+        this.fetchPagedRecords();
+
+    }
+
     fetchPagedRecords() {
         const pageNumber = this.paginator.pageIndex + 1;
         const pageSize = this.paginator.pageSize;
@@ -108,35 +138,47 @@ export class RefundComponent implements OnInit, AfterViewInit {
                 throw error;
             }))
             .subscribe((data: ApiResponse<any[]>) => {
+                // Ordena os dados por 'data.result.data' em ordem decrescente antes de atribuir
+                data.result.sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
+
                 // Atualize os dados diretamente no MatTableDataSource existente
-
                 this.sellsDataSource().data = data.result;
-
-                // Configure a ordenação padrão
-                if (this.sort) {
-                    this.sort.active = 'data';
-                    this.sort.direction = 'desc';
-                }
-
-                this.sellsDataSource().sortingDataAccessor = (item: any, property) => {
-                    switch (property) {
-                        case 'Nome':
-                            return item.clienteNome?.toLowerCase() || ''; // Ordena por nome do cliente
-                        case 'Data':
-                            return new Date(item.data).getTime(); // Ordena por data
-                        case 'Valor':
-                            return item.valor || 0; // Ordena por valor
-                        case 'TransactionId':
-                            return item.transactionId || ''; // Ordena por TransactionId
-                        default:
-                            return item[property] || ''; // Ordena por qualquer outra propriedade
-                    }
-                };
-
-                // Vincule o paginator e o sort ao MatTableDataSource
-                //this.sellsDataSource().paginator = this.paginator;
-                this.sellsDataSource().sort = this.sort;
             });
+    }
+
+    handleFilterinput($event: any) {
+        const input = $event.target as HTMLInputElement;
+
+        if(input.value === '') {
+            this.showClearButton.set(false);
+            this.clearInputs();
+            return;
+        }
+
+        if (input.value.length >= 4) {
+
+            this._httpClient.get(`${environment.API_URL}permissionario/GetVendasFiltered/${input.value}`, {
+                headers: {
+                    "Authorization": `Bearer ${this._authService.accessToken}`
+                }
+            })
+                .pipe(catchError((error) => {
+                    console.log(error);
+                    throw error;
+                }))
+                .subscribe((data: ApiResponse<any[]>) => {
+
+                    // Ordena os dados por 'data.result.data' em ordem decrescente antes de atribuir
+                    data.result.sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
+
+                    // Atualize os dados diretamente no MatTableDataSource existente
+                    this.sellsDataSource().data = data.result;
+                    this.paginator.length = data.totalRecords;
+                    this.sellsDataSource().paginator = this.paginator;
+                });
+
+
+        }
     }
 
 }
