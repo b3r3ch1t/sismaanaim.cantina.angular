@@ -1,4 +1,3 @@
-import { Navigation } from './../../../core/navigation/navigation.types';
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -14,13 +13,12 @@ import { ApiResponse } from 'app/core/api/api-response.types';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { CurrencyPipe } from '@angular/common';
 import { UserService } from 'app/core/user/user.service';
-import { MatRadioChange, MatRadioGroup, MatRadioModule } from "@angular/material/radio"
-import { MatSelectionListChange, MatSelectionList, MatListModule, MatList } from '@angular/material/list';
+import { MatRadioGroup, MatRadioModule } from "@angular/material/radio"
+import { MatListModule } from '@angular/material/list';
 import { environment } from 'app/environments/environment';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { CurrencyMaskModule } from "ng2-currency-mask";
-import { Router } from '@angular/router';
 import { ConfirmationService } from 'app/services/confirmation.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';

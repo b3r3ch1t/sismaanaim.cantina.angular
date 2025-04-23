@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +13,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { environment } from 'app/environments/environment';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
+import { ConfirmationService } from 'app/services/confirmation.service';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { catchError } from 'rxjs';
 
@@ -28,7 +29,7 @@ import { catchError } from 'rxjs';
         MatCheckboxModule,
         CustomDatePipe,
         CustomCurrencyPipe,
-
+        CommonModule,
         MatInputModule,
     ]
 
@@ -54,6 +55,7 @@ export class RefundComponent implements OnInit, AfterViewInit {
         "Data",
         "Valor",
         "TransactionId",
+        "Estado",
         "Ações",
     ]
 
@@ -61,8 +63,9 @@ export class RefundComponent implements OnInit, AfterViewInit {
     @ViewChild('filterInput', { static: false }) filterInput: ElementRef;
 
     constructor(
-
+        private readonly confirmationService: ConfirmationService,
         private readonly snackbarService: SnackbarService,
+        private readonly customDatePipe: CustomDatePipe,
     ) { }
 
     ngOnInit() {
@@ -149,7 +152,7 @@ export class RefundComponent implements OnInit, AfterViewInit {
     handleFilterinput($event: any) {
         const input = $event.target as HTMLInputElement;
 
-        if(input.value === '') {
+        if (input.value === '') {
             this.showClearButton.set(false);
             this.clearInputs();
             return;
@@ -181,4 +184,54 @@ export class RefundComponent implements OnInit, AfterViewInit {
         }
     }
 
+    formatDate(date: string): string {
+        return this.customDatePipe.transform(date);
+    }
+
+    refundSell(sell) {
+
+
+        const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        const confirmationMessage = [
+            `Nome: ${sell.clienteNome}`,
+            `Data: ${this.formatDate(sell.data)}`,
+            `Transação: ${sell.transactionId}`,
+            `Valor: ${formatter.format(sell.valor)}`
+        ].join('<br>');
+
+        this.confirmationService.confirm("Tem certeza que deseja cancelar a venda abaixo?", confirmationMessage).subscribe(result => {
+            if (result) {
+
+
+                this._httpClient.post(`${environment.API_URL}permissionario/estornarvendabytransactionid/${sell.transactionId}`, null).pipe(
+                    catchError((error) => {
+                        console.log(error);
+                        throw error
+                    })
+                ).subscribe((response: ApiResponse<any>) => {
+                    console.log(response)
+
+                    if (response.success) {
+
+                        this.snackbarService.success(
+                            `Venda cancelada com sucesso!`,
+                            30 * 1000
+                        );
+
+                    } else {
+                        this.snackbarService.error(
+                            `Erro ao cancelar a venda: ${response.message}`,
+                            30 * 1000
+                        );
+                    }
+                    this.clearInputs();
+                    this.ngAfterViewInit();
+                })
+            }
+        });
+
+
+
+    }
 }
