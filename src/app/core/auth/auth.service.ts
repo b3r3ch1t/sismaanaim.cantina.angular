@@ -56,7 +56,13 @@ export class AuthService {
 
     decodeToken(): JwtPayload | null {
         try {
-            const token = this.accessToken;
+            console.log('Decodificando token JWT...');
+            const token = sessionStorage.getItem('accessToken');
+
+            if (!token) {
+                console.log('Token não encontrado.');
+                return null;
+            }
             if (!token) return null;
 
             const decoded = jwtDecode<JwtPayload>(token);
@@ -75,7 +81,7 @@ export class AuthService {
         return decoded.exp < now;
     }
 
-    getTokenField<T = any>(token: string, field: string): T | null {
+    getTokenField<T = any>(field: string): T | null {
         const decoded = this.decodeToken();
         return decoded && field in decoded ? decoded[field] as T : null;
     }

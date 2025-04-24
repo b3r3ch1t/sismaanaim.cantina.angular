@@ -4,6 +4,10 @@ import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { PageNotFoundComponent } from './modules/admin/page-not-found/page-not-found.component';
+import { AttendantGuard } from './core/auth/guards/attendant.guard';
+import { OperatorGuard } from './core/auth/guards/operator.guard';
+import { PermissionaryGuard } from './core/auth/guards/permissionary.guard';
+import { ReviewerGuard } from './core/auth/guards/reviewer.guard';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -76,20 +80,6 @@ export const appRoutes: Route[] = [
 
         ]
     },
-
-
-    // Landing routes
-    // {
-    //     path: '',
-    //     component: LayoutComponent,
-    //     data: {
-    //         layout: 'empty'
-    //     },
-    //     children: [
-    //         { path: 'home', loadChildren: () => import('app/modules/landing/home/home.routes') },
-    //     ]
-    // },
-
     // Admin routes
     {
         path: '',
@@ -105,8 +95,8 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [OperatorGuard],
+        canActivateChild: [OperatorGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -117,8 +107,8 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [OperatorGuard],
+        canActivateChild: [OperatorGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -129,8 +119,8 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [OperatorGuard],
+        canActivateChild: [OperatorGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -141,8 +131,8 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [OperatorGuard],
+        canActivateChild: [OperatorGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -153,8 +143,8 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [OperatorGuard],
+        canActivateChild: [OperatorGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -167,8 +157,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [OperatorGuard],
+        canActivateChild: [OperatorGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -180,8 +170,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [OperatorGuard],
+        canActivateChild: [OperatorGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -194,8 +184,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [AttendantGuard],
+        canActivateChild: [AttendantGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -208,8 +198,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [AttendantGuard],
+        canActivateChild: [AttendantGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -222,8 +212,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [AttendantGuard],
+        canActivateChild: [AttendantGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -235,8 +225,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [AttendantGuard],
+        canActivateChild: [AttendantGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -250,8 +240,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [PermissionaryGuard],
+        canActivateChild: [PermissionaryGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -263,8 +253,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [PermissionaryGuard],
+        canActivateChild: [PermissionaryGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -277,8 +267,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [PermissionaryGuard],
+        canActivateChild: [PermissionaryGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -291,8 +281,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [PermissionaryGuard],
+        canActivateChild: [PermissionaryGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -305,8 +295,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [PermissionaryGuard],
+        canActivateChild: [PermissionaryGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -319,8 +309,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [PermissionaryGuard],
+        canActivateChild: [PermissionaryGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -332,8 +322,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -346,8 +336,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -361,8 +351,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -377,8 +367,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -389,8 +379,8 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -402,8 +392,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -416,8 +406,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -431,8 +421,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -444,8 +434,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -458,8 +448,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -472,8 +462,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -485,8 +475,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -499,8 +489,8 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
