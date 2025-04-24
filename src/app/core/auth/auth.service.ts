@@ -4,12 +4,26 @@ import { inject, Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+
+
+export interface JwtPayload {
+    // Defina os campos conforme sua necessidade ou use [key: string]: any;
+    sub?: string;
+    email?: string;
+    exp?: number;
+    iat?: number;
+    roles?: string[];
+    [key: string]: any;
+}
+
+
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private _authenticated: boolean = false;
-    private _httpClient = inject(HttpClient);
-    private _userService = inject(UserService);
+    private readonly _httpClient = inject(HttpClient);
+    private readonly _userService = inject(UserService);
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -39,6 +53,34 @@ export class AuthService {
         return this._httpClient.post('api/auth/forgot-password', email);
     }
 
+
+    decodeToken(): JwtPayload | null {
+        try {
+            const token = this.accessToken;
+            if (!token) return null;
+
+            const decoded = jwtDecode<JwtPayload>(token);
+            return decoded;
+        } catch (error) {
+            console.error('Erro ao decodificar token JWT:', error);
+            return null;
+        }
+    }
+
+    isTokenExpired(token: string): boolean {
+        const decoded = this.decodeToken();
+        if (!decoded || !decoded.exp) return true;
+
+        const now = Date.now().valueOf() / 1000;
+        return decoded.exp < now;
+    }
+
+    getTokenField<T = any>(token: string, field: string): T | null {
+        const decoded = this.decodeToken();
+        return decoded && field in decoded ? decoded[field] as T : null;
+    }
+
+
     /**
      * Reset password
      *
@@ -48,8 +90,8 @@ export class AuthService {
 
 
         const params = new HttpParams()
-        .set('newPassword', password)
-        .set('confirmPassword', password);
+            .set('newPassword', password)
+            .set('confirmPassword', password);
 
 
         return this._httpClient.post(`${environment.API_URL}account/changepassword`, params);
@@ -79,7 +121,7 @@ export class AuthService {
                         id: response.result.userId,
                         name: response.result.userName,
                         email: response.result.userEmail,
-                        profiles : response.result.profiles
+                        profiles: response.result.profiles
                     }
 
                     // // Store the access token in the local storage
@@ -201,3 +243,5 @@ export class AuthService {
         return this.signInUsingToken();
     }
 }
+
+
