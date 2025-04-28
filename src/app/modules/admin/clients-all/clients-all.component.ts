@@ -1,6 +1,6 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator } from '@angular/material/paginator';
@@ -20,7 +20,6 @@ import { catchError } from 'rxjs';
         CommonModule,
         MatTableModule,
         MatPaginator,
-        MatSortModule,
         MatInputModule,
         CustomCurrencyPipe
     ],
@@ -33,14 +32,14 @@ import { catchError } from 'rxjs';
     templateUrl: './clients-all.component.html',
     styleUrl: './clients-all.component.scss'
 })
-export class ClientsAllComponent implements OnInit {
+export class ClientsAllComponent implements AfterViewInit {
 
     private readonly _httpClient = inject(HttpClient)
     private readonly _authService = inject(AuthService)
 
-    @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort!: MatSort;
+    @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+    @ViewChild('filterInput', { static: false }) filterInput: ElementRef;
 
     clients = signal([]);
     clientsDataSource = signal(new MatTableDataSource([]));
@@ -52,15 +51,12 @@ export class ClientsAllComponent implements OnInit {
         "Saldo"
     ]
 
+    fetchPagedRecords() {
 
+        const pageNumber = this.paginator.pageIndex + 1;
+        const pageSize = this.paginator.pageSize;
 
-    ngOnInit(): void {
-        this.fetchClients()
-    }
-
-
-    fetchClients() {
-        this._httpClient.get(`${environment.API_URL}clientes/getallclientes`, {
+        this._httpClient.get(`${environment.API_URL}clientes/getallclientes/${pageSize}/${pageNumber}`, {
             headers: {
                 "Authorization": `Bearer ${this._authService.accessToken}`
             }
@@ -73,35 +69,77 @@ export class ClientsAllComponent implements OnInit {
                 if (data.success) {
 
 
-                    console.log(data.result);
 
-                    data.result.sort((a, b) => a.nome.localeCompare(b.nome));
-                    this.clients.set(data.result);
+                    this.clientsDataSource().data = data.result;
 
-                    const dataSource = new MatTableDataSource(this.clients())
-                    if (dataSource) {
-
-
-
-                        dataSource.sortingDataAccessor = (item: any, property) => {
-                            switch (property) {
-                                case 'Nome':
-                                    return item.nome;
-                                case 'CPF':
-                                    return item.cpf;
-
-                                case 'Saldo':
-                                    return item.saldo;
-                                default:
-                                    return item[property];
-                            }
-                        };
-
-                        dataSource.paginator = this.paginator;
-                        dataSource.sort = this.sort;
-                        this.clientsDataSource.set(dataSource);
-                    }
                 }
+            });
+    }
+
+    ngAfterViewInit() {
+
+        this.fetchTotalRecords(); // Primeiro, busca o total de registros
+
+        // Configure os eventos de paginação e ordenação
+        this.paginator.page.subscribe(() => this.fetchPagedRecords());
+
+        // Monitore mudanças no campo de filtro
+        this.filterInput.nativeElement.addEventListener('input', () => {
+            const filterValue = this.filterInput.nativeElement.value.trim();
+        });
+        // Agora que o paginator está inicializado, chame fetchSells
+        this.fetchPagedRecords();
+    }
+
+
+    handleFilterinput($event: any) {
+        const input = $event.target as HTMLInputElement;
+
+        if (input.value === '') {
+            return;
+        }
+
+        if (input.value.length >= 4) {
+
+            this._httpClient.get(`${environment.API_URL}permissionario/GetVendasFiltered/${input.value}`, {
+                headers: {
+                    "Authorization": `Bearer ${this._authService.accessToken}`
+                }
+            })
+                .pipe(catchError((error) => {
+                    console.log(error);
+                    throw error;
+                }))
+                .subscribe((data: ApiResponse<any[]>) => {
+
+                    // Ordena os dados por 'data.result.data' em ordem decrescente antes de atribuir
+                    data.result.sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
+
+                    // Atualize os dados diretamente no MatTableDataSource existente
+                    this.clientsDataSource().data = data.result;
+                    this.paginator.length = data.totalRecords;
+                    this.clientsDataSource().paginator = this.paginator;
+                });
+
+
+        }
+
+    }
+
+    fetchTotalRecords() {
+        this._httpClient.get(`${environment.API_URL}clientes/totalclientes`, {
+            headers: {
+                "Authorization": `Bearer ${this._authService.accessToken}`
+            }
+        })
+            .pipe(catchError((error) => {
+                console.log(error);
+                throw error;
+            }))
+            .subscribe((totalResponse: ApiResponse<number>) => {
+                // Atualize o total de registros no paginator
+
+                this.paginator.length = totalResponse.result; // Supondo que `result` contém o total de registros
             });
     }
 
@@ -134,7 +172,6 @@ export class ClientsAllComponent implements OnInit {
 
 
         dataSource.paginator = this.paginator;
-        dataSource.sort = this.sort;
         this.clientsDataSource.set(dataSource);
 
 
