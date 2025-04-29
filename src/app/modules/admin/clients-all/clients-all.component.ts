@@ -101,7 +101,7 @@ export class ClientsAllComponent implements AfterViewInit {
 
         if (input.value.length >= 4) {
 
-            this._httpClient.get(`${environment.API_URL}permissionario/GetVendasFiltered/${input.value}`, {
+            this._httpClient.get(`${environment.API_URL}clientes/GetClientesFiltered/${input.value}`, {
                 headers: {
                     "Authorization": `Bearer ${this._authService.accessToken}`
                 }
