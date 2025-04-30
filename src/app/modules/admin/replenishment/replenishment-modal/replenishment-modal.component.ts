@@ -138,10 +138,6 @@ export class ReplenishmentModalComponent implements OnInit {
         const rechargeValue = parseFloat(this.rechargeValueInput.nativeElement.value.replace(".", "").replace(",", "."))
         const troco = paidValue - rechargeValue;
 
-        console.log('valor pago', paidValue)
-        console.log('valor recarga', rechargeValue)
-        console.log('troco', troco)
-
 
         if (troco < 0) {
             this.snackbar.error("O valor pago deve ser maior ou igual ao valor da recarga", 30 * 1000);

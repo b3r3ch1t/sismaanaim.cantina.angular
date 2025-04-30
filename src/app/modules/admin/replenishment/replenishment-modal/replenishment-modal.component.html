@@ -20,7 +20,8 @@
 
 <mat-form-field class="w-full">
     <mat-label>Forma de Pagamento*</mat-label>
-    <mat-select (selectionChange)="handlePaymentMethodSelection()" [disabled]="paymentMethods().length === 0 "  #paymentMethodDropdown="matSelect">
+    <mat-select (selectionChange)="handlePaymentMethodSelection()" [disabled]="paymentMethods().length === 0 "
+        #paymentMethodDropdown="matSelect">
         @for (payment of paymentMethods(); track $index) {
         <mat-option [value]="payment.id">{{ payment.descricao }}</mat-option>
         }
@@ -38,7 +39,7 @@
 <mat-form-field class="w-full">
     <mat-label>Valor da Recarga</mat-label>
     <span matPrefix>R$&nbsp;</span>
-    <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }"
+    <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" (input)="validar()"
         [disabled]="selectedPaymentMethod() === null" type="text" #rechargeValueInput
         placeholder="Informe o valor da recarga">
     @if (validRechargeInput() === false) {
@@ -68,4 +69,3 @@
     <button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
     <button mat-flat-button color="primary" [disabled]="!validar()" (click)="handleSubmit()">Efetuar Recarga</button>
 </mat-dialog-actions>
-

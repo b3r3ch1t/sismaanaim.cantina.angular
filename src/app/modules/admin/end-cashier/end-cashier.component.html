@@ -31,14 +31,14 @@
 
                 <ng-container matColumnDef="Actions">
                     <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Ações </th>
-                    <td mat-cell class="border border-gray-300 p-2" *matCellDef="let cashier">
+                    <td mat-cell class="border border-gray-300 p-2" *matCellDef="let formaPagamento">
                         <div class="flex flex-wrap gap-2 py-2 justify-center">
 
                             <button *ngIf="cashier.informado" class="text-white bg-green-500"
-                                (click)="cashierDetails(cashier)" mat-flat-button>Alterar</button>
+                                (click)="cashierPaymentChange(formaPagamento)" mat-flat-button>Alterar</button>
 
                             <button *ngIf="!cashier.informado" class="text-white bg-teal-500"
-                                (click)="cashierDetails(cashier)" mat-flat-button>Informar</button>
+                                (click)="cashierPaymentAdd(formaPagamento)" mat-flat-button>Informar</button>
 
                         </div>
                     </td>
@@ -53,9 +53,28 @@
         </mat-dialog-content>
 
 
+        <mat-form-field class="w-full" *ngIf="formaPagamento()">
+            <mat-label>Valor apurado</mat-label>
+            <span matPrefix>R$&nbsp;</span>
+            <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }"
+                placeholder="Informe o valor apurado" #apuradoValueInput>
+
+        </mat-form-field>
+
+        <mat-dialog-actions *ngIf="formaPagamento()" align="center" class="flex justify-between">
+            <button mat-flat-button color="warn" (click)="clearFormaPagamento()">Cancelar</button>
+            <button color="primary" mat-flat-button [disabled]="!validar()" *ngIf="atualizarFormaPagamento()"
+                (click)="handleUpdateSubmit()">Atualizar</button>
+            <button color="primary" mat-flat-button [disabled]="!validar()" *ngIf="informarFormaPagamento()"
+                (click)="handleInsertSubmit()">Informar</button>
+        </mat-dialog-actions>
+
 
 
     </div>
+
+
+
 </div>
 
 <mat-dialog-actions align="end">
