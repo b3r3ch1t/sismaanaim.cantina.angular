@@ -14,12 +14,13 @@ import { environment } from 'app/environments/environment';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { catchError } from 'rxjs';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { EventStatus } from '../event-status.enum';
 import { CashierDetailComponent } from '../../cashier-detail/cashier-detail-component';
 import { AddCashierComponent } from '../add-cashier/add-cashier.component';
 import { ConfirmationService } from 'app/services/confirmation.service';
+import { EndCashierComponent } from '../../end-cashier/end-cashier.component';
 @Component({
     selector: 'app-cashier-event-detail-component',
     templateUrl: './cashier-event-detail-component.html',
@@ -35,6 +36,7 @@ import { ConfirmationService } from 'app/services/confirmation.service';
         MatTableModule,
         MatSelectModule,
         CustomCurrencyPipe,
+        CommonModule
     ],
     providers: [
         CurrencyPipe,
@@ -118,35 +120,54 @@ export class CashierEventDetailComponent {
 
 
     endCashier(cashier: any) {
-        this.confirmationService.confirm(`Confirmar`, `Tem certeza de que deseja fechar o caixa ${cashier.operador}?`).subscribe(result => {
+        // this.confirmationService.confirm(`Confirmar`, `Tem certeza de que deseja fechar o caixa ${cashier.operador}?`).subscribe(result => {
+        //     if (result) {
+        //       this._httpClient.request('POST', `${environment.API_URL}caixa/EncerrarCaixa/${cashier.id}`, {
+        //         headers: {
+        //           "Authorization": `Bearer ${this._authService.accessToken}`,
+        //           "Content-Type": "application/json" // Ensure JSON is sent properly
+        //         },
+        //       }).subscribe({
+        //         next: (response : ApiResponse<any>) => {
+        //           console.log(response)
+        //           if(response.success){
+
+
+        //             this.snackbarService.success("Caixa encerrado com sucesso !");
+        //             this.fetchCashierList();
+
+        //           }
+
+        //           if (response.error) {
+        //             this.snackbarService.error(response.errors.join(", "))
+        //           }
+        //         },
+        //         error: (error) => {
+        //           console.error('Error:', error);
+        //         }
+        //       });
+
+        //     }
+        //   })
+
+
+
+        const dialogRef = this.dialog.open(EndCashierComponent, {
+            data: {
+                cashier: cashier,
+                event: this.event
+            },
+            width: "99%",
+          });
+
+          dialogRef.afterClosed().subscribe(result => {
             if (result) {
-              this._httpClient.request('POST', `${environment.API_URL}caixa/EncerrarCaixa/${cashier.id}`, {
-                headers: {
-                  "Authorization": `Bearer ${this._authService.accessToken}`,
-                  "Content-Type": "application/json" // Ensure JSON is sent properly
-                },
-              }).subscribe({
-                next: (response : ApiResponse<any>) => {
-                  console.log(response)
-                  if(response.success){
-
-
-                    this.snackbarService.success("Caixa encerrado com sucesso !");
-                    this.fetchCashierList();
-
-                  }
-
-                  if (response.error) {
-                    this.snackbarService.error(response.errors.join(", "))
-                  }
-                },
-                error: (error) => {
-                  console.error('Error:', error);
-                }
-              });
-
+              // Aqui você pode executar sua lógica após o fechamento
+                  this.fetchCashierList();
+            } else {
+              console.log('O diálogo foi fechado sem resultado');
             }
-          })
+          });
     }
 
 
@@ -222,8 +243,6 @@ export class CashierEventDetailComponent {
                 );
 
                 this.cashiers.set(sortedCashiers);
-
-                console.log(data.result);
 
             }
         })

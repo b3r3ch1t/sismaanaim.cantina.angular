@@ -36,8 +36,8 @@ import { DetailEventComponent } from './detail-event/detail-event.component';
 })
 
 export class EventsComponent implements OnInit {
-    private _httpClient = inject(HttpClient)
-    private _authService = inject(AuthService)
+    private readonly _httpClient = inject(HttpClient)
+    private readonly _authService = inject(AuthService)
 
     @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort!: MatSort;
@@ -207,8 +207,6 @@ export class EventsComponent implements OnInit {
             }))
             .subscribe((data: ApiResponse<Array<any>>) => {
                 if (data.success) {
-
-                    console.log(data.result);
 
                     this.events.set(data.result)
 
