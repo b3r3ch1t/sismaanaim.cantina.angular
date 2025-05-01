@@ -1,6 +1,5 @@
-import { CurrencyPipe } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, inject, Inject, signal, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { Component, Inject, OnInit, ViewChild, AfterViewInit, signal, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -9,19 +8,22 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { ApiResponse } from 'app/core/api/api-response.types';
-import { AuthService } from 'app/core/auth/auth.service';
-import { environment } from 'app/environments/environment';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
-import { catchError } from 'rxjs';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { AmmountCollectedCashierComponent } from '../ammount-collected-cashier/ammount-collected-cashier';
+import { environment } from 'app/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from 'app/core/auth/auth.service';
+import { catchError } from 'rxjs';
+import { ApiResponse } from 'app/core/api/api-response.types';
 
 @Component({
     selector: 'app-cashier-detail-component',
+    standalone: true,
     templateUrl: './cashier-detail-component.html',
     styleUrl: './cashier-detail-component.scss',
     imports: [
@@ -39,6 +41,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
         MatTabsModule,
         MatPaginator,
         MatSortModule,
+        CommonModule
     ],
     providers: [
         CurrencyPipe,
@@ -53,8 +56,24 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
     @ViewChild('historySort') historySort!: MatSort;
     @ViewChild('moedaSort') moedaSort!: MatSort;
 
+    @ViewChild(MatSort, { static: false }) sort!: MatSort;
+
+    private readonly _httpClient = inject(HttpClient);
+    private readonly _authService = inject(AuthService);
+
+    cashierDataSource = signal(new MatTableDataSource([]))
+
+
     displayedColumns: string[] = ['Descrição', 'Valor'];
-    displayedColumnsHistorico: string[] = ['Horario', 'ClienteNome', 'TipoOperacao', 'Valor','AceitaEstorno', 'Actions'];
+    displayedColumnsHistorico: string[] = ['Horario', 'ClienteNome', 'TipoOperacao', 'Valor', 'AceitaEstorno', 'Actions'];
+    displayedColumnsAmmountCollected = [
+        "formaPagamentoNome",
+        "totalFormaPagamento",
+        "valorApurado",
+        "diferenca",
+        "informado",
+    ]
+
     historyDatasource = new MatTableDataSource([]);
 
     totalPorMoedasDataSource = new MatTableDataSource<any>([]);
@@ -75,6 +94,8 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.historyDatasource = new MatTableDataSource(this.historicoCaixaDto);
+
+        this.fetchCashierList();
     }
 
 
@@ -93,8 +114,8 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
                     return item.tipoOperacao?.toLowerCase();
                 case 'Valor':
                     return item.valor;
-                    case 'Estorno':
-                        return item.aceitaEstorno;
+                case 'Estorno':
+                    return item.aceitaEstorno;
                 default:
                     return item[property];
             }
@@ -112,6 +133,44 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
                     return item[property];
             }
         };
+    }
+
+    fetchCashierList() {
+        this._httpClient.get(`${environment.API_URL}caixa/GetFechamentoByCaixaId/${this.cashier.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + this._authService.accessToken
+            }
+        }).pipe(catchError(error => {
+            throw error
+        })).subscribe((data: ApiResponse<any>) => {
+
+            if (data.success) {
+
+                console.log(data.result.formasPagamento);
+
+                const dataSource = new MatTableDataSource(data.result.formasPagamento);
+                if (dataSource) {
+                    dataSource.sortingDataAccessor = (item: any, property) => {
+                        switch (property) {
+                            // case 'Descricao':
+                            //   return item.descricao;
+                            // case 'Aceita Estorno':
+                            //   return item.aceitaEstorno;
+                            // case 'Ordem débito':
+                            //   return Number(item.ordemDebito);
+                            default:
+                                return item[property];
+                        }
+                    };
+
+                    dataSource.paginator = this.paginator;
+                    dataSource.sort = this.sort;
+                    this.cashierDataSource.set(dataSource);
+
+                }
+            }
+
+        });
     }
 
 

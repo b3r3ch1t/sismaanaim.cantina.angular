@@ -61,7 +61,7 @@
                         caixa</button>
                     }
 
-                    @if( 'Fechado' == cashier.estadoCaixa){
+                    @if( 'Fechado' == cashier.estadoCaixa && '2' == event.estadoEvento){
 
                     <button mat-flat-button (click)="reOpenCashier(cashier)" class="text-white bg-green-500">Reabrir
                         caixa</button>

@@ -1,6 +1,6 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, inject, Inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Inject, Input, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -23,6 +23,7 @@ import { catchError } from 'rxjs';
 
 @Component({
     selector: 'app-end-cashier',
+    standalone: true,
     imports: [
         MatDialogModule,
         FormsModule,
@@ -44,10 +45,10 @@ import { catchError } from 'rxjs';
         CustomCurrencyPipe,
         CustomDatePipe
     ],
-    templateUrl: './end-cashier.component.html',
-    styleUrl: './end-cashier.component.scss'
+    templateUrl: './ammount-collected-cashier.html',
+    styleUrl: './ammount-collected-cashier.scss'
 })
-export class EndCashierComponent implements OnInit {
+export class AmmountCollectedCashierComponent implements OnInit {
 
     validInformedInput = signal(null);
     private readonly _httpClient = inject(HttpClient);
@@ -55,6 +56,8 @@ export class EndCashierComponent implements OnInit {
 
     @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort!: MatSort;
+    @Input() showActions: boolean = true;
+
 
     cashierDataSource = signal(new MatTableDataSource([]))
 
@@ -80,7 +83,7 @@ export class EndCashierComponent implements OnInit {
 
         @Inject(MAT_DIALOG_DATA) public data: { event: any, cashier: any },
         private readonly confirmationService: ConfirmationService,
-        private readonly dialogRef: MatDialogRef<EndCashierComponent>,
+        private readonly dialogRef: MatDialogRef<AmmountCollectedCashierComponent>,
         private readonly snackbar: SnackbarService,
     ) {
         this.event = data.event;

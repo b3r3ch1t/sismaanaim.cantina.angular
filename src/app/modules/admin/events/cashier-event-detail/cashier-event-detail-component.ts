@@ -20,7 +20,8 @@ import { EventStatus } from '../event-status.enum';
 import { CashierDetailComponent } from '../../cashier-detail/cashier-detail-component';
 import { AddCashierComponent } from '../add-cashier/add-cashier.component';
 import { ConfirmationService } from 'app/services/confirmation.service';
-import { EndCashierComponent } from '../../end-cashier/end-cashier.component';
+import { AmmountCollectedCashierComponent } from '../../ammount-collected-cashier/ammount-collected-cashier';
+
 @Component({
     selector: 'app-cashier-event-detail-component',
     templateUrl: './cashier-event-detail-component.html',
@@ -66,6 +67,7 @@ export class CashierEventDetailComponent {
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
         this.event = data;
+
         this.fetchCashierList();
     }
 
@@ -124,7 +126,7 @@ export class CashierEventDetailComponent {
 
 
 
-        const dialogRef = this.dialog.open(EndCashierComponent, {
+        const dialogRef = this.dialog.open(AmmountCollectedCashierComponent, {
             data: {
                 cashier: cashier,
                 event: this.event

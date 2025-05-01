@@ -56,7 +56,7 @@ export class AuthService {
 
     decodeToken(): JwtPayload | null {
         try {
-            console.log('Decodificando token JWT...');
+
             const token = sessionStorage.getItem('accessToken');
 
             if (!token) {

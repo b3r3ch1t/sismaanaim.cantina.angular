@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EndCashierComponent } from './end-cashier.component';
+import { EndCashierComponent } from './ammount-collected-cashier';
 
 describe('EndCashierComponent', () => {
   let component: EndCashierComponent;

@@ -24,8 +24,6 @@ export class ReviewerGuard implements CanActivate, CanActivateChild {
 
         const hasReviewer = profile.includes(Profile.Revisor.toString());
 
-        console.log("hasReviewer", hasReviewer);
-
         // Redirecionar para uma página de erro ou login, se necessário
 
         if(!hasReviewer){

@@ -45,7 +45,7 @@
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="Actions">
+                <ng-container *ngIf="showActions" matColumnDef="Actions">
                     <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Ações </th>
                     <td mat-cell class="border border-gray-300 p-2" *matCellDef="let formaPagamento">
                         <div class="flex flex-wrap gap-2 py-2 justify-center">
@@ -67,27 +67,6 @@
             <mat-paginator [pageSize]="25" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
 
         </mat-dialog-content>
-
-
-        <mat-form-field class="w-full" *ngIf="formaPagamento()">
-            <mat-label>Valor apurado</mat-label>
-            <span matPrefix>R$&nbsp;</span>
-            <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }"
-                placeholder="Informe o valor apurado" #apuradoValueInput>
-
-        </mat-form-field>
-
-
-
-        <mat-dialog-actions *ngIf="formaPagamento()" align="center" class="flex justify-between">
-            <button mat-flat-button color="warn" (click)="clearFormaPagamento()">Cancelar</button>
-            <button color="primary" mat-flat-button [disabled]="!validar()" *ngIf="atualizarFormaPagamento()"
-                (click)="handleUpdateSubmit(formaPagamento())">Atualizar</button>
-            <button color="primary" mat-flat-button [disabled]="!validar()" *ngIf="informarFormaPagamento()"
-                (click)="handleInsertSubmit()">Informar</button>
-        </mat-dialog-actions>
-
-
 
     </div>
 

@@ -21,6 +21,7 @@ import { DetailEventComponent } from './detail-event/detail-event.component';
 
 @Component({
     selector: 'app-events',
+    standalone: true,
     imports: [
         MatTableModule,
         MatPaginator,
