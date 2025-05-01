@@ -43,7 +43,7 @@
 
         <ng-container matColumnDef="Actions">
             <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Ações </th>
-            <td mat-cell  class="border border-gray-300 p-2" *matCellDef="let cashier">
+            <td mat-cell class="border border-gray-300 p-2" *matCellDef="let cashier">
                 <div class="flex flex-wrap gap-2 py-2">
                     <button class="text-white bg-teal-500" (click)="cashierDetails(cashier)" mat-flat-button>Detalhe do
                         Caixa</button>
@@ -59,6 +59,9 @@
 
                     <button mat-flat-button (click)="endCashier(cashier)" class="text-white bg-blue-500">Fechar
                         caixa</button>
+                    }
+
+                    @if( 'Fechado' == cashier.estadoCaixa){
 
                     <button mat-flat-button (click)="reOpenCashier(cashier)" class="text-white bg-green-500">Reabrir
                         caixa</button>

@@ -82,7 +82,7 @@
         <mat-dialog-actions *ngIf="formaPagamento()" align="center" class="flex justify-between">
             <button mat-flat-button color="warn" (click)="clearFormaPagamento()">Cancelar</button>
             <button color="primary" mat-flat-button [disabled]="!validar()" *ngIf="atualizarFormaPagamento()"
-                (click)="handleUpdateSubmit()">Atualizar</button>
+                (click)="handleUpdateSubmit(formaPagamento())">Atualizar</button>
             <button color="primary" mat-flat-button [disabled]="!validar()" *ngIf="informarFormaPagamento()"
                 (click)="handleInsertSubmit()">Informar</button>
         </mat-dialog-actions>
@@ -96,6 +96,6 @@
 </div>
 
 <mat-dialog-actions class="flex justify-between w-full">
-    <button color="primary" mat-flat-button [disabled]="!validarFecharCaixa()" mat-button (click)="closeDialog()">Fechar Caixa</button>
+    <button color="primary" mat-flat-button [disabled]="!validarFecharCaixa()" mat-button (click)="closeCashier()">Fechar Caixa</button>
     <button mat-button (click)="closeDialog()">Close</button>
 </mat-dialog-actions>

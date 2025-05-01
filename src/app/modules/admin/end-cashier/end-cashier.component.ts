@@ -111,6 +111,7 @@ export class EndCashierComponent implements OnInit {
         this.informarFormaPagamento.set(true);
 
     }
+
     clearFormaPagamento() {
         this.formaPagamento.set(null);
         this.atualizarFormaPagamento.set(false);
@@ -155,14 +156,84 @@ export class EndCashierComponent implements OnInit {
         });
     }
 
+    handleUpdateSubmit(event) {
 
-    handleUpdateSubmit() {
+        console.log(event);
 
-        const confirmationMessage = `Você tem certeza que deseja atualizar o fechamento do caixa?`;
+        const apuradoValueInput = parseFloat(this.apuradoValueInput?.nativeElement.value.replace('.', '').replace(',', '.')) || 0;
 
-        this.confirmationService.confirm("Confirmar", confirmationMessage).subscribe(result => {
+        const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        if (apuradoValueInput <= 0) {
+            this.snackbar.error("O valor apurado deve ser maior que 0", 30 * 1000);
+
+            this.validInformedInput.set(false)
+            return
+        }
+
+
+        console.log(this.formaPagamento());
+        if (this.formaPagamento() == null) {
+            this.validInformedInput.set(false)
+            return
+        }
+
+        const confirmationMessage = `Você tem certeza que deseja atualizar os valores abaixo para o caixa? <br>
+        Caixa: ${this.cashier.operador} <br>
+        Forma de Pagamento: ${this.formaPagamento().formaPagamentoNome} <br>
+        Valor : ${formatter.format(apuradoValueInput)} <br> `;
+
+
+        this.confirmationService.confirm("Confirmação de informação", confirmationMessage).subscribe(result => {
             if (result) {
 
+                this._httpClient.put(`${environment.API_URL}caixa/updateValorFechamentoByFormaPagamento`, {
+                    "fechamentoFormaPagamentoId": event.fechamentoFormaPagamentoId,
+                    "caixaId": this.cashier.id,
+                    "valorInformado": apuradoValueInput,
+                    "formaPagamentoId": this.formaPagamento().formaPagamentoId,
+                }).pipe(
+                    catchError((error) => {
+
+
+                        this.fetchCashierList();
+                        this.validar();
+                        this.validarFecharCaixa();
+                        this.clearFormaPagamento();
+
+
+                        console.log(error);
+                        throw error
+                    })
+                ).subscribe((response: ApiResponse<any>) => {
+                    console.log(response)
+
+                    if (response.success) {
+
+                        const confirmationMessage = `Foi informado os valores abaixo:${this.cashier.operador}
+                    Forma de Pagamento: ${this.formaPagamento().formaPagamentoNome}
+                    Valor : ${formatter.format(apuradoValueInput)} `;
+
+                        this.snackbar.success(
+                            confirmationMessage,
+                            30 * 1000
+                        );
+
+                    }
+                    else {
+                        this.snackbar.error(
+                            response.message,
+                            30 * 1000
+                        );
+
+
+                    }
+
+                    this.fetchCashierList();
+                    this.validar();
+                    this.validarFecharCaixa();
+                    this.clearFormaPagamento();
+                })
             }
         }
         );
@@ -204,21 +275,39 @@ export class EndCashierComponent implements OnInit {
                     "formaPagamentoId": this.formaPagamento().formaPagamentoId,
                 }).pipe(
                     catchError((error) => {
+
+
+                        this.fetchCashierList();
+                        this.validar();
+                        this.validarFecharCaixa();
+                        this.clearFormaPagamento();
+
+
                         console.log(error);
                         throw error
                     })
                 ).subscribe((response: ApiResponse<any>) => {
                     console.log(response)
+                    if (response.success) {
 
-
-                    const confirmationMessage = `Foi informado os valores abaixo:${this.cashier.operador}
+                        const confirmationMessage = `Foi informado os valores abaixo:${this.cashier.operador}
                     Forma de Pagamento: ${this.formaPagamento().formaPagamentoNome}
                     Valor : ${formatter.format(apuradoValueInput)} `;
 
-                    this.snackbar.success(
-                        confirmationMessage,
-                        30 * 1000
-                    );
+                        this.snackbar.success(
+                            confirmationMessage,
+                            30 * 1000
+                        );
+
+                    }
+                    else {
+                        this.snackbar.error(
+                            response.message,
+                            30 * 1000
+                        );
+
+
+                    }
 
                     this.fetchCashierList();
                     this.validar();
@@ -247,9 +336,47 @@ export class EndCashierComponent implements OnInit {
             ? !formasPagamento.some(fp => fp.informado === false)
             : true;
 
-        console.log(result);
+        console.log(this.cashier)
+        const caixaFechado =  this.cashier.estado;
 
         return result;
+    }
+
+    closeCashier() {
+
+        this.confirmationService.confirm(`Confirmar`, `Tem certeza de que deseja fechar o caixa ${this.cashier.operador}?`).subscribe(result => {
+            if (result) {
+                this._httpClient.request('POST', `${environment.API_URL}caixa/EncerrarCaixa/${this.cashier.id}`, {
+                    headers: {
+                        "Authorization": `Bearer ${this._authService.accessToken}`,
+                        "Content-Type": "application/json" // Ensure JSON is sent properly
+                    },
+                }).subscribe({
+                    next: (response: ApiResponse<any>) => {
+                        console.log(response)
+                        if (response.success) {
+
+
+                            this.snackbar.success("Caixa encerrado com sucesso !");
+                            this.fetchCashierList();
+
+                        }
+
+                        if (response.error) {
+                            this.snackbar.error(response.errors.join(", "))
+                        }
+
+
+                        this.closeDialog();
+                    },
+                    error: (error) => {
+                        console.error('Error:', error);
+                    }
+                });
+
+            }
+        })
+
     }
 
 }

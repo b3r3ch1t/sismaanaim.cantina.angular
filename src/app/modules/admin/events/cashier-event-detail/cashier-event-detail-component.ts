@@ -120,35 +120,7 @@ export class CashierEventDetailComponent {
 
 
     endCashier(cashier: any) {
-        // this.confirmationService.confirm(`Confirmar`, `Tem certeza de que deseja fechar o caixa ${cashier.operador}?`).subscribe(result => {
-        //     if (result) {
-        //       this._httpClient.request('POST', `${environment.API_URL}caixa/EncerrarCaixa/${cashier.id}`, {
-        //         headers: {
-        //           "Authorization": `Bearer ${this._authService.accessToken}`,
-        //           "Content-Type": "application/json" // Ensure JSON is sent properly
-        //         },
-        //       }).subscribe({
-        //         next: (response : ApiResponse<any>) => {
-        //           console.log(response)
-        //           if(response.success){
 
-
-        //             this.snackbarService.success("Caixa encerrado com sucesso !");
-        //             this.fetchCashierList();
-
-        //           }
-
-        //           if (response.error) {
-        //             this.snackbarService.error(response.errors.join(", "))
-        //           }
-        //         },
-        //         error: (error) => {
-        //           console.error('Error:', error);
-        //         }
-        //       });
-
-        //     }
-        //   })
 
 
 
@@ -161,12 +133,7 @@ export class CashierEventDetailComponent {
           });
 
           dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-              // Aqui você pode executar sua lógica após o fechamento
-                  this.fetchCashierList();
-            } else {
-              console.log('O diálogo foi fechado sem resultado');
-            }
+            this.fetchCashierList();
           });
     }
 
@@ -210,13 +177,8 @@ export class CashierEventDetailComponent {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            // Aqui você pode executar sua lógica após o fechamento
-                this.fetchCashierList();
-          } else {
-            console.log('O diálogo foi fechado sem resultado');
-          }
-        });
+            this.fetchCashierList();
+          });
       }
 
 
