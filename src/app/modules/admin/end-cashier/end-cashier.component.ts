@@ -65,6 +65,8 @@ export class EndCashierComponent implements OnInit {
         "formaPagamentoNome",
         "totalFormaPagamento",
         "valorApurado",
+        "diferenca",
+        "informado",
         "Actions"
     ]
 
@@ -196,7 +198,7 @@ export class EndCashierComponent implements OnInit {
         this.confirmationService.confirm("Confirmação de informação", confirmationMessage).subscribe(result => {
             if (result) {
 
-                this._httpClient.post(`${environment.API_URL}caixa/informarValorFechamentoByFormaPagamento`, {
+                this._httpClient.post(`${environment.API_URL}caixa/insertValorFechamentoByFormaPagamento`, {
                     "caixaId": this.cashier.id,
                     "valorInformado": apuradoValueInput,
                     "formaPagamentoId": this.formaPagamento().formaPagamentoId,
@@ -209,15 +211,19 @@ export class EndCashierComponent implements OnInit {
                     console.log(response)
 
 
+                    const confirmationMessage = `Foi informado os valores abaixo:${this.cashier.operador}
+                    Forma de Pagamento: ${this.formaPagamento().formaPagamentoNome}
+                    Valor : ${formatter.format(apuradoValueInput)} `;
 
-                    // this.snackbar.success(
-                    //     `A recarga foi realizada com sucesso! O valor do troco é ${troco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`,
-                    //     30 * 1000
-                    // );
+                    this.snackbar.success(
+                        confirmationMessage,
+                        30 * 1000
+                    );
 
-
-                    // this.clearInputs();
-                    // this.dialogRef.close(true);
+                    this.fetchCashierList();
+                    this.validar();
+                    this.validarFecharCaixa();
+                    this.clearFormaPagamento();
                 })
             }
         }
@@ -233,6 +239,17 @@ export class EndCashierComponent implements OnInit {
             this.formaPagamento() !== null &&
             apuradoValueInput > 0
         );
+    }
+
+    validarFecharCaixa(): boolean {
+        const formasPagamento = this.cashierDataSource().data;
+        const result = Array.isArray(formasPagamento)
+            ? !formasPagamento.some(fp => fp.informado === false)
+            : true;
+
+        console.log(result);
+
+        return result;
     }
 
 }

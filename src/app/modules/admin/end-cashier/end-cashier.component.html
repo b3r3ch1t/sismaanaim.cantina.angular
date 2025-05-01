@@ -28,16 +28,32 @@
                         customCurrency }} </td>
                 </ng-container>
 
+                <ng-container matColumnDef="informado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Informado </th>
+                    <td mat-cell *matCellDef="let formaPagamento">
+                        <mat-checkbox [checked]="formaPagamento.informado" disabled></mat-checkbox>
+                    </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="diferenca">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Diferença </th>
+                    <td mat-cell *matCellDef="let formaPagamento">
+                        <span *ngIf="formaPagamento.informado" [ngStyle]="{'color': (formaPagamento.valorApurado > formaPagamento.totalFormaPagamento) ? 'blue' : (formaPagamento.valorApurado < formaPagamento.totalFormaPagamento) ? 'red' : 'black'}">
+                            {{formaPagamento.valorApurado - formaPagamento.totalFormaPagamento | customCurrency }}
+                        </span>
+                    </td>
+                </ng-container>
 
                 <ng-container matColumnDef="Actions">
                     <th mat-header-cell class="border border-gray-300 p-2" *matHeaderCellDef> Ações </th>
                     <td mat-cell class="border border-gray-300 p-2" *matCellDef="let formaPagamento">
                         <div class="flex flex-wrap gap-2 py-2 justify-center">
 
-                            <button *ngIf="cashier.informado" class="text-white bg-green-500"
+                            <button *ngIf="formaPagamento.informado" class="text-white bg-green-500"
                                 (click)="cashierPaymentChange(formaPagamento)" mat-flat-button>Alterar</button>
 
-                            <button *ngIf="!cashier.informado" class="text-white bg-teal-500"
+                            <button *ngIf="!formaPagamento.informado" class="text-white bg-teal-500"
                                 (click)="cashierPaymentAdd(formaPagamento)" mat-flat-button>Informar</button>
 
                         </div>
@@ -61,6 +77,8 @@
 
         </mat-form-field>
 
+
+
         <mat-dialog-actions *ngIf="formaPagamento()" align="center" class="flex justify-between">
             <button mat-flat-button color="warn" (click)="clearFormaPagamento()">Cancelar</button>
             <button color="primary" mat-flat-button [disabled]="!validar()" *ngIf="atualizarFormaPagamento()"
@@ -77,6 +95,7 @@
 
 </div>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions class="flex justify-between w-full">
+    <button color="primary" mat-flat-button [disabled]="!validarFecharCaixa()" mat-button (click)="closeDialog()">Fechar Caixa</button>
     <button mat-button (click)="closeDialog()">Close</button>
 </mat-dialog-actions>
