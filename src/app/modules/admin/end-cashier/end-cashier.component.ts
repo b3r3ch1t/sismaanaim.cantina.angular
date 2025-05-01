@@ -336,10 +336,9 @@ export class EndCashierComponent implements OnInit {
             ? !formasPagamento.some(fp => fp.informado === false)
             : true;
 
-        console.log(this.cashier)
-        const caixaFechado =  this.cashier.estado;
+        const caixaFechado =  this.cashier.estado != "Fechado";
 
-        return result;
+        return result && caixaFechado;
     }
 
     closeCashier() {
