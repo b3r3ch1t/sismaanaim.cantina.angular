@@ -162,10 +162,16 @@ export const auditorNavigation: FuseNavigationItem[] = [
                 title: 'Principal',
                 type: 'basic',
                 icon: 'heroicons_outline:chart-pie',
-                link: '/auditor-dashboard'
+                link: '/auditor/dashboard'
             },
 
-
+            {
+                id: 'events',
+                title: 'Eventos',
+                type: 'basic',
+                icon: 'heroicons_outline:calendar-days',
+                link: '/auditor/events'
+            },
 
             {
                 id: 'clients',
@@ -179,7 +185,7 @@ export const auditorNavigation: FuseNavigationItem[] = [
                         title: 'Saldo do Cliente',
                         type: 'basic',
                         icon: 'heroicons_outline:wallet',
-                        link: '/reviewer/client-balance'
+                        link: '/auditor/client-balance'
                     },
 
                     {
@@ -187,7 +193,7 @@ export const auditorNavigation: FuseNavigationItem[] = [
                         title: 'Histórico do Cliente',
                         type: 'basic',
                         icon: 'heroicons_outline:banknotes',
-                        link: '/reviewer/client-history'
+                        link: '/auditor/client-history'
                     },
 
 
@@ -196,7 +202,7 @@ export const auditorNavigation: FuseNavigationItem[] = [
                         title: 'Clientes',
                         type: 'basic',
                         icon: 'heroicons_outline:identification',
-                        link: '/reviewer/clients-all'
+                        link: '/auditor/clients-all'
                     },
 
                 ]

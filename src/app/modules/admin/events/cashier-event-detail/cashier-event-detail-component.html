@@ -4,7 +4,8 @@
 
     @if(eventStatus.Aberto == event.estadoEvento){
     <div class="max-w-128">
-        <button class="mb-5 bg-blue-500 text-white" mat-stroked-button (click)="addCaixa()">Adicionar</button>
+        <button *ngIf="isRevisor" class="mb-5 bg-blue-500 text-white" mat-stroked-button
+            (click)="addCaixa()">Adicionar</button>
     </div>
     }
 
@@ -51,19 +52,22 @@
 
                     @if('Aberto' == cashier.estadoCaixa ){
 
-                    <button mat-flat-button (click)="endSellingCashier(cashier)" class="text-white bg-red-500">Encerrar
+                    <button *ngIf="isRevisor" mat-flat-button (click)="endSellingCashier(cashier)"
+                        class="text-white bg-red-500">Encerrar
                         vendas</button>
                     }
 
                     @if('Vendas Encerradas' == cashier.estadoCaixa ){
 
-                    <button mat-flat-button (click)="endCashier(cashier)" class="text-white bg-blue-500">Fechar
+                    <button *ngIf="isRevisor" mat-flat-button (click)="endCashier(cashier)"
+                        class="text-white bg-blue-500">Fechar
                         caixa</button>
                     }
 
                     @if( 'Fechado' == cashier.estadoCaixa && '2' == event.estadoEvento){
 
-                    <button mat-flat-button (click)="reOpenCashier(cashier)" class="text-white bg-green-500">Reabrir
+                    <button *ngIf="isRevisor" mat-flat-button (click)="reOpenCashier(cashier)"
+                        class="text-white bg-green-500">Reabrir
                         caixa</button>
                     }
                 </div>

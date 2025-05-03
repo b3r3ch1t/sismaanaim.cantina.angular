@@ -54,7 +54,7 @@ export class NavigationService {
                         }
 
 
-                        if(event.urlAfterRedirects.includes("auditor-dashboard")) {
+                        if(event.urlAfterRedirects.includes("auditor")) {
                             navigation.default = auditorNavigation
                         }
 

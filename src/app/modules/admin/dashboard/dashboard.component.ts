@@ -27,7 +27,7 @@ export class DashboardComponent {
         [UserProfile.Cashier]: '/cashier-dashboard',
         [UserProfile.Admin]: '/admin-dashboard',
         [UserProfile.Attendant]: '/attendant/sell',
-        [UserProfile.Auditor]: '/auditor-dashboard',
+        [UserProfile.Auditor]: '/auditor/dashboard',
         [UserProfile.Reviewer]: '/reviewer-dashboard',
         [UserProfile.Permissionary]: '/permissionary-dashboard',
         [UserProfile.Indefinite]: '/indefinite-dashboard',

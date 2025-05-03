@@ -4,7 +4,7 @@
         <div class="max-w-128">
             <h1 class="text-2xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">Eventos</h1>
 
-            <button class="mb-5 bg-blue-500 text-white" mat-stroked-button (click)="addEvent()">Adicionar</button>
+            <button *ngIf="isRevisor" class="mb-5 bg-blue-500 text-white" mat-stroked-button (click)="addEvent()">Adicionar</button>
 
         </div>
 
@@ -44,11 +44,11 @@
                                 do Evento</button>
 
                             @if(eventStatus.Criado == Event.estadoEvento){
-                            <button mat-flat-button (click)="editEvent(Event)" class="text-white bg-blue-500">Editar
+                            <button  *ngIf="isRevisor"  mat-flat-button (click)="editEvent(Event)" class="text-white bg-blue-500">Editar
                                 evento</button>
-                            <button mat-flat-button (click)="confirmEvent(Event)"
+                            <button *ngIf="isRevisor"  mat-flat-button (click)="confirmEvent(Event)"
                                 class="text-white bg-blue-500">Confirmar Evento</button>
-                            <button mat-flat-button (click)="cancelEvent(Event)" class="text-white bg-blue-500">Cancelar
+                            <button  *ngIf="isRevisor"  mat-flat-button (click)="cancelEvent(Event)" class="text-white bg-blue-500">Cancelar
                                 Evento</button>
                             }
 
@@ -62,18 +62,18 @@
 
                             @if(eventStatus.Aberto == Event.estadoEvento){
 
-                            <button mat-flat-button (click)="endEventSelling(Event)"
+                            <button *ngIf="isRevisor"  mat-flat-button (click)="endEventSelling(Event)"
                                 class="text-white bg-red-500">Encerar
                                 vendas</button>
                             }
 
                             @if(eventStatus.VendasEncerradas == Event.estadoEvento){
-                            <button mat-flat-button (click)="endEvent(Event)" class="text-white bg-red-500">Fechar
+                            <button *ngIf="isRevisor"  mat-flat-button (click)="endEvent(Event)" class="text-white bg-red-500">Fechar
                                 evento</button>
                             }
 
                             @if(eventStatus.Fechado == Event.estadoEvento){
-                            <button mat-flat-button (click)="reopenEvent(Event)" class="text-white bg-blue-500">Reabrir
+                            <button *ngIf="isRevisor"  mat-flat-button (click)="reopenEvent(Event)" class="text-white bg-blue-500">Reabrir
                                 evento</button>
                             }
 

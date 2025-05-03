@@ -83,7 +83,23 @@ export class AuthService {
 
     getTokenField<T = any>(field: string): T | null {
         const decoded = this.decodeToken();
+
+
         return decoded && field in decoded ? decoded[field] as T : null;
+    }
+
+    isRevisor(): boolean {
+        const decoded = this.decodeToken();
+        if (!decoded || !decoded.Profile) {
+            return false;
+        }
+
+        // Profile pode ser string ou array de strings
+        if (Array.isArray(decoded.Profile)) {
+
+            return decoded.Profile.includes('4');
+        }
+        return decoded.Profile === '4';
     }
 
 

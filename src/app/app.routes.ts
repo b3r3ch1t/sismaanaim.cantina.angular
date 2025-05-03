@@ -510,9 +510,63 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'auditor-dashboard', loadChildren: () => import('app/modules/admin/auditor-dashboard/auditor-dashboard.routes') },
+            { path: 'auditor/dashboard', loadChildren: () => import('app/modules/admin/auditor-dashboard/auditor-dashboard.routes') },
         ]
     },
+
+
+    {
+        path: '',
+        canActivate: [AuditorGuard],
+        canActivateChild: [AuditorGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'auditor/events', loadChildren: () => import('app/modules/admin/events/events.routes') },
+        ]
+    },
+
+    {
+        path: '',
+        canActivate: [AuditorGuard],
+        canActivateChild: [AuditorGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'auditor/client-balance', loadChildren: () => import('app/modules/admin/client-balance/client-balance.routes') },
+        ]
+    },
+
+    {
+        path: '',
+        canActivate: [AuditorGuard],
+        canActivateChild: [AuditorGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'auditor/client-history', loadChildren: () => import('app/modules/admin/client-history/client-history.routes') },
+        ]
+    },
+
+    {
+        path: '',
+        canActivate: [AuditorGuard],
+        canActivateChild: [AuditorGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'auditor/clients-all', loadChildren: () => import('app/modules/admin/clients-all/clients-all.routes') },
+        ]
+    },
+
 
     {
         canActivate: [AuthGuard],

@@ -5,7 +5,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { environment } from 'app/environments/environment';
 import { catchError } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +18,7 @@ import { EventStatus } from './event-status.enum';
 import { CashierEventDetailComponent } from './cashier-event-detail/cashier-event-detail-component';
 import { AttendantsEventDetailComponent } from './attendants-event-detail/attendants-event-detail.component';
 import { DetailEventComponent } from './detail-event/detail-event.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-events',
@@ -29,7 +30,8 @@ import { DetailEventComponent } from './detail-event/detail-event.component';
         MatButtonModule,
         MatIconModule,
         CustomDatePipe,
-        MatDialogModule
+        MatDialogModule,
+        CommonModule
     ],
     templateUrl: './events.component.html',
     styleUrl: './events.component.scss',
@@ -39,6 +41,8 @@ import { DetailEventComponent } from './detail-event/detail-event.component';
 export class EventsComponent implements OnInit {
     private readonly _httpClient = inject(HttpClient)
     private readonly _authService = inject(AuthService)
+
+    isRevisor=false;
 
     @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort!: MatSort;
@@ -65,7 +69,10 @@ export class EventsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.fetchEvents()
+        this.fetchEvents();
+
+        console.log(this._authService.isRevisor(), "isRevisor");
+        this.isRevisor=this._authService.isRevisor();
     }
 
     eventDetails(event) {
