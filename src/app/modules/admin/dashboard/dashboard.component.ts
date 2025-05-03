@@ -46,7 +46,9 @@ export class DashboardComponent {
 
     ngOnInit(): void {
         // Subscribe to the user service
-        this.user = this._userService.user
+        this.user = this._userService.user;
+
+        console.log(this.user, 'user from dashboard component');
     }
 
     ngOnDestroy(): void {

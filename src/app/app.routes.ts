@@ -8,6 +8,7 @@ import { AttendantGuard } from './core/auth/guards/attendant.guard';
 import { OperatorGuard } from './core/auth/guards/operator.guard';
 import { PermissionaryGuard } from './core/auth/guards/permissionary.guard';
 import { ReviewerGuard } from './core/auth/guards/reviewer.guard';
+import { AuditorGuard } from './core/auth/guards/auditor.guard';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -497,6 +498,19 @@ export const appRoutes: Route[] = [
         },
         children: [
             { path: 'reviewer/permissionario', loadChildren: () => import('app/modules/admin/permissionaries/permissionaries.routes') },
+        ]
+    },
+
+    {
+        path: '',
+        canActivate: [AuditorGuard],
+        canActivateChild: [AuditorGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'auditor-dashboard', loadChildren: () => import('app/modules/admin/auditor-dashboard/auditor-dashboard.routes') },
         ]
     },
 
