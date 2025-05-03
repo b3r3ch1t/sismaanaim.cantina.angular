@@ -68,6 +68,24 @@
 
         </mat-dialog-content>
 
+        <mat-form-field class="w-full" *ngIf="formaPagamento()">
+            <mat-label>Valor apurado</mat-label>
+            <span matPrefix>R$&nbsp;</span>
+            <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }"
+                placeholder="Informe o valor apurado" #apuradoValueInput>
+
+        </mat-form-field>
+
+
+
+        <mat-dialog-actions *ngIf="formaPagamento()" align="center" class="flex justify-between">
+            <button mat-flat-button color="warn" (click)="clearFormaPagamento()">Cancelar</button>
+            <button color="primary" mat-flat-button [disabled]="!validar()" *ngIf="atualizarFormaPagamento()"
+                (click)="handleUpdateSubmit(formaPagamento())">Atualizar</button>
+            <button color="primary" mat-flat-button [disabled]="!validar()" *ngIf="informarFormaPagamento()"
+                (click)="handleInsertSubmit()">Informar</button>
+        </mat-dialog-actions>
+
     </div>
 
 

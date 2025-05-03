@@ -155,7 +155,7 @@ export class EventsComponent implements OnInit {
     endEvent(event) {
         this.confirmationService.confirm("Confirmar", "Tem certeza que deseja fechar o evento ?").subscribe(result => {
             if (result) {
-                this._httpClient.put(`${environment.API_URL}evento/encerrarevento/${event.id}`, null , {
+                this._httpClient.put(`${environment.API_URL}evento/encerrarevento/${event.id}`, null, {
                     headers: {
                         Authorization: `Bearer ${this._authService.accessToken}`
                     }
@@ -209,7 +209,9 @@ export class EventsComponent implements OnInit {
             .subscribe((data: ApiResponse<Array<any>>) => {
                 if (data.success) {
 
-                    this.events.set(data.result)
+                    const sortedEvents = [...data.result].sort((a, b) => new Date(b.dataInicial).getTime() - new Date(a.dataInicial).getTime());
+
+                    this.events.set(sortedEvents);
 
                     const dataSource = new MatTableDataSource(this.events())
                     if (dataSource) {
