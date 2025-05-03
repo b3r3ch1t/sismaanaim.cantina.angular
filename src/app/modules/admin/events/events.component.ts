@@ -97,7 +97,7 @@ export class EventsComponent implements OnInit {
     confirmEvent(event) {
         this.confirmationService.confirm("Confirmar", "Confirme se deseja alterar o status do evento").subscribe(result => {
             if (result) {
-                this._httpClient.put(`${environment.API_URL}evento/confirmarevento`, event.id, {
+                this._httpClient.put(`${environment.API_URL}evento/confirmarevento/${event.id}`, null, {
                     headers: {
                         Authorization: `Bearer ${this._authService.accessToken}`
                     }
@@ -105,7 +105,9 @@ export class EventsComponent implements OnInit {
                     console.log(error)
                     throw error
                 })).subscribe(result => {
-                    console.log(result)
+                    console.log(result);
+
+                    this.fetchEvents();
                 })
             }
         })
