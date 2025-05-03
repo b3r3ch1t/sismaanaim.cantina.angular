@@ -71,7 +71,6 @@ export class EventsComponent implements OnInit {
     ngOnInit(): void {
         this.fetchEvents();
 
-        console.log(this._authService.isRevisor(), "isRevisor");
         this.isRevisor=this._authService.isRevisor();
     }
 
