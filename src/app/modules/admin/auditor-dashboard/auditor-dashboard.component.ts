@@ -17,9 +17,9 @@ import { SummaryReplenishmentGraphicComponent } from '../summary-replenishment-g
 import { SummaryComponent } from '../summary/summary.component';
 
 @Component({
-    selector: 'app-reviewer-dashboard',
-    templateUrl: './reviewer-dashboard.component.html',
-    styleUrls: ['./reviewer-dashboard.component.css'],
+    selector: 'app-auditor-dashboard',
+    templateUrl: './auditor-dashboard.component.html',
+    styleUrls: ['./auditor-dashboard.component.css'],
     imports: [
     CommonModule,
     MatTableModule,
@@ -35,7 +35,7 @@ import { SummaryComponent } from '../summary/summary.component';
     SummaryReplenishmentGraphicComponent
 ],
 })
-export class ReviewerDashboardComponent implements OnInit {
+export class AuditorDashboardComponent implements OnInit {
 
     activeTabIndex = 0;
 

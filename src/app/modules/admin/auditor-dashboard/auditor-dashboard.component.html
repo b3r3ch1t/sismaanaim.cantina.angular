@@ -1,0 +1,33 @@
+<div class="flex-auto p-6 sm:p-10 h-full  overflow-y-hidden w-full">
+
+    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+
+        <mat-tab label="Resumo">
+                <div *ngIf="activeTabIndex === 0" class="grid w-full min-w-0 grid-cols-1 gap-7 sm:grid-cols-2 md:grid-cols-4   overflow-y-hidden">
+                    <!-- Summary -->
+                    <div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl p-6 shadow  md:col-span-2">
+
+                        <app-summary></app-summary>
+
+                    </div>
+                    <!-- Issues -->
+                    <div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl p-6 shadow  md:col-span-2">
+                       <app-summary-balance-cashiers></app-summary-balance-cashiers>
+                    </div>
+                </div>
+        </mat-tab>
+        <mat-tab label="Gráfico Vendas">
+            <div class="bg-card ...">
+                <app-summary-sell-graphic *ngIf="activeTabIndex === 1"></app-summary-sell-graphic>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Gráfico Abastecimentos">
+            <div class="bg-card ...">
+                <app-summary-replenishment-graphic *ngIf="activeTabIndex === 2"></app-summary-replenishment-graphic>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+
+
+</div>

@@ -27,7 +27,7 @@ export class DashboardComponent {
         [UserProfile.Cashier]: '/cashier-dashboard',
         [UserProfile.Admin]: '/admin-dashboard',
         [UserProfile.Attendant]: '/attendant/sell',
-        [UserProfile.Auditor]: '/auditor-dashboard',
+        [UserProfile.Auditor]: '/auditor/dashboard',
         [UserProfile.Reviewer]: '/reviewer-dashboard',
         [UserProfile.Permissionary]: '/permissionary-dashboard',
         [UserProfile.Indefinite]: '/indefinite-dashboard',
@@ -46,7 +46,9 @@ export class DashboardComponent {
 
     ngOnInit(): void {
         // Subscribe to the user service
-        this.user = this._userService.user
+        this.user = this._userService.user;
+
+        console.log(this.user, 'user from dashboard component');
     }
 
     ngOnDestroy(): void {

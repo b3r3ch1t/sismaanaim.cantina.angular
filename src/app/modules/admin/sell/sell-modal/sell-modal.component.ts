@@ -43,6 +43,7 @@ export class SellModalComponent implements OnInit {
 
     @ViewChild('sellingInput', { static: false }) sellingInput: ElementRef;
     evento: any;
+    subiting: boolean;
 
 
     constructor(
@@ -84,6 +85,14 @@ export class SellModalComponent implements OnInit {
     }
 
     handleSubmit() {
+
+        if(this.subiting ) return;
+
+
+        this.subiting = true;
+
+
+
         const unformatedValue = this.sellingInput.nativeElement.value
         if (unformatedValue == "") {
             this.snackbar.error("O valor de venda é obrigatório")
@@ -118,7 +127,9 @@ export class SellModalComponent implements OnInit {
                             Authorization: `Bearer ${this._authService.accessToken}`
                         },
                     }).pipe(catchError(error => {
-                        console.log(error)
+                        console.log(error);
+                        this.subiting = false;
+
                         throw error
                     })).subscribe((response: ApiResponse<any>) => {
 
@@ -133,6 +144,7 @@ export class SellModalComponent implements OnInit {
                         }
 
                         this.snackbar.error(response.message, 1000 * 10);
+                        this.subiting = false;
 
                     })
 

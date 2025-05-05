@@ -22,12 +22,12 @@ export class AuditorGuard implements CanActivate, CanActivateChild {
 
         const profile = this.authService.getTokenField('Profile');
 
-        const hasAttendant = profile.includes(Profile.Auditoria.toString());
+        const hasAuditor = profile.includes(Profile.Auditoria.toString());
 
         // Redirecionar para uma página de erro ou login, se necessário
-        if (!hasAttendant) {
+        if (!hasAuditor) {
             this.router.navigate(['/dashboard']);
         }
-        return hasAttendant;
+        return hasAuditor;
     }
 }

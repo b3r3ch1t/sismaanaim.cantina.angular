@@ -26,17 +26,17 @@ import { SnackbarService } from 'app/services/snackbar.service';
 })
 export class EventFormComponent {
 
-  private _httpClient = inject(HttpClient)
-  private _authService = inject(AuthService)
+  private readonly _httpClient = inject(HttpClient)
+  private readonly  _authService = inject(AuthService)
 
   eventForm: FormGroup;
   isEditMode = false;  // Flag to check if it's editing mode
 
   constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<EventFormComponent>,
+    private readonly  fb: FormBuilder,
+    private readonly  dialogRef: MatDialogRef<EventFormComponent>,
     @Inject(MAT_DIALOG_DATA) public eventData: any, // Receive event data,
-    private snackbarService: SnackbarService
+    private readonly  snackbarService: SnackbarService
   ) {
     this.eventForm = this.fb.group({
       id: [null], // Keep track of event ID
@@ -65,9 +65,17 @@ export class EventFormComponent {
 
   //  Custom Validator: Start Date must be at least D+1
   futureDateValidator(control: any) {
+    if (!control.value) return null;
+
     const today = new Date();
-    today.setDate(today.getDate() + 1); // Minimum D+1
+    today.setHours(0, 0, 0, 0); // Zera horário
+
     const selectedDate = new Date(control.value);
+    selectedDate.setHours(selectedDate.getHours() + 3); // Ajusta para UTC-3
+
+
+    selectedDate.setHours(0, 0, 0, 0); // Zera horário
+
 
     return selectedDate >= today ? null : { invalidDate: true };
   }

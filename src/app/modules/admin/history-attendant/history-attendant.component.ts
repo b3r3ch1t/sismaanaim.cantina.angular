@@ -100,7 +100,7 @@ export class HistoryAttendantComponent implements AfterViewInit {
         ).subscribe((data: ApiResponse<any>) => {
             if (data.success) {
 
-                const sortedHistory = data.result.sort((a, b) =>
+                const sortedHistory = data.result.sort((b,a) =>
                     a.data.localeCompare(b.data)
                 );
                 this.historyDatasource.data = sortedHistory;

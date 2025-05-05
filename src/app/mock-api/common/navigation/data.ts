@@ -149,6 +149,71 @@ export const permissionaryNavigation: FuseNavigationItem[] = [
 
 ]
 
+export const auditorNavigation: FuseNavigationItem[] = [
+
+    {
+        id: 'dashboards',
+        title: 'Menu Auditor',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'principal',
+                title: 'Principal',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-pie',
+                link: '/auditor/dashboard'
+            },
+
+            {
+                id: 'events',
+                title: 'Eventos',
+                type: 'basic',
+                icon: 'heroicons_outline:calendar-days',
+                link: '/auditor/events'
+            },
+
+            {
+                id: 'clients',
+                title: 'Clientes',
+                type: 'collapsable',
+                icon: 'heroicons_outline:user-circle',
+                children: [
+
+                    {
+                        id: 'client-balance',
+                        title: 'Saldo do Cliente',
+                        type: 'basic',
+                        icon: 'heroicons_outline:wallet',
+                        link: '/auditor/client-balance'
+                    },
+
+                    {
+                        id: 'client-history',
+                        title: 'Histórico do Cliente',
+                        type: 'basic',
+                        icon: 'heroicons_outline:banknotes',
+                        link: '/auditor/client-history'
+                    },
+
+
+                    {
+                        id: 'all-clients',
+                        title: 'Clientes',
+                        type: 'basic',
+                        icon: 'heroicons_outline:identification',
+                        link: '/auditor/clients-all'
+                    },
+
+                ]
+            },
+
+        ]
+
+    }
+
+]
+
 
 export const reviewerNavigation: FuseNavigationItem[] = [
 

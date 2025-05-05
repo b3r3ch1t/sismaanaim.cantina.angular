@@ -31,6 +31,12 @@
                     <td mat-cell *matCellDef="let cliente">{{ cliente.cpf }}</td>
                 </ng-container>
 
+                <ng-container matColumnDef="Alteracao">
+                    <th mat-header-cell *matHeaderCellDef > Alteração </th>
+                    <td mat-cell *matCellDef="let cliente">{{ cliente.alteracao | customDate }}</td>
+                </ng-container>
+
+
                 <ng-container matColumnDef="Saldo">
                     <th mat-header-cell *matHeaderCellDef  > Saldo </th>
                     <td mat-cell *matCellDef="let cliente">{{ cliente.saldo  | customCurrency}}</td>

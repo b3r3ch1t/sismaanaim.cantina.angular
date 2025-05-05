@@ -20,7 +20,9 @@ import { catchError } from 'rxjs';
         MatTableModule,
         MatPaginator,
         MatInputModule,
-        CustomCurrencyPipe
+        CustomCurrencyPipe,
+
+        CustomDatePipe,
     ],
 
     providers: [
@@ -47,6 +49,7 @@ export class ClientsAllComponent implements AfterViewInit {
     displayedColumns = [
         "Nome",
         "CPF",
+        "Alteracao",
         "Saldo"
     ]
 
@@ -66,10 +69,9 @@ export class ClientsAllComponent implements AfterViewInit {
             }))
             .subscribe((data: ApiResponse<any>) => {
                 if (data.success) {
-
-
-
                     this.clientsDataSource().data = data.result;
+
+                    console.log(data.result);
 
                 }
             });
