@@ -61,7 +61,8 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
     private readonly _httpClient = inject(HttpClient);
     private readonly _authService = inject(AuthService);
 
-    cashierDataSource = signal(new MatTableDataSource([]))
+    cashierDataSource = signal(new MatTableDataSource([]));
+    abastecimentoDataSource = signal(new MatTableDataSource([]));
 
 
     displayedColumns: string[] = ['Descrição', 'Valor'];
@@ -75,7 +76,6 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
     ]
 
     historyDatasource = new MatTableDataSource([]);
-
     totalPorMoedasDataSource = new MatTableDataSource<any>([]);
     historicoCaixaDto = [];
     constructor(
@@ -146,9 +146,10 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
 
             if (data.success) {
 
-                console.log(data.result.formasPagamento);
+                console.log(data.result);
 
                 const dataSource = new MatTableDataSource(data.result.formasPagamento);
+                let dataSourceAbastecimento = new MatTableDataSource(data.result.abastecimentos);
                 if (dataSource) {
                     dataSource.sortingDataAccessor = (item: any, property) => {
                         switch (property) {
@@ -166,6 +167,22 @@ export class CashierDetailComponent implements OnInit, AfterViewInit {
                     dataSource.paginator = this.paginator;
                     dataSource.sort = this.sort;
                     this.cashierDataSource.set(dataSource);
+
+                    dataSourceAbastecimento = new MatTableDataSource(data.result.abastecimentos);
+                    dataSourceAbastecimento.sortingDataAccessor = (item: any, property) => {
+                        switch (property) {
+                            // case 'Descricao':
+                            //   return item.descricao;
+                            // case 'Aceita Estorno':
+                            //   return item.aceitaEstorno;
+                            // case 'Ordem débito':
+                            //   return Number(item.ordemDebito);
+                            default:
+                                return item[property];
+                        }
+                    }
+                        this.abastecimentoDataSource.set(dataSourceAbastecimento);
+
 
                 }
             }
