@@ -2,7 +2,7 @@
 
 export enum BackendURL {
   Local = 'http://localhost:55228/v1/sismaanaim/',
-  Staging = 'https://apicantina.berechit.com.br/v1/sismaanaim/',
+  Staging = 'http://172.17.136.253:5010/v1/sismaanaim/',
   Prod = 'api/v1/sismaanaim/',
 
 }
@@ -33,7 +33,7 @@ export enum Checkout_URL {
 }
 
 export const environment = {
-  API_URL:BackendURL.Local,
+  API_URL:BackendURL.Staging,
   production: false,
   KEYCLOAK_URL:KEYCLOAKURL.Staging,
   KEYCLOAK_REALM: KEYCLOAKREALM.Local,

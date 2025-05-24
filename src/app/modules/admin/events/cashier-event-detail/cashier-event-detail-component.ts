@@ -85,7 +85,11 @@ export class CashierEventDetailComponent {
         this.dialog.open(AddCashierComponent, {
             data:  this.event,
             width: "95%"
-        })
+        });
+
+        this.dialog.afterAllClosed.subscribe(() => {
+            this.fetchCashierList();
+        });
     }
 
     endSellingCashier(cashier: any) {
