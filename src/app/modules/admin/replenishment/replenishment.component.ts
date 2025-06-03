@@ -95,7 +95,6 @@ export class ReplenishmentComponent implements OnInit {
     constructor(
         private readonly snackbar: SnackbarService,
         private readonly dialog: MatDialog,
-        private readonly confirmationService: ConfirmationService,
     ) { }
 
     ngOnInit(): void {

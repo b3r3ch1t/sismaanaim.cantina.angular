@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelect, MatSelectModule } from "@angular/material/select"
 import { HttpClient } from "@angular/common/http"
@@ -13,12 +13,16 @@ import { ApiResponse } from 'app/core/api/api-response.types';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 import { CurrencyPipe } from '@angular/common';
 import { UserService } from 'app/core/user/user.service';
-import { MatRadioChange, MatRadioGroup, MatRadioModule } from "@angular/material/radio"
+import { MatRadioGroup, MatRadioModule } from "@angular/material/radio"
 import { environment } from 'app/environments/environment';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { ConfirmationService } from 'app/services/confirmation.service';
-import { CurrencyMaskDirective } from 'app/directives/currency-mask.directive';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { ReimbursementModalComponent } from './reimbursement-modal/reimbursement-modal.component';
 
 @Component({
     selector: 'app-reimbursement',
@@ -30,10 +34,13 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
         MatIconModule,
         MatProgressSpinnerModule,
         MatSelectModule,
-        CustomCurrencyPipe,
         MatRadioModule,
-        CurrencyMaskDirective,
-        CurrencyMaskModule
+        CurrencyMaskModule,
+
+
+        MatTableModule,
+        MatSort,
+        MatPaginator,
     ],
     providers: [CurrencyPipe, CustomCurrencyPipe],
     templateUrl: './reimbursement.component.html',
@@ -42,10 +49,10 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 export class ReimbursementComponent implements OnInit {
 
-    private _httpClient = inject(HttpClient)
-    private _authService = inject(AuthService)
-    private _userService = inject(UserService);
-    private _customCurrencyPipe = inject(CustomCurrencyPipe)
+    private readonly _httpClient = inject(HttpClient)
+    private readonly _authService = inject(AuthService)
+    private readonly _userService = inject(UserService);
+    private readonly _customCurrencyPipe = inject(CustomCurrencyPipe)
 
     noClientFound = signal(false);
     clients = signal([]);
@@ -61,6 +68,12 @@ export class ReimbursementComponent implements OnInit {
     currentEvent = signal(null);
     selectedClientBalance = signal([])
     balanceAgainstPaymentMethod = signal(null)
+    clientDataSource = signal(new MatTableDataSource([]));
+    displayedColumns = [
+        "Nome",
+        "CPF",
+        "Ressarcimento"
+    ]
 
 
     @ViewChild('nameInput', { static: true }) nameInput: ElementRef;
@@ -68,10 +81,13 @@ export class ReimbursementComponent implements OnInit {
     @ViewChild('clientDropdown', { static: false }) clientDropdown: MatRadioGroup;
     @ViewChild('paymentMethodDropdown', { static: false }) paymentMethodDropdown: MatSelect;
     @ViewChild('returnAmountValueInput', { static: false }) returnAmountValueInput: ElementRef;
+    @ViewChild(MatSort, { static: false }) sort!: MatSort;
+    @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
     constructor(
         private readonly snackbar: SnackbarService,
-        private readonly  confirmationService: ConfirmationService
+        private readonly confirmationService: ConfirmationService,
+        private readonly dialog: MatDialog,
     ) { }
 
     ngOnInit(): void {
@@ -117,12 +133,12 @@ export class ReimbursementComponent implements OnInit {
                 ).subscribe((response: ApiResponse<any>) => {
 
 
-                    if(response.success) {
+                    if (response.success) {
 
-                    const value = parseFloat(this.returnAmountValueInput.nativeElement.value.replace(".", "").replace(",", "."))
-                    const amount = this._customCurrencyPipe.transform(value)
-                    this.snackbar.success(`*O Reembolso para o cliente ‘${this.selectedClient().nome}’ no valor de ‘${amount}’ foi feito com sucesso`, 30 * 1000)
-                    this.clearInputs();
+                        const value = parseFloat(this.returnAmountValueInput.nativeElement.value.replace(".", "").replace(",", "."))
+                        const amount = this._customCurrencyPipe.transform(value)
+                        this.snackbar.success(`*O Reembolso para o cliente ‘${this.selectedClient().nome}’ no valor de ‘${amount}’ foi feito com sucesso`, 30 * 1000)
+                        this.clearInputs();
 
                     }
 
@@ -156,14 +172,12 @@ export class ReimbursementComponent implements OnInit {
 
         });
     }
-
-
-
-
     handleNameInput(event: InputEvent) {
         this.noClientFound.set(false)
         const input = event.target as HTMLInputElement;
         if (input.value.length >= 4) {
+            this.selectedClient.set(null)
+            this.clients.set([])
             // this.inputDisabled.set(true);
             // TODO : Move this to an API service
             this._httpClient.get(`${environment.API_URL}clientes/getclientesbynome/${input.value}`, {
@@ -178,17 +192,36 @@ export class ReimbursementComponent implements OnInit {
                 // TODO : Create datatype for Client
                 .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
                     if (data.result) {
-                        const clients = data.result
-                        this.clients.set(clients)
+
+                        const dataSource = new MatTableDataSource(data.result);
+
+                        // Set default sort to 'Data' column in descending order
+                        if (this.sort) {
+                            this.sort.active = 'nome';
+                            this.sort.direction = 'asc';
+                        }
+
+                        // Set the paginator and sort
+                        dataSource.paginator = this.paginator;
+                        dataSource.sort = this.sort;
+                        // Update the signal
+                        this.clientDataSource.set(dataSource);
+
+
+                        const clients = data.result;
+                        this.clients.set(clients);
 
                         if (this.clients().length === 1) {
-                            this.selectedClient.set(this.clients()[0])
+                            this.selectedClient.set(this.clients()[0]);
                         }
 
                         if (!this.clients().length) {
-                            this.noClientFound.set(true)
-                        }
 
+
+                            this.noClientFound.set(true);
+                            this.snackbar.error("Nenhum cliente encontrado com esse CPF", 30 * 1000);
+
+                        }
                     }
                     this.showClearButton.set(true)
                 });
@@ -214,20 +247,39 @@ export class ReimbursementComponent implements OnInit {
                     throw error;
                 }))
                 .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
-                    if (data.success) {
-                        const clients = data.result
-                        this.clients.set(clients)
 
-                        if (this.clients().length === 1) {
-                            this.selectedClient.set(this.clients()[0])
-                        }
+                    const dataSource = new MatTableDataSource(data.result);
 
-                        if (!this.clients().length) {
-                            this.noClientFound.set(true)
-                        }
+                    // Set default sort to 'Data' column in descending order
+                    if (this.sort) {
+                        this.sort.active = 'nome';
+                        this.sort.direction = 'asc';
+                    }
+
+                    // Set the paginator and sort
+                    dataSource.paginator = this.paginator;
+                    dataSource.sort = this.sort;
+                    // Update the signal
+                    this.clientDataSource.set(dataSource);
+
+
+                    const clients = data.result;
+                    this.clients.set(clients);
+
+                    this.showClearButton.set(true);
+
+                    if (this.clients().length === 1) {
+                        this.selectedClient.set(this.clients()[0]);
 
                     }
-                    this.showClearButton.set(true)
+
+                    if (!this.clients().length) {
+
+                        this.showClearButton.set(false);
+                        this.noClientFound.set(true);
+                        this.snackbar.error("Nenhum cliente encontrado com esse CPF", 30 * 1000);
+
+                    }
                 });
 
         } else {
@@ -235,54 +287,53 @@ export class ReimbursementComponent implements OnInit {
         }
     }
 
+    applyFilter(event: Event) {
+
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.clientDataSource().filter = filterValue.trim().toLowerCase();
+    }
+
     clearInputs() {
 
-        this.showClearButton.set(false)
-        this.inputDisabled.set(false)
-        this.clients.set([])
-        this.selectedClient.set(null)
+        this.showClearButton.set(false);
+        this.inputDisabled.set(false);
+        this.clients.set([]);
+        this.selectedClient.set(null);
+
+        if (this.cpfInput) {
+            this.cpfInput.nativeElement.value = '';
+        }
+
+        if (this.nameInput) {
+            this.nameInput.nativeElement.value = '';
+        }
+
+
+        this.clientDataSource.set(new MatTableDataSource([]));
+
     }
 
 
     handleClientSelection(clientId: string) {
         if (clientId) {
-            this.disableClientDropdown.set(true)
 
-            this._httpClient.get(`${environment.API_URL}clientes/getsaldoclientebyclientid/${clientId}`, {
-                headers: {
-                    "Authorization": `Bearer ${this._authService.accessToken}`
-                }
-            }).pipe(
-                catchError((error) => {
-                    console.log(error);
-                    throw error
-                })
-            ).subscribe((response: ApiResponse<any>) => {
-                if (response.success) {
-                    this.selectedClientBalance.set(response.result)
-                    console.log(this.selectedClientBalance())
-                }
-            })
 
-            this._httpClient.get(`${environment.API_URL}clientes/getclientebyid/${clientId}`, {
-                headers: {
-                    "Authorization": `Bearer ${this._authService.accessToken}`
-                }
-            })
-                .pipe(catchError((error) => {
-                    console.log(error);
-                    throw error;
-                }))
-                // TODO : Create a datatype for Client
-                // TODO : Move this to an API service
-                .subscribe((data: ApiResponse<object>) => {
-                    console.log(data)
-                    this.disableClientDropdown.set(false)
-                    if (data.success) {
-                        this.selectedClient.set(data.result)
-                        console.log(this.selectedClient())
-                    }
-                });
+            const cliente = this.clients()
+                .find(cliente => cliente.id === clientId);
+
+            console.log(cliente);
+
+
+            const dialogRef = this.dialog.open(ReimbursementModalComponent, {
+                data: cliente,
+                width: "99%"
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                this.clearInputs();
+            });
+
+
 
         }
     }

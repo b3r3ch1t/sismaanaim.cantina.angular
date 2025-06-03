@@ -1,0 +1,39 @@
+<h1 class="text-2xl lg:text-3xl font-bold leading-tight tracking-tight mb-8">Ressarcimento</h1>
+<mat-dialog-content>
+    <p>
+        <strong>Nome : </strong>{{cliente.nome}}
+    </p>
+    <p>
+        <strong>CPF : </strong>{{cliente.cpf }}
+    </p>
+    <p>
+        <strong>Email : </strong>{{cliente.email }}
+    </p>
+    <p>
+        <strong>Telefone Contato : </strong>{{cliente.telefoneContato }}
+    </p>
+    <p>
+        <strong>Saldo : </strong>{{cliente.saldo | customCurrency }}
+    </p>
+
+</mat-dialog-content>
+
+<mat-form-field class="w-full">
+    <mat-label>Valor Devolvido</mat-label>
+    <span matPrefix>R$&nbsp;</span>
+
+    <input matInput type="text" #returnAmountValueInput placeholder="Informe o Valor Devolvido" currencyMask
+        [options]="{ prefix: '', thousands: '.', decimal: ',' }" [(ngModel)]="value">
+
+
+</mat-form-field>
+
+
+
+
+
+
+<mat-dialog-actions align="center" class="flex flex-row justify-between gap-4 sm:flex-col sm:gap-2">
+    <button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
+    <button mat-flat-button color="primary" [disabled]="!validar()" (click)="handleSubmit()">Efetuar Reembolso</button>
+</mat-dialog-actions>

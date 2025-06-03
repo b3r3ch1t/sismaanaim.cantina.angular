@@ -7,7 +7,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -17,7 +16,6 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { UserService } from 'app/core/user/user.service';
 import { environment } from 'app/environments/environment';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
-import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
 import { ConfirmationService } from 'app/services/confirmation.service';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
@@ -41,9 +39,7 @@ import { catchError } from 'rxjs';
         MatButtonModule,
         MatCheckboxModule,
         MatTableModule,
-        CustomDatePipe,
         MatTabsModule,
-        MatPaginator,
         MatSortModule,
     ],
     providers: [
