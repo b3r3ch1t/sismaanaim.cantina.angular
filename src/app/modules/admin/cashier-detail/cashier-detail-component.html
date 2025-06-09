@@ -7,7 +7,7 @@
 
 
     <mat-tab-group>
-        <mat-tab label="Saldo por Moeda">
+        <mat-tab label="Saldo por Forma de Pagamento">
 
             <div>
                 <table mat-table matSort #moedaSort="matSort" [dataSource]="totalPorMoedasDataSource"
@@ -132,7 +132,7 @@
                         customCurrency }} </td>
                 </ng-container>
 
-                
+
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

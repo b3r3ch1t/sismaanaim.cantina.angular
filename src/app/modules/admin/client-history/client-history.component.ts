@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { AuthService } from 'app/core/auth/auth.service';
 import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
-import { ConfirmationService } from 'app/services/confirmation.service';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { MatInputModule } from '@angular/material/input';
 import { environment } from 'app/environments/environment';
@@ -63,6 +62,8 @@ export class ClientHistoryComponent implements OnInit {
 
     constructor(
         private readonly dialog: MatDialog,
+
+        private readonly snackbar: SnackbarService,
     ) { }
 
     ngOnInit(): void {
@@ -91,6 +92,13 @@ export class ClientHistoryComponent implements OnInit {
                 }))
                 // TODO : Create datatype for Client
                 .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
+                    if (data.error) {
+                        this.noClientFound.set(true);
+                        this.snackbar.error("Nenhum cliente encontrado com esse CPF", 30 * 1000);
+                        this.clientDataSource.set(new MatTableDataSource([]));
+                        return;
+                    }
+
                     if (data.result) {
                         const dataSource = new MatTableDataSource(data.result);
 
@@ -197,7 +205,7 @@ export class ClientHistoryComponent implements OnInit {
         })
 
         dialogRef.afterClosed().subscribe(result => {
-           this.clearInputs();
+            this.clearInputs();
         });
 
     }

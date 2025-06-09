@@ -187,10 +187,22 @@ export class ReimbursementComponent implements OnInit {
             })
                 .pipe(catchError((error) => {
                     console.log(error);
+
+                    this.showClearButton.set(true);
                     throw error;
                 }))
                 // TODO : Create datatype for Client
                 .subscribe((data: ApiResponse<Array<{ id: string, nome: string }>>) => {
+
+                    console.log(data);
+
+                    if (data.error) {
+                        this.showClearButton.set(false);
+                        this.noClientFound.set(true);
+                        this.snackbar.error(data.message, 30 * 1000);
+                        return;
+                    }
+
                     if (data.result) {
 
                         const dataSource = new MatTableDataSource(data.result);
@@ -222,11 +234,16 @@ export class ReimbursementComponent implements OnInit {
                             this.snackbar.error("Nenhum cliente encontrado com esse CPF", 30 * 1000);
 
                         }
+                    } else {
+                        this.noClientFound.set(true);
+                        this.snackbar.error("Nenhum cliente encontrado com esse nome", 30 * 1000);
                     }
                     this.showClearButton.set(true)
                 });
 
         } else {
+            console.log("else");
+
             this.showClearButton.set(false)
         }
     }
