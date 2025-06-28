@@ -1,9 +1,10 @@
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, inject, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ApiResponse } from 'app/core/api/api-response.types';
 import { AuthService } from 'app/core/auth/auth.service';
 import { UserService } from 'app/core/user/user.service';
@@ -24,6 +25,8 @@ import { catchError } from 'rxjs';
         CurrencyMaskModule,
         MatLabel,
         MatInputModule,
+        MatProgressSpinnerModule,
+        CommonModule
     ],
     providers: [
 
@@ -36,7 +39,7 @@ import { catchError } from 'rxjs';
 export class SellModalComponent implements OnInit {
 
     cliente: any;
-
+    loading = false;
     private readonly _httpClient = inject(HttpClient)
     private readonly _authService = inject(AuthService)
     private readonly _userService = inject(UserService);
@@ -85,25 +88,24 @@ export class SellModalComponent implements OnInit {
     }
 
     handleSubmit() {
-
-        if(this.subiting ) return;
-
+        if (this.subiting) return;
 
         this.subiting = true;
+        this.loading = true; // Inicia o loading
 
-
-
-        const unformatedValue = this.sellingInput.nativeElement.value
+        const unformatedValue = this.sellingInput.nativeElement.value;
         if (unformatedValue == "") {
-            this.snackbar.error("O valor de venda é obrigatório")
-            return
+            this.snackbar.error("O valor de venda é obrigatório");
+            this.loading = false; // Finaliza o loading
+            return;
         }
 
         let sellingAmount = parseFloat(unformatedValue.replace('R$', '').replace('.', '').replace(',', '.'));
 
         if (sellingAmount > this.cliente.saldo) {
-            this.snackbar.error("O valor de venda deve ser menor que o saldo")
-            return
+            this.snackbar.error("O valor de venda deve ser menor que o saldo");
+            this.loading = false; // Finaliza o loading
+            return;
         }
 
         const formattedValue = this.sellingInput.nativeElement.value.replace(".", "").replace(",", ".");
@@ -115,7 +117,6 @@ export class SellModalComponent implements OnInit {
 
         this.confirmationService.confirm("Confirmar", confirmationMessage).subscribe(result => {
             if (result) {
-
                 this._httpClient.post(`${environment.API_URL}atendente/realizarvenda`,
                     {
                         eventoId: this.evento.id,
@@ -129,29 +130,24 @@ export class SellModalComponent implements OnInit {
                     }).pipe(catchError(error => {
                         console.log(error);
                         this.subiting = false;
-
-                        throw error
+                        this.loading = false; // Finaliza o loading em caso de erro
+                        throw error;
                     })).subscribe((response: ApiResponse<any>) => {
+                        this.loading = false; // Finaliza o loading após resposta
 
                         if (response.success) {
-
                             this.snackbar.success("Venda Realizada com sucesso!", 1000 * 10);
-
                             this.dialogRef.close();
-
                             return;
-
                         }
 
                         this.snackbar.error(response.message, 1000 * 10);
                         this.subiting = false;
-
-                    })
-
+                    });
+            } else {
+                this.loading = false; // Finaliza o loading se o usuário cancelar
             }
-        }
-
-        )
+        });
     }
 
 
