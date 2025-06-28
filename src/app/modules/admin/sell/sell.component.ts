@@ -146,7 +146,7 @@ export class AttendantSellComponent implements OnInit {
         this.totalClientBalance = 0;
 
         const input = event.target as HTMLInputElement;
-        if (input.value.length >= 4) {
+        if (input.value.length >= 6) {
 
             this.inputDisabled.set(true);
 
