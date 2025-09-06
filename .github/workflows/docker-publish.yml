@@ -30,7 +30,7 @@ jobs:
         run: |
           export TZ=America/Sao_Paulo
           BRANCH_NAME=${{ github.ref_name }}
-          TIMESTAMP=$(date +'%d_%m_%Y_%H_%M' --date='TZ="America/Sao_Paulo"')
+            TIMESTAMP=$(date +'%d_%m_%Y_%H_%M')
           if [ "$BRANCH_NAME" = "main" ]; then
             TAG_LATEST="prod_latest"
             TAG_TIMESTAMP="prod_${TIMESTAMP}"
