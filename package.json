@@ -10,7 +10,8 @@
         "start": "ng serve",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
-        "test": "ng test"
+        "test": "ng test",
+        "postcommit": "node increment-version.js"
     },
     "dependencies": {
         "@angular/animations": "19.0.5",
@@ -54,6 +55,7 @@
         "@types/luxon": "3.4.2",
         "autoprefixer": "10.4.20",
         "chroma-js": "2.4.2",
+        "husky": "^9.1.7",
         "jasmine-core": "5.1.2",
         "karma": "6.4.4",
         "karma-chrome-launcher": "3.2.0",
