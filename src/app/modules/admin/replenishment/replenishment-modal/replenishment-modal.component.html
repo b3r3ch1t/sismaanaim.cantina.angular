@@ -18,20 +18,24 @@
 
 </mat-dialog-content>
 
-<mat-form-field class="w-full">
-    <mat-label>Forma de Pagamento*</mat-label>
-    <mat-select (selectionChange)="handlePaymentMethodSelection()" [disabled]="paymentMethods().length === 0 "
-        #paymentMethodDropdown="matSelect">
+<div class="w-full mb-4">
+    <label class="block font-medium mb-2">Forma de Pagamento*</label>
+    <mat-radio-group
+    [disabled]="paymentMethods().length === 0"
+    (change)="handlePaymentMethodSelection()"
+    [(ngModel)]="selectedPaymentMethodId"  class="mat-radio-group-horizontal">
         @for (payment of paymentMethods(); track $index) {
-        <mat-option [value]="payment.id">{{ payment.descricao }}</mat-option>
+            <mat-radio-button [value]="payment.id" class="block w-full mb-2">
+                {{ payment.descricao }}
+            </mat-radio-button>
         }
-    </mat-select>
+    </mat-radio-group>
     @if (validPaymentMethod() === false) {
-    <mat-error>
-        Por favor, selecione um método de pagamento válido.
-    </mat-error>
+        <mat-error>
+            Por favor, selecione um método de pagamento válido.
+        </mat-error>
     }
-</mat-form-field>
+</div>
 
 
 
@@ -65,10 +69,7 @@
 
 
 
-<mat-dialog-actions
-  align="center"
-  class="flex flex-row justify-between gap-4 sm:flex-col sm:gap-2"
->
-  <button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
-  <button mat-flat-button color="primary" [disabled]="!validar()" (click)="handleSubmit()">Efetuar Recarga</button>
+<mat-dialog-actions align="center" class="flex flex-row justify-between gap-4 sm:flex-col sm:gap-2">
+    <button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
+    <button mat-flat-button color="primary" [disabled]="!validar()" (click)="handleSubmit()">Efetuar Recarga</button>
 </mat-dialog-actions>

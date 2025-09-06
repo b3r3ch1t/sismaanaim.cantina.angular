@@ -20,11 +20,11 @@ import { ConfirmationService } from 'app/services/confirmation.service';
 import { SnackbarService } from 'app/services/snackbar.service';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { catchError } from 'rxjs';
+import { MatRadioButton, MatRadioModule } from "@angular/material/radio";
 
 @Component({
     selector: 'app-replenishment-modal',
     imports: [
-
         CustomCurrencyPipe,
         MatDialogModule,
         MatFormFieldModule,
@@ -33,14 +33,15 @@ import { catchError } from 'rxjs';
         CommonModule,
         FormsModule,
         MatInputModule,
-
-
         ReactiveFormsModule,
         MatButtonModule,
         MatCheckboxModule,
         MatTableModule,
         MatTabsModule,
         MatSortModule,
+        MatRadioButton,
+        MatRadioButton,
+        MatRadioModule
     ],
     providers: [
         CurrencyPipe,
@@ -57,6 +58,7 @@ export class ReplenishmentModalComponent implements OnInit {
     private readonly _authService = inject(AuthService)
     private readonly _userService = inject(UserService);
 
+    selectedPaymentMethodId: string | number | null = null;
 
     paymentMethods = signal([]);
     validPaymentMethod = signal(null);
@@ -241,11 +243,11 @@ export class ReplenishmentModalComponent implements OnInit {
 
     handlePaymentMethodSelection() {
 
-        const paymentMethodId = this.paymentMethodDropdown.value
+        const paymentMethodId = this.selectedPaymentMethodId;
         this.disablePaymentMethodDropdown.set(true)
         this.selectedPaymentMethod.set(paymentMethodId);
 
-
+        console.log('Selecionado:', paymentMethodId);
         this.disablePaymentMethodDropdown.set(false)
 
     }
@@ -263,5 +265,6 @@ export class ReplenishmentModalComponent implements OnInit {
             paidValue >= rechargeValue
         );
     }
+
 
 }
