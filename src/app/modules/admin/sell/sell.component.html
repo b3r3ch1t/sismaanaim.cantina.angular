@@ -11,7 +11,7 @@
 
             <mat-form-field class="w-full">
                 <mat-label>CPF</mat-label>
-                <input type="text" [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
+                <input type="number" [disabled]="inputDisabled()" id="cpf" (input)="handleCpfInput($event)"
                     placeholder="Insira pelo menos 6 caracteres para pesquisar" #cpfInput matInput />
             </mat-form-field>
 
