@@ -110,6 +110,10 @@ export class UserComponent implements OnInit, OnDestroy {
         this._router.navigate(['/sign-out']);
     }
 
+    changePassword(): void {
+        this._router.navigate(['/change-password']);
+    }
+
     profile(): void {
         this._router.navigate(['/dashboard']);
     }
