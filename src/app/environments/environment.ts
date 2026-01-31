@@ -3,7 +3,7 @@
 export enum BackendURL {
   Local = 'http://localhost:55328/v1/sismaanaim/',
   Staging = 'http://172.17.136.253:5010/v1/sismaanaim/',
-  Prod = 'api/v1/sismaanaim/',
+  Prod = 'http://149.255.39.117:5010/v1/sismaanaim/',
 
 }
 

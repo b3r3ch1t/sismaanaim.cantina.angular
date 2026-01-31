@@ -28,7 +28,7 @@
     <mat-form-field class="w-full">
         <mat-label>Valor vendido</mat-label>
         <span matPrefix>R$&nbsp;</span>
-        <input matInput currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" #sellingInput type="text"
+        <input matInput type="number" currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" #sellingInput type="text"
             placeholder="Informe o valor vendido">
 
     </mat-form-field>

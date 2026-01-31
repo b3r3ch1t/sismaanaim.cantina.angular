@@ -80,14 +80,12 @@ export class CashierEventDetailComponent {
     }
 
     addCaixa() {
-
-
-        this.dialog.open(AddCashierComponent, {
+        const dialogRef = this.dialog.open(AddCashierComponent, {
             data:  this.event,
             width: "95%"
         });
 
-        this.dialog.afterAllClosed.subscribe(() => {
+        dialogRef.afterClosed().subscribe(() => {
             this.fetchCashierList();
         });
     }
