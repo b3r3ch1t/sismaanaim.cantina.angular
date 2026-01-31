@@ -426,7 +426,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         id: 'ChangePassword',
         title: 'Alterar Senha',
         type: 'basic',
-        icon: 'heroicons_outline:lock-closed',
+        icon: 'heroicons_outline:key',
         link: '/change-password',
     },
 
