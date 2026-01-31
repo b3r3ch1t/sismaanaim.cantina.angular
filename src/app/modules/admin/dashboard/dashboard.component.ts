@@ -28,6 +28,7 @@ export class DashboardComponent {
         [UserProfile.Admin]: '/admin-dashboard',
         [UserProfile.Attendant]: '/attendant/sell',
         [UserProfile.Auditor]: '/auditor/dashboard',
+        [UserProfile.Membro]: '/membro/dashboard',
         [UserProfile.Reviewer]: '/reviewer-dashboard',
         [UserProfile.Permissionary]: '/permissionary-dashboard',
         [UserProfile.Indefinite]: '/indefinite-dashboard',

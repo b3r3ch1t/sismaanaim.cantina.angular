@@ -5,6 +5,7 @@ export enum UserProfile {
 	Attendant = 3,
 	Reviewer = 4,
 	Auditor = 5,
+	Membro = 6,
 	SecretaryChurch = 10,
 	SecretaryPolo = 11,
 	SecretariatArea = 12,

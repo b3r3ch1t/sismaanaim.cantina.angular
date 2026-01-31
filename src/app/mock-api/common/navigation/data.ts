@@ -363,7 +363,67 @@ export const reviewerNavigation: FuseNavigationItem[] = [
     }
 
 ]
+export const membroNavigation: FuseNavigationItem[] = [
 
+    {
+        id: 'dashboards',
+        title: 'Menu Membro',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+           
+        {
+                id: 'principal',
+                title: 'Principal',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-pie',
+                link: '/membro/dashboard'
+            },
+            {
+                id: 'atualizarTelefone',
+                title: 'Atualizar Telefone',
+                type: 'basic',
+                icon: 'heroicons_outline:phone',
+                link: '/membro/atualizartelefone'
+            },
+            {
+                id: 'efichasHistoricoOperacoes',
+                title: 'Histórico Operações',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-bar',
+                link: '/membro/historico'
+            },
+
+            {
+                id: 'efichasHistoricoRecargas',
+                title: 'Histórico Recargas',
+                type: 'basic',
+                icon: 'heroicons_outline:adjustments-horizontal',
+                link: '/membro/historicorecarga'
+            },
+            {
+                id: 'efichasRecarga',
+                title: 'Recarga',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/membro/recarga'
+            },
+            {
+                id: 'efichasSaldo',
+                title: 'Saldo',
+                type: 'basic',
+                icon: 'heroicons_outline:document-chart-bar',
+                link: '/membro/saldo'
+            },
+
+             
+
+
+        ]
+
+    }
+
+]
 
 export const attendantNavigation: FuseNavigationItem[] = [
     {
@@ -438,6 +498,10 @@ export const defaultNavigation: FuseNavigationItem[] = [
         link: '/sign-out',
     },
 ];
+
+
+
+
 
 export const compactNavigation: FuseNavigationItem[] = [
     {

@@ -503,6 +503,19 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
+        canActivate: [ReviewerGuard],
+        canActivateChild: [ReviewerGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'membro/dashboard', loadChildren: () => import('app/modules/admin/auditor-dashboard/auditor-dashboard.routes') },
+        ]
+    },
+
+     {
+        path: '',
         canActivate: [AuditorGuard],
         canActivateChild: [AuditorGuard],
         component: LayoutComponent,

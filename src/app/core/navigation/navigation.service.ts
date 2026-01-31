@@ -3,7 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { filter, Observable, ReplaySubject, tap } from 'rxjs';
 import { NavigationEnd, Router } from "@angular/router";
-import { attendantNavigation, auditorNavigation, cashierNavigation, defaultNavigation, permissionaryNavigation, reviewerNavigation } from 'app/mock-api/common/navigation/data';
+import { attendantNavigation, auditorNavigation, cashierNavigation, defaultNavigation, membroNavigation, permissionaryNavigation, reviewerNavigation } from 'app/mock-api/common/navigation/data';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -62,6 +62,9 @@ export class NavigationService {
                             navigation.default = reviewerNavigation
                         }
 
+                         if(event.urlAfterRedirects.includes("membro")) {
+                            navigation.default = membroNavigation
+                        }
 
                         this._navigation.next(navigation);
                     });

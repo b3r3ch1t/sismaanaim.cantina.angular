@@ -5,5 +5,5 @@ export enum Profile {
     Atendente = 3,
     Revisor = 4,
     Auditoria = 5,
-
+    Membro = 6,
   }
