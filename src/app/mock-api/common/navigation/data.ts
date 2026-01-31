@@ -380,6 +380,21 @@ export const membroNavigation: FuseNavigationItem[] = [
                 link: '/membro/dashboard'
             },
             {
+                id: 'efichasSaldo',
+                title: 'Saldo',
+                type: 'basic',
+                icon: 'heroicons_outline:document-chart-bar',
+                link: '/membro/saldo'
+            },
+            {
+                id: 'efichasRecarga',
+                title: 'Recarga',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/membro/recarga'
+            },
+
+            {
                 id: 'atualizarTelefone',
                 title: 'Atualizar Telefone',
                 type: 'basic',
@@ -401,21 +416,6 @@ export const membroNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:adjustments-horizontal',
                 link: '/membro/historicorecarga'
             },
-            {
-                id: 'efichasRecarga',
-                title: 'Recarga',
-                type: 'basic',
-                icon: 'heroicons_outline:currency-dollar',
-                link: '/membro/recarga'
-            },
-            {
-                id: 'efichasSaldo',
-                title: 'Saldo',
-                type: 'basic',
-                icon: 'heroicons_outline:document-chart-bar',
-                link: '/membro/saldo'
-            },
-
              
 
 
