@@ -510,7 +510,7 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'membro/dashboard', loadChildren: () => import('app/modules/admin/members/member-client-balance.routes') },
+            { path: 'membro/dashboard', loadChildren: () => import('app/modules/admin/members/member-client-balance/member-client-balance.routes') },
         ]
     },
 
@@ -524,7 +524,7 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'membro/saldo', loadChildren: () => import('app/modules/admin/members/member-client-balance.routes') },
+            { path: 'membro/saldo', loadChildren: () => import('app/modules/admin/members/member-client-balance/member-client-balance.routes') },
         ]
     },
 
