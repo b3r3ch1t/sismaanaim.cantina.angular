@@ -1,24 +1,82 @@
-<h2 mat-dialog-title>Adicionar Atendente </h2>
+<h2 mat-dialog-title>Adicionar Permissionário</h2>
 <mat-dialog-content>
-  <form [formGroup]="addUserForm" (submit)="submitForm()" class="space-y-4">
+  <form [formGroup]="addPermissionario" (submit)="submitForm()" class="space-y-4">
+    <!-- Nome -->
     <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Selecione o usuário</mat-label>
-      <mat-select formControlName="user">
-        @for (user of availableUsers(); track $index) {
-          <mat-option [value]="user">
-            {{ user.nome }}
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome" maxlength="100" />
+      @if (addPermissionario.controls['nome'].hasError('required')) {
+        <mat-error>Nome é obrigatório</mat-error>
+      }
+      @if (addPermissionario.controls['nome'].hasError('maxlength')) {
+        <mat-error>Máximo 100 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Código -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="codigo" maxlength="14" (input)="onCodigoInput($event)" />
+      @if (addPermissionario.controls['codigo'].hasError('required')) {
+        <mat-error>Código é obrigatório</mat-error>
+      }
+      @if (addPermissionario.controls['codigo'].hasError('invalidCodigo')) {
+        <mat-error>CPF ou CNPJ inválido</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Tipo Permissionário -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Tipo Permissionário</mat-label>
+      <mat-select formControlName="tipoPermissionario">
+        @for (tipo of tiposPermissionario(); track $index) {
+          <mat-option [value]="tipo.key">
+            {{ tipo.value }}
           </mat-option>
         }
       </mat-select>
-      @if (addUserForm.controls['user'].hasError('required')) {
-        <mat-error>User is required</mat-error>
+      @if (addPermissionario.controls['tipoPermissionario'].hasError('required')) {
+        <mat-error>Tipo Permissionário é obrigatório</mat-error>
       }
     </mat-form-field>
-  
+
+    <!-- Responsável -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Responsável</mat-label>
+      <input matInput formControlName="responsavel" maxlength="100" />
+      @if (addPermissionario.controls['responsavel'].hasError('required')) {
+        <mat-error>Responsável é obrigatório</mat-error>
+      }
+      @if (addPermissionario.controls['responsavel'].hasError('maxlength')) {
+        <mat-error>Máximo 100 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Percentual -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Percentual</mat-label>
+      <input 
+        matInput 
+        type="number" 
+        formControlName="percentualPermissionario" 
+        min="0" 
+        max="1" 
+        step="0.1" 
+      />
+      @if (addPermissionario.controls['percentualPermissionario'].hasError('required')) {
+        <mat-error>Percentual é obrigatório</mat-error>
+      }
+      @if (addPermissionario.controls['percentualPermissionario'].hasError('min')) {
+        <mat-error>Percentual mínimo é 0</mat-error>
+      }
+      @if (addPermissionario.controls['percentualPermissionario'].hasError('max')) {
+        <mat-error>Percentual máximo é 1</mat-error>
+      }
+    </mat-form-field>
 
     <div class="flex justify-end">
       <button mat-button type="button" (click)="closeModal()">Cancelar</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="addUserForm.invalid">Adicionar</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="addPermissionario.invalid">Adicionar</button>
     </div>
   </form>
   

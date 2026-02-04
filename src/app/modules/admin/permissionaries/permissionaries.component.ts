@@ -64,7 +64,7 @@ export class PermissionariesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.response.success) {
-          this.snackbarService.success("Usuário adicionado com sucesso")
+          this.snackbarService.success("Permissionário adicionado com sucesso")
           this.fetchUsers()
         }
       }
@@ -126,8 +126,7 @@ export class PermissionariesComponent implements OnInit {
       }))
       .subscribe((data: ApiResponse<any>) => {
         if (data.success) {
-          this.users.set(data.result)
-          console.log(this.users())
+          this.users.set(data.result) 
           const dataSource = new MatTableDataSource(this.users())
           if (dataSource) {
 

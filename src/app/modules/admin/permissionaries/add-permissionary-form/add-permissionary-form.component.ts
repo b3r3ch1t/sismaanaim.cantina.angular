@@ -29,7 +29,7 @@ import { MatSelectModule } from '@angular/material/select';
   ]
 })
 export class AddPermissionaryComponent {
-  addUserForm: FormGroup;
+  addPermissionario: FormGroup;
 
   private _httpClient = inject(HttpClient);
   private _authService = inject(AuthService);
@@ -38,6 +38,7 @@ export class AddPermissionaryComponent {
   users = signal([])
   attendants = signal([])
   availableUsers = signal([])
+  tiposPermissionario = signal([]);
 
   constructor(
     private fb: FormBuilder,
@@ -45,8 +46,13 @@ export class AddPermissionaryComponent {
   ) {
     this.fetchAttendants()
     this.fetchUsers()
-    this.addUserForm = this.fb.group({
-      user: ['', [Validators.required]],
+    this.fetchTiposPermissionario()
+    this.addPermissionario = this.fb.group({
+      nome: ['', [Validators.required, Validators.maxLength(100)]],
+      codigo: ['', [Validators.required, Validators.maxLength(14)]],
+      tipoPermissionario: ['', [Validators.required]],
+      responsavel: ['', [Validators.required, Validators.maxLength(100)]],
+      percentualPermissionario: [0, [Validators.required, Validators.min(0), Validators.max(1)]]
     });
   }
 
@@ -59,8 +65,7 @@ export class AddPermissionaryComponent {
     const available = this.users().filter(user => {
       return !attendants.has(user.userId);
     })
-
-    console.log(available)
+ 
     this.availableUsers.set(available)
   }
 
@@ -71,15 +76,47 @@ export class AddPermissionaryComponent {
     return null;
   }
 
+  onCodigoInput(event: any) {
+    const codigo = event.target.value.replace(/\D/g, '');
+
+    this.addPermissionario.get('codigo')?.setValue(codigo);
+
+    if (codigo.length === 11) {
+      // Valida CPF
+      if (this._fuseUtils.validarCPF(codigo)) {
+        this.addPermissionario.get('codigo')?.setErrors(null);
+      } else {
+        this.addPermissionario.get('codigo')?.setErrors({ invalidCodigo: true });
+      }
+    } else if (codigo.length === 14) {
+      // Valida CNPJ
+      if (this._fuseUtils.validarCNPJ(codigo)) {
+        this.addPermissionario.get('codigo')?.setErrors(null);
+      } else {
+        this.addPermissionario.get('codigo')?.setErrors({ invalidCodigo: true });
+      }
+    } else if (codigo.length > 0 && codigo.length !== 11 && codigo.length !== 14) {
+      this.addPermissionario.get('codigo')?.setErrors({ invalidCodigo: true });
+    }
+  }
+
   submitForm(): void {
-    if (this.addUserForm.valid) {
+    if (this.addPermissionario.valid) {
+
+      console.log("Submitting form with data:", this.addPermissionario.value);
+
+      const formValue = this.addPermissionario.value;
+      
       const payload = {
-        userId: this.addUserForm.value.user.userId,
-        claimType: "Profile",
-        claimValue: "3"
+        nome: formValue.nome,
+        codigo: formValue.codigo,
+        tipoPermissionario: formValue.tipoPermissionario,
+        responsavel: formValue.responsavel,
+        percentualPermissionario: formValue.percentualPermissionario
       };
 
-      this._httpClient.post<ApiResponse<any>>(`${environment.API_URL}account/addclaimaousuario`, payload, {
+      // Aqui você deve substituir pela URL correta da sua API
+      this._httpClient.post<ApiResponse<any>>(`${environment.API_URL}permissionario/AdicionarPermissionario`, payload, {
         headers: {
           "Authorization": `Bearer ${this._authService.accessToken}`
         }
@@ -92,7 +129,7 @@ export class AddPermissionaryComponent {
         if (response.success) {
           this.dialogRef.close({
             response,
-            value: this.addUserForm.value
+            value: this.addPermissionario.value
           });
         }
       });
@@ -111,8 +148,7 @@ export class AddPermissionaryComponent {
       }))
       .subscribe((data: ApiResponse<any>) => {
         if (data.success) {
-          this.attendants.set(data.result)
-          console.log(this.attendants())
+          this.attendants.set(data.result) 
           this.updateAvailableUsers()
         }
       });
@@ -130,13 +166,31 @@ export class AddPermissionaryComponent {
       }))
       .subscribe((data: ApiResponse<any>) => {
         if (data.success) {
-          this.users.set(data.result)
-          console.log(this.users())
+          this.users.set(data.result) 
           this.updateAvailableUsers()
         }
       });
   }
 
+  fetchTiposPermissionario() {
+    this._httpClient.get(`${environment.API_URL}permissionario/gettipospermissionarios`, {
+      headers: {
+        "Authorization": `Bearer ${this._authService.accessToken}`
+      }
+    })
+      .pipe(catchError((error) => {
+        console.log(error);
+        throw error;
+      }))
+      .subscribe((data: ApiResponse<any>) => { 
+        
+        console.log("Tipos de Permissionário fetched:", data);
+
+        if (data.success) {
+          this.tiposPermissionario.set(data.result)
+        }
+      });
+  }
 
   closeModal(): void {
     this.dialogRef.close();
