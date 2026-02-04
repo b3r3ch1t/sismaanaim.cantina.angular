@@ -1,16 +1,16 @@
 
-import { Component, signal, OnInit, OnDestroy } from '@angular/core'; 
+import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { MatCard, MatCardHeader, MatCardContent, MatCardActions } from "@angular/material/card";
 import { MatTabGroup, MatTab } from "@angular/material/tabs";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseConfirmationService } from '@fuse/services/confirmation/public-api';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CommonModule } from '@angular/common'; 
-import { firstValueFrom } from 'rxjs'; 
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClient } from '@angular/common/http';
@@ -18,7 +18,8 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { environment } from 'app/environments/environment';
 import { ApiResponse } from 'app/core/api/api-response.types';
 import { FuseUtilsService } from '@fuse/services/utils';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { CustomCurrencyPipe } from 'app/pipes/custom-currency.pipe';
 
 @Component({
     selector: 'app-member-recarga',
@@ -37,13 +38,15 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
         MatLabel,
         MatCardActions,
         MatInputModule,
-        MatButtonModule, 
+        MatButtonModule,
         ReactiveFormsModule,
         MatProgressSpinnerModule,
-        NgxMaskDirective,
+        CurrencyMaskModule,
     ],
     providers: [
-        provideNgxMask()
+
+        CurrencyPipe,
+        CustomCurrencyPipe,
     ],
     templateUrl: './member-recarga.component.html',
     styleUrl: './member-recarga.component.scss'
@@ -131,7 +134,7 @@ export class MemberRecargaComponent implements OnInit, OnDestroy {
             ],
             cpf: ['', [Validators.required]],
         });
-        
+
 
         // TODO: Implementar busca de cliente por email
         /*
@@ -194,6 +197,10 @@ export class MemberRecargaComponent implements OnInit, OnDestroy {
 
             // Subscribe to afterClosed from the dialog reference
             dialogRef.afterClosed().subscribe(async (result) => {
+
+                console.log("valor:", valor);
+
+
                 if (result == 'confirmed') {
                     this.loading = true;
                     try {
@@ -285,7 +292,18 @@ export class MemberRecargaComponent implements OnInit, OnDestroy {
         this.registrationForm.patchValue({ cpf: "" });
     }
 
-    InserirRecarga(id: string, nome :string ) {
+    limparCpf() {
+        this.registrationOtherForm.patchValue({ cpf: "" });
+        this.dataSource.data = [];
+    }
+
+    limparFormulario() {
+        this.registrationOtherForm.reset();
+        this.registrationForm.reset();
+        this.dataSource.data = [];
+    }
+
+    InserirRecarga(id: string, nome: string) {
         const cliente = this.clienteSignal();
 
         console.log("Cliente:", cliente);
