@@ -543,6 +543,19 @@ export const appRoutes: Route[] = [
 
     {
         path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'membro/historico', loadChildren: () => import('app/modules/admin/member-history-client/member-history.routes') },
+        ]
+    },
+
+    {
+        path: '',
         canActivate: [AuditorGuard],
         canActivateChild: [AuditorGuard],
         component: LayoutComponent,
