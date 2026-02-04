@@ -135,29 +135,30 @@ export class MemberRecargaComponent implements OnInit, OnDestroy {
             cpf: ['', [Validators.required]],
         });
 
+        this.carregarSaldoCliente();
+    }
 
-        // TODO: Implementar busca de cliente por email
-        /*
-        this.clienteService.getClienteByEmail().subscribe({
-            next: cliente => {
+    async carregarSaldoCliente() {
+        try {
+            const result = await firstValueFrom(
+                this.http.get<ApiResponse<any>>(`${environment.API_URL}clientes/getsaldoclientelogado`, {
+                    headers: {
+                        'Authorization': `Bearer ${this.authService.accessToken}`
+                    }
+                })
+            );
 
-                if (!cliente) {
-                    console.log('Cliente não encontrado');
-                    // Adiciona a rota de origem para uso posterior
-                    localStorage.setItem('origem-member-recarga', window.location.pathname);
-                    window.location.href = '/atualizarcpf';
-                    this.clienteSignal.set(null);
-                    return;
-                }
-                console.log(cliente);
-                this.clienteSignal.set(cliente);
-            },
-            error: error => {
-                console.log(error);
+            if (result.success && result.result) {
+                console.log('Cliente logado:', result.result);
+                this.clienteSignal.set(result.result);
+            } else {
+                console.log('Cliente não encontrado');
                 this.clienteSignal.set(null);
             }
-        });
-        */
+        } catch (error) {
+            console.error('Erro ao carregar saldo do cliente:', error);
+            this.clienteSignal.set(null);
+        }
     }
 
 
