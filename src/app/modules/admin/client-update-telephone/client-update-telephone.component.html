@@ -1,0 +1,102 @@
+<!-- Main -->
+<div class="flex-auto p-2 ">
+    <mat-card style="width: 100%;">
+        <mat-card-header>
+            <h1>Registrar Telefone</h1>
+        </mat-card-header>
+
+        <mat-card-content>
+            <mat-button-toggle-group name="opcao" [(ngModel)]="selectedOption" (change)="clearForms()"
+                aria-label="Escolha uma opção" appearance="legacy" class="w-full flex flex-wrap justify-center gap-2">
+                <mat-button-toggle value="registrar">
+                    <span>Registrar telefone</span>
+                </mat-button-toggle>
+                <mat-button-toggle value="confirmar">
+                    <span>Informar código de confirmação</span>
+                </mat-button-toggle>
+                <mat-button-toggle value="reenviar">
+                    <span>Reenviar código</span>
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </mat-card-content>
+
+        <mat-card-content *ngIf="selectedOption === 'registrar'">
+            <form [formGroup]="registrationTelefoneForm" (ngSubmit)="onSubmitTelefone()" class="p-4"
+                style="width: 100%;">
+                <mat-form-field appearance="fill" style="width: 100%;">
+                    <mat-label>Registrar Telefone</mat-label>
+                    <input matInput [mask]="'(00) 00000-0000'" formControlName="telefone" type="text"
+                        placeholder="Digite o telefone com o padrão (xx) xxxxx-xxxx">
+                </mat-form-field>
+                <mat-card-actions>
+                    <button mat-raised-button color="primary" type="submit"
+                        [disabled]="!registrationTelefoneForm.valid">
+                        Registrar Telefone
+                    </button>
+                </mat-card-actions>
+            </form>
+        </mat-card-content>
+
+        <mat-card-content *ngIf="selectedOption === 'confirmar'">
+            <div class="flex justify-center items-center w-full h-full min-h-[200px] text-center">
+                <div class="otp-container ">
+                    <div
+                        class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 rounded-tr-full rounded-bl-full rounded-tl-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                            class="w-12 h-12 text-orange-500 fill-current"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                            <path
+                                d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7 17l0 80c0 13.3 10.7 24 24 24l80 0c13.3 0 24-10.7 24-24l0-40 40 0c13.3 0 24-10.7 24-24l0-40 40 0c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9 5.4 35 8.3 53.7 8.3zM376 96a40 40 0 1 1 0 80 40 40 0 1 1 0-80z" />
+                        </svg>
+                    </div>
+                    <h1>Recebeu o código?</h1>
+                    <p>Digite o código que recebeu pelo Whatsapp.</p>
+
+                    <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+                        <div class="otp-inputs">
+                            <input #otpInput type="tel" formControlName="digit0" maxlength="1"
+                                (input)="onOtpInput(0, $event)" (keyup)="onOtpInput(0, $event)"
+                                (paste)="onOtpPaste($event, 0)" autofocus inputmode="numeric">
+                            <input #otpInput type="tel" formControlName="digit1" maxlength="1"
+                                (input)="onOtpInput(1, $event)" (keyup)="onOtpInput(1, $event)"
+                                (paste)="onOtpPaste($event, 1)" inputmode="numeric">
+                            <input #otpInput type="tel" formControlName="digit2" maxlength="1"
+                                (input)="onOtpInput(2, $event)" (keyup)="onOtpInput(2, $event)"
+                                (paste)="onOtpPaste($event, 2)" inputmode="numeric">
+                            <input #otpInput type="tel" formControlName="digit3" maxlength="1"
+                                (input)="onOtpInput(3, $event)" (keyup)="onOtpInput(3, $event)"
+                                (paste)="onOtpPaste($event, 3)" inputmode="numeric">
+                            <input #otpInput type="tel" formControlName="digit4" maxlength="1"
+                                (input)="onOtpInput(4, $event)" (keyup)="onOtpInput(4, $event)"
+                                (paste)="onOtpPaste($event, 4)" inputmode="numeric">
+                            <input #otpInput type="tel" formControlName="digit5" maxlength="1"
+                                (input)="onOtpInput(5, $event)" (keyup)="onOtpInput(5, $event)"
+                                (paste)="onOtpPaste($event, 5)" inputmode="numeric">
+
+                        </div>
+
+                        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+                        <button type="submit" (click)="onSubmitCodigo()" [disabled]="otpForm.invalid || loading">
+                            {{ loading ? 'Confirmando...' : 'Confirmar' }}
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+        </mat-card-content>
+
+        <mat-card-content *ngIf="selectedOption === 'reenviar'">
+
+            <button mat-raised-button color="primary" type="submit" class="m-4" (click)="reenviarCodigo()">
+                Reenviar Código
+            </button>
+        </mat-card-content>
+
+        <mat-card-footer *ngIf="dataSource.data && dataSource.data.length > 0"
+            style="margin-top: 24px; margin-left: 24px; margin-bottom: 10px;">
+            <button mat-raised-button color="warn" (click)="cancel()">
+                Cancelar
+            </button>
+        </mat-card-footer>
+    </mat-card>
+</div>

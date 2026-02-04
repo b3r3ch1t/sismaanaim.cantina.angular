@@ -528,6 +528,19 @@ export const appRoutes: Route[] = [
         ]
     },
 
+     {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'membro/atualizartelefone', loadChildren: () => import('app/modules/admin/client-update-telephone/client-update-telephone.routes') },
+        ]
+    },
+
     {
         path: '',
         canActivate: [AuditorGuard],
