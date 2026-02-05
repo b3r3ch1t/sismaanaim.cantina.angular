@@ -172,7 +172,7 @@ export class MemberRecargaComponent implements OnInit, OnDestroy {
             const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
 
-            const confirmationMessage = ` Deseja confirmar o reabastecimento ? <br>
+            const confirmationMessage = ` Deseja confirmar a recarga ? <br>
                 Nome: ${this.clienteSignal()?.nome} <br>
                 Valor: ${formatter.format(formattedValue)} <br>`;
 
@@ -206,28 +206,24 @@ export class MemberRecargaComponent implements OnInit, OnDestroy {
                     this.loading = true;
                     try {
                         this.loading = true;
-                        // TODO: Implementar recarga
-                        /*
-                        this.clienteService.recargaEfichas(valor, this.clienteSignal()?.id).subscribe({
-                            next: (response) => {
-                                if (response.success) {
-                                    this.snackbar.open('Recarga realizada com sucesso!', 'Fechar', { duration: 3000 });
-                                    this.registrationForm.reset();
-                                } else {
-                                    this.snackbar.open('Erro ao realizar recarga: ' + response.message, 'Fechar', { duration: 3000 });
+                        
+                        const response = await firstValueFrom(
+                            this.http.post<ApiResponse<any>>(`${environment.API_URL}clientes/adicionarrecarga?valor=${valor}`, null, {
+                                headers: {
+                                    'Authorization': `Bearer ${this.authService.accessToken}`
                                 }
-                            },
-                            error: (error) => {
-                                console.error('Erro ao realizar recarga:', error);
-                                this.snackbar.open('Erro ao realizar recarga. Tente novamente.', 'Fechar', { duration: 3000 });
-                            },
-                            complete: () => {
-                                this.loading = false;
-                            }
-                        });
-                        */
+                            })
+                        );
+                        
                         this.loading = false;
-                        this.snackbar.open('Função em desenvolvimento', 'Fechar', { duration: 3000 });
+                        
+                        if (response.success) {
+                            this.snackbar.open('Recarga realizada com sucesso!', 'Fechar', { duration: 3000 });
+                            this.registrationForm.reset();
+                            await this.carregarSaldoCliente();
+                        } else {
+                            this.snackbar.open(response.message || 'Erro ao realizar recarga', 'Fechar', { duration: 3000 });
+                        }
                     } catch (error) {
                         console.error('Erro ao realizar recarga:', error);
                         this.snackbar.open('Erro ao realizar recarga. Tente novamente.', 'Fechar', { duration: 3000 });
