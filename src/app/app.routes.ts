@@ -555,6 +555,19 @@ export const appRoutes: Route[] = [
     },
 
 
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'membro/historicorecarga', loadChildren: () => import('app/modules/admin/member-history-recarga-client/member-history-recarga.routes') },
+        ]
+    },
+
  {
         path: '',
         canActivate: [AuthGuard],
