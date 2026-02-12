@@ -68,6 +68,42 @@
             </td>
           </ng-container>
 
+          <!-- Coluna Ações -->
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef>Ações</th>
+            <td mat-cell *matCellDef="let item">
+              <button 
+                *ngIf="item.status === 1"
+                mat-icon-button 
+                class="text-orange-500"
+                matTooltip="Dados PIX"
+                aria-label="Dados PIX"
+                (click)="openPixDetails(item.id)">
+                <mat-icon class="text-orange-500">warning</mat-icon>
+              </button>
+
+              
+              <button 
+                *ngIf="item.status === 2"
+                mat-icon-button 
+                class="text-green-500"
+                matTooltip="Confirmado"
+                aria-label="Confirmado">
+                <mat-icon class="text-green-500">check_circle</mat-icon>
+              </button>
+
+              <button 
+                *ngIf="item.status === 3"
+                mat-icon-button 
+                class="text-red-500"
+                matTooltip="Dados PIX"
+                aria-label="Dados PIX">
+                <mat-icon class="text-red-500">error</mat-icon>
+              </button>
+
+            </td>
+          </ng-container>
+
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>

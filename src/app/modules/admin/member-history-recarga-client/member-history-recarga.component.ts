@@ -7,6 +7,8 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from 'app/core/auth/auth.service';
 import { environment } from 'app/environments/environment';
 import { SnackbarService } from 'app/services/snackbar.service';
@@ -33,6 +35,8 @@ import { CustomDatePipe } from 'app/pipes/custom-date.pipe';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
     CustomCurrencyPipe,
     CustomDatePipe
   ]
@@ -43,7 +47,7 @@ export class MemberHistoryRecargaClientComponent implements OnInit, AfterViewIni
   private readonly _snackbarService = inject(SnackbarService);
 
   dataSource = signal(new MatTableDataSource<any>([]));
-  displayedColumns: string[] = ['data', 'clienteBeneficiario', 'valor', 'tipo', 'status'];
+  displayedColumns: string[] = ['data', 'clienteBeneficiario', 'valor', 'tipo', 'status', 'acoes'];
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
@@ -89,5 +93,12 @@ export class MemberHistoryRecargaClientComponent implements OnInit, AfterViewIni
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource().filter = filterValue.trim().toLowerCase();
+  }
+
+  openPixDetails(id: string): void {
+    // Abre nova aba com os detalhes do PIX
+    // Usando window.open diretamente no clique para evitar bloqueio de pop-up
+    const url = `/detail-pix/${id}`;
+    window.open(url, '_blank');
   }
 }

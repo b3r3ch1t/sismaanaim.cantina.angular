@@ -17,8 +17,18 @@ export const appRoutes: Route[] = [
 
 
     {
-        path: 'qr-code',
-        loadChildren: () => import('app/modules/qr-code/qr-code.routes').then(m => m.QR_CODE_ROUTES),
+        path: 'detail-pix/:id',
+        loadChildren: () => import('app/modules/qr-code/qr-code.routes').then(m => m.default),
+    },
+
+    // {
+    //     path: 'qr-code',
+    //     loadChildren: () => import('app/modules/qr-code/qr-code.routes').then(m => m.QR_CODE_ROUTES),
+    // },
+
+    {
+        path: 'detail-pix/:id',
+        loadChildren: () => import('app/modules/admin/detalhe-pix/detalhe-pix.routes').then(m => m.default)
     },
 
     // Redirect empty path to '/example'
@@ -528,7 +538,7 @@ export const appRoutes: Route[] = [
         ]
     },
 
-     {
+    {
         path: '',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
@@ -568,7 +578,7 @@ export const appRoutes: Route[] = [
         ]
     },
 
- {
+    {
         path: '',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],

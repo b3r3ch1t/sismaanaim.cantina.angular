@@ -1,0 +1,70 @@
+<button *ngIf="dialogData" mat-icon-button aria-label="Close dialog" class="close-button" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+</button>
+
+<div *ngIf="loading" class="loading-container">
+    <p>Carregando detalhes do PIX...</p>
+</div>
+
+<div *ngIf="error" class="error-container">
+    <p>Erro ao carregar detalhes do PIX. Por favor, tente novamente.</p>
+</div>
+
+<div *ngIf="!loading && !error && detalhePix">
+    <h1>
+        Detalhes do PIX - {{detalhePix.membro}}
+    </h1>
+
+    <mat-dialog-content class="container">
+        <div class="left-column col-75">
+            <p><strong>Nome: </strong>{{detalhePix.membro}} </p>
+            <p><strong>Evento: </strong>{{detalhePix.evento}} </p>
+            <p><strong>Valor: </strong>{{detalhePix.valorCentavos /100 |
+                currency:'BRL':'symbol':'1.2-2':'pt'}} </p>
+            <p><strong>Data de Expiração: </strong>
+                <span [ngStyle]="{'color': getDataExpiracaoColor( )}">
+                    {{detalhePix.dataExpiracao | date:'dd/MM/yyyy HH:mm' }}
+
+            </span>
+            </p>
+            <p><strong>Estado:</strong>
+
+                <span [ngStyle]="{'color': getDataExpiracaoColor( )}">
+                    {{detalhePix.getStatusCobranca}}
+                </span>
+
+            </p>
+            <div  *ngIf="!isExpired">
+
+                <p><strong>Endereço de Checkout: </strong>
+                    <a [href]="currentUrl +  detalhePix.cobrancaId" target="_blank">
+                        {{ currentUrl +  detalhePix.cobrancaId }}
+                    </a>
+                    <button mat-icon-button (click)="copiarCodigo()">
+                        <mat-icon>content_copy</mat-icon>
+                    </button>
+                </p>
+
+
+                <!-- <p><strong>Codigo PIX: </strong>
+                    <input class="truncate-input" type="text" value="{{detalhePix.codigo}}" readonly>
+
+                    <button mat-icon-button (click)="copiarCodigoPIX()">
+                        <mat-icon>content_copy</mat-icon>
+                    </button>
+                </p> -->
+
+                <p><strong>PIX QrCode: </strong>
+                    <img [src]="detalhePix.qrCodeImageBase64" alt="Imagem do detalhe Pix"
+                        style="width: 200px; height: 200px; object-fit: cover;">
+                </p>
+
+            </div>
+
+        </div>
+    </mat-dialog-content>
+
+    <mat-card-actions class="button-container">
+
+    </mat-card-actions>
+</div>
