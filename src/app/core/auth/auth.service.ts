@@ -1,6 +1,7 @@
 import { environment } from 'app/environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
@@ -24,6 +25,7 @@ export class AuthService {
     private _authenticated: boolean = false;
     private readonly _httpClient = inject(HttpClient);
     private readonly _userService = inject(UserService);
+    private readonly _router = inject(Router);
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -246,6 +248,12 @@ export class AuthService {
      * Check the authentication status
      */
     check(): Observable<boolean> {
+        // Check if current route is public
+        const currentUrl = this._router.url;
+        if (currentUrl.startsWith('/detail-pix/')) {
+            return of(true);
+        }
+
         // Check if the user is logged in
         if (this._authenticated) {
             return of(true);

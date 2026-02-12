@@ -2,37 +2,34 @@ import { Route } from '@angular/router';
 import { initialDataResolver } from 'app/app.resolvers';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
+import { PublicGuard } from 'app/core/auth/guards/public.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { PageNotFoundComponent } from './modules/admin/page-not-found/page-not-found.component';
 import { AttendantGuard } from './core/auth/guards/attendant.guard';
 import { OperatorGuard } from './core/auth/guards/operator.guard';
 import { PermissionaryGuard } from './core/auth/guards/permissionary.guard';
 import { ReviewerGuard } from './core/auth/guards/reviewer.guard';
-import { AuditorGuard } from './core/auth/guards/auditor.guard';
+import { AuditorGuard } from './core/auth/guards/auditor.guard'; 
+import { QRCodeComponent } from './modules/qr-code/qr-code.component';
 
 // @formatter:off
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export const appRoutes: Route[] = [
 
-
+    // Public route - must be first
     {
         path: 'detail-pix/:id',
-        loadChildren: () => import('app/modules/qr-code/qr-code.routes').then(m => m.default),
-    },
-
-    // {
-    //     path: 'qr-code',
-    //     loadChildren: () => import('app/modules/qr-code/qr-code.routes').then(m => m.QR_CODE_ROUTES),
-    // },
-
-    {
-        path: 'detail-pix/:id',
-        loadChildren: () => import('app/modules/admin/detalhe-pix/detalhe-pix.routes').then(m => m.default)
+        component: QRCodeComponent,
+        canActivate: [PublicGuard]
     },
 
     // Redirect empty path to '/example'
-    { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+    { 
+        path: '', 
+        pathMatch: 'full', 
+        redirectTo: 'dashboard'
+    },
 
     // Redirect signed-in user to the '/example'
     //

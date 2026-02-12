@@ -19,3 +19,17 @@
     background-color: rgba(239, 68, 68, 0.1);
     color: #ef4444;
 }
+
+/* Snackbar customizado para melhor visualização no fundo escuro */
+::ng-deep .qr-code-snackbar {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+}
+
+::ng-deep .qr-code-snackbar .mat-mdc-snack-bar-label {
+    color: #1f2937 !important;
+}
+
+::ng-deep .qr-code-snackbar .mat-mdc-button {
+    color: #3b82f6 !important;
+}

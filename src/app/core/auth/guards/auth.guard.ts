@@ -6,6 +6,11 @@ import { of, switchMap } from 'rxjs';
 export const AuthGuard: CanActivateFn | CanActivateChildFn = (route, state) => {
     const router: Router = inject(Router);
 
+    // Allow access to public routes without authentication
+    if (state.url.startsWith('/detail-pix/')) {
+        return of(true);
+    }
+
     // Check the authentication status
     return inject(AuthService)
         .check()

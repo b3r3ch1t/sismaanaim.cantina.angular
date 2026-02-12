@@ -21,6 +21,10 @@ export const authInterceptor = (
 ): Observable<HttpEvent<unknown>> => {
     const authService = inject(AuthService);
 
+    // Check if we're on a public route - don't redirect or sign out
+    const currentPath = window.location.pathname;
+    const isPublicRoute = currentPath.startsWith('/detail-pix/');
+
     // Clone the request object
     let newReq = req.clone();
 
@@ -44,20 +48,28 @@ export const authInterceptor = (
         });
     }
 
-    // authService.signOut();
-
     // Response
     return next(newReq).pipe(
         catchError((error) => {        
-            // return
             // Catch "401 Unauthorized" responses
             if (error instanceof HttpErrorResponse && error.status === 401) {
                 
-                // Sign out
-                authService.signOut();
+                // Don't sign out if we're on a public route
+                if (isPublicRoute) {
+                    return throwError(error);
+                }
+                
+                // Check if the request is for a public endpoint
+                const isPublicEndpoint = req.url.includes('/pix/detalhes/');
+                
+                // If not a public endpoint, sign out and reload
+                if (!isPublicEndpoint) {
+                    // Sign out
+                    authService.signOut();
 
-                // Reload the app
-                location.reload();
+                    // Reload the app
+                    location.reload();
+                }
             }
 
             return throwError(error);

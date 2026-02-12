@@ -9,6 +9,11 @@ export const NoAuthGuard: CanActivateFn | CanActivateChildFn = (
 ) => {
     const router: Router = inject(Router);
 
+    // Allow access to public routes without checking authentication
+    if (state.url.startsWith('/detail-pix/')) {
+        return of(true);
+    }
+
     // Check the authentication status
     return inject(AuthService)
         .check()

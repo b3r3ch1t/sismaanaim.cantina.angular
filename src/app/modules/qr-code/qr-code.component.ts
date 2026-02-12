@@ -91,8 +91,10 @@ export class QRCodeComponent implements OnInit {
       this.snackBar.open('Código copiado para a área de transferência!', 'Fechar', {
         duration: 3000,
         horizontalPosition: 'center',
-        verticalPosition: 'bottom'
+        verticalPosition: 'top',
+        panelClass: ['qr-code-snackbar']
       });
+
     }
   }
 
