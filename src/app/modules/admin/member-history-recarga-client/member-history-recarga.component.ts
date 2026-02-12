@@ -47,7 +47,7 @@ export class MemberHistoryRecargaClientComponent implements OnInit, AfterViewIni
   private readonly _snackbarService = inject(SnackbarService);
 
   dataSource = signal(new MatTableDataSource<any>([]));
-  displayedColumns: string[] = ['data', 'clienteBeneficiario', 'valor', 'tipo', 'status', 'acoes'];
+  displayedColumns: string[] = ['data', 'clienteBeneficiario', 'valor', 'vencimento', 'status', 'acoes'];
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
@@ -100,5 +100,12 @@ export class MemberHistoryRecargaClientComponent implements OnInit, AfterViewIni
     // Usando window.open diretamente no clique para evitar bloqueio de pop-up
     const url = `/detail-pix/${id}`;
     window.open(url, '_blank');
+  }
+
+  isDataMaiorQueAtual(data: string): boolean {
+    const dataItem = new Date(data);
+    const dataAtual = new Date();
+
+    return dataItem > dataAtual;
   }
 }

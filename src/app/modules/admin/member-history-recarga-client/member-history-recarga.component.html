@@ -51,11 +51,11 @@
             </td>
           </ng-container>
 
-          <!-- Coluna Tipo -->
-          <ng-container matColumnDef="tipo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Evento</th>
+          <!-- Coluna Vencimento -->
+          <ng-container matColumnDef="vencimento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Vencimento</th>
             <td mat-cell *matCellDef="let item">
-              {{ item.evento }}
+              {{ item.vencimento ? (item.vencimento | customDate) : 'N/A' }}
             </td>
           </ng-container>
 
@@ -72,9 +72,18 @@
           <ng-container matColumnDef="acoes">
             <th mat-header-cell *matHeaderCellDef>Ações</th>
             <td mat-cell *matCellDef="let item">
-              <button 
+              <button
+                *ngIf="item.status === 0"
+                mat-icon-button
+                class="text-green-500"
+                matTooltip="Pendente"
+                aria-label="Pendente">
+                <mat-icon class="text-green-500">hourglass_empty</mat-icon>
+              </button>
+
+              <button
                 *ngIf="item.status === 1"
-                mat-icon-button 
+                mat-icon-button
                 class="text-orange-500"
                 matTooltip="Dados PIX"
                 aria-label="Dados PIX"
@@ -82,19 +91,19 @@
                 <mat-icon class="text-orange-500">warning</mat-icon>
               </button>
 
-              
-              <button 
+
+              <button
                 *ngIf="item.status === 2"
-                mat-icon-button 
+                mat-icon-button
                 class="text-green-500"
                 matTooltip="Confirmado"
                 aria-label="Confirmado">
                 <mat-icon class="text-green-500">check_circle</mat-icon>
               </button>
 
-              <button 
-                *ngIf="item.status === 3"
-                mat-icon-button 
+              <button
+                *ngIf="item.status === 3 || isDataMaiorQueAtual(item.data)"
+                mat-icon-button
                 class="text-red-500"
                 matTooltip="Dados PIX"
                 aria-label="Dados PIX">
