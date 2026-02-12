@@ -3,90 +3,95 @@
         <div class="flex justify-between items-center">
             <div class="text-2xl font-semibold tracking-tight leading-none">QR Code de Pagamento</div>
         </div>
-    
+
         <!-- Loading state -->
         @if (loading) {
-            <div class="flex flex-col items-center py-8">
-                <mat-spinner [diameter]="40"></mat-spinner>
-                <div class="mt-4 text-secondary">Carregando dados do QR Code...</div>
-            </div>
+        <div class="flex flex-col items-center py-8">
+            <mat-spinner [diameter]="40"></mat-spinner>
+            <div class="mt-4 text-secondary">Carregando dados do QR Code...</div>
+        </div>
         }
-    
+
         <!-- Error state -->
         @if (error) {
-            <div class="flex flex-col items-center py-8">
-                <mat-icon class="text-red-500 text-6xl">error_outline</mat-icon>
-                <div class="mt-4 text-red-500 font-medium">Erro ao carregar o QR Code</div>
-                <button mat-flat-button color="primary" class="mt-4" (click)="fetchQRCode()">
-                    Tentar novamente
-                </button>
-            </div>
+        <div class="flex flex-col items-center py-8">
+            <mat-icon class="text-red-500 text-6xl">error_outline</mat-icon>
+            <div class="mt-4 text-red-500 font-medium">Erro ao carregar o QR Code</div>
+            <button mat-flat-button color="primary" class="mt-4" (click)="fetchQRCode()">
+                Tentar novamente
+            </button>
+        </div>
         }
-    
+
         <!-- Content state -->
         @if (!loading && !error && qrCodeData) {
-            <div class="flex flex-col sm:flex-row mt-4 gap-8">
-                <!-- QR Code Section -->
-                <div class="flex flex-col items-center sm:w-1/2 p-4">
-                    @if (qrCodeData.estadoCobranca === 1) {
-                        <div class="bg-white p-4 rounded-lg shadow mb-4">
-                            <img [src]="'data:image/png;base64,' + qrCodeData.qrCodeImage" alt="QR Code" class="w-64 h-64">
-                        </div>
-                    }
-                    
-                    @if (qrCodeData.estadoCobranca === 3) {
-                        <div class="flex flex-col items-center">
-                            <mat-icon class="text-red-500 text-6xl">error_outline</mat-icon>
-                            <div class="mt-2 text-red-500 font-medium text-lg">PIX vencido!</div>
-                        </div>
-                    }
+        <div class="flex flex-col sm:flex-row mt-4 gap-8">
+            <!-- QR Code Section -->
+            <div class="flex flex-col items-center sm:w-1/2 p-4">
+                @if (!isExpired) {
+                <div class="bg-white p-4 rounded-lg shadow mb-4">
+                    <img [src]="qrCodeData.qrCodeImage" alt="QR Code" class="w-64 h-64">
                 </div>
-    
-                <!-- Details Section -->
-                <div class="flex flex-col sm:w-1/2 p-4">
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-secondary">Evento</span>
-                            <span class="text-lg font-semibold">{{ qrCodeData.evento }}</span>
-                        </div>
-    
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-secondary">Seminárista</span>
-                            <span class="text-lg font-semibold">{{ qrCodeData.membro }}</span>
-                        </div>
-    
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-secondary">Valor</span>
-                            <span class="text-lg font-semibold">{{ formatCurrency(qrCodeData.valor) }}</span>
-                        </div>
-    
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-secondary">Situação do Pagamento</span>
-                            <span class="text-lg font-semibold" [ngClass]="getStatusColor()">{{ getStatusText() }}</span>
-                        </div>
-    
-                        <!-- BR Code section - only show if estadoCobranca is 1 -->
-                        @if (qrCodeData.estadoCobranca === 1) {
-                            <div class="flex flex-col">
-                                <span class="text-sm font-medium text-secondary">BR Code</span>
-                                <div class="flex items-center mt-1">
-                                    <mat-form-field class="w-full">
-                                        <input matInput [value]="qrCodeData.brCode" readonly>
-                                    </mat-form-field>
-                                    <button mat-icon-button color="primary" (click)="copyBrCode()" matTooltip="Copiar código">
-                                        <mat-icon>content_copy</mat-icon>
-                                    </button>
-                                </div>
-                            </div>
-    
-                            <button mat-flat-button color="primary" (click)="copyBrCode()">
-                                <mat-icon class="mr-2">content_copy</mat-icon>
-                                Copiar Código
-                            </button>
-                        }
+                }
+
+                @if (isExpired) {
+                <div class="flex flex-col items-center">
+                    <mat-icon class="text-red-500 text-6xl">error_outline</mat-icon>
+                    <div class="mt-2 text-red-500 font-medium text-lg">PIX vencido!</div>
+                </div>
+                }
+            </div>
+
+            <!-- Details Section -->
+            <div class="flex flex-col sm:w-1/2 p-4">
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-secondary">Evento</span>
+                        <span class="text-lg font-semibold">{{ qrCodeData.eventoNome }}</span>
                     </div>
+
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-secondary">Cliente</span>
+                        <span class="text-lg font-semibold">{{ qrCodeData.clienteNome }}</span>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-secondary">CPF</span>
+                        <span class="text-lg font-semibold">{{ qrCodeData.clienteCpf }}</span>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-secondary">Valor</span>
+                        <span class="text-lg font-semibold">{{ formatCurrency(qrCodeData.valor) }}</span>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-secondary">Situação do Pagamento</span>
+                        <span class="text-lg font-semibold" [ngClass]="getStatusColor()">{{ getStatusText() }}</span>
+                    </div>
+
+                    <!-- BR Code section - only show if not expired -->
+                    @if (!isExpired) {
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-secondary">Código PIX</span>
+                        <div class="flex items-center mt-1">
+                            <mat-form-field class="w-full">
+                                <input matInput [value]="qrCodeData.pixCodigoQrCode" readonly>
+                            </mat-form-field>
+                            <button mat-icon-button color="primary" (click)="copyBrCode()" matTooltip="Copiar código">
+                                <mat-icon>content_copy</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button mat-flat-button color="primary" (click)="copyBrCode()">
+                        <mat-icon class="mr-2">content_copy</mat-icon>
+                        Copiar Código
+                    </button>
+                    }
                 </div>
             </div>
+        </div>
         }
     </div>
 </div>

@@ -13,24 +13,18 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { environment } from 'app/environments/environment';
+import { AuthService } from 'app/core/auth/auth.service';
 
 interface QRCodeResponse {
-  result: {
-    cobrancaId: string;
-    dataExpiracao: string;
-    estadoCobranca: number;
-    qrCodeImage: string;
-    brCode: string;
-    valor: number;
-    membro: string;
-    evento: string;
-    getStatusCobranca: string;
-  };
-  success: boolean;
-  error: boolean;
-  errors: any[];
-  code: number;
-  message: string;
+  recargaId: string;
+  valor: number;
+  clienteNome: string;
+  clienteCpf: string;
+  pixCodigoQrCode: string;
+  qrCodeImage: string;
+  dataExpiracao: string;
+  eventoId: string;
+  eventoNome: string;
 }
 
 @Component({
@@ -52,17 +46,19 @@ interface QRCodeResponse {
   ]
 })
 export class QRCodeComponent implements OnInit {
-  qrCodeData: QRCodeResponse['result'] | null = null;
+  qrCodeData: QRCodeResponse | null = null;
   loading = false;
   error = false;
   pixId: string | null = null;
+  isExpired = false;
 
   constructor(
     private http: HttpClient,
     private clipboard: Clipboard,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private _authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     this.pixId = this.route.snapshot.paramMap.get('id');
@@ -77,21 +73,17 @@ export class QRCodeComponent implements OnInit {
     }
 
     this.loading = true;
-    this.http.get<QRCodeResponse>(`${environment.API_URL}clientes/getdetalhepix/${this.pixId}`, {
-      headers: {
-        'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
-      }
-    }).subscribe({
+    this.http.get<any>(
+      `${environment.API_URL}clientes/getdetalhepix/${this.pixId}`,
+      { headers: { "Authorization": `Bearer ${this._authService.accessToken}` } }
+    ).subscribe({
       next: (response) => {
-        if (response.success) {
-          // this.qrCodeData = response.result;
+        console.log('Resposta da API:', response);
+        this.qrCodeData = response.result;
 
-          console.log('Resposta da API:', response);
+        console.log('qrCodeData:', this.qrCodeData);
 
-          
-        } else {
-          this.error = true;
-        }
+        this.checkIfExpired();
         this.loading = false;
       },
       error: (error) => {
@@ -103,8 +95,8 @@ export class QRCodeComponent implements OnInit {
   }
 
   copyBrCode(): void {
-    if (this.qrCodeData?.brCode) {
-      this.clipboard.copy(this.qrCodeData.brCode);
+    if (this.qrCodeData?.pixCodigoQrCode) {
+      this.clipboard.copy(this.qrCodeData.pixCodigoQrCode);
       this.snackBar.open('Código copiado para a área de transferência!', 'Fechar', {
         duration: 3000,
         horizontalPosition: 'center',
@@ -115,32 +107,25 @@ export class QRCodeComponent implements OnInit {
     }
   }
 
+  checkIfExpired(): void {
+    if (!this.qrCodeData) return;
+    const now = new Date();
+    const expirationDate = new Date(this.qrCodeData.dataExpiracao);
+    this.isExpired = now >= expirationDate;
+  }
+
   getStatusColor(): string {
-    if (!this.qrCodeData) return '';
-    
-    switch (this.qrCodeData.estadoCobranca) {
-      case 1: return 'text-blue-600';
-      case 2: return 'text-green-600';
-      case 3: return 'text-red-600';
-      default: return '';
-    }
+    return this.isExpired ? 'text-red-600' : 'text-blue-600';
   }
 
   getStatusText(): string {
-    if (!this.qrCodeData) return '';
-    
-    switch (this.qrCodeData.estadoCobranca) {
-      case 1: return 'Ativa';
-      case 2: return 'Paga';
-      case 3: return 'Vencida';
-      default: return '';
-    }
+    return this.isExpired ? 'Vencido' : 'Ativo';
   }
 
   formatCurrency(value: number): string {
-    return new Intl.NumberFormat('pt-BR', { 
-      style: 'currency', 
-      currency: 'BRL' 
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
     }).format(value);
   }
 }
