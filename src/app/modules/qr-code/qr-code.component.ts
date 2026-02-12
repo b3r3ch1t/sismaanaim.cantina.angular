@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
@@ -54,35 +55,51 @@ export class QRCodeComponent implements OnInit {
   qrCodeData: QRCodeResponse['result'] | null = null;
   loading = false;
   error = false;
+  pixId: string | null = null;
 
   constructor(
     private http: HttpClient,
     private clipboard: Clipboard,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.pixId = this.route.snapshot.paramMap.get('id');
     this.fetchQRCode();
   }
 
   fetchQRCode(): void {
+    if (!this.pixId) {
+      this.error = true;
+      this.loading = false;
+      return;
+    }
+
     this.loading = true;
-    this.http.get<QRCodeResponse>(`${environment.API_URL}caixa/getqrcode`)
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.qrCodeData = response.result;
-          } else {
-            this.error = true;
-          }
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching QR code:', error);
+    this.http.get<QRCodeResponse>(`${environment.API_URL}clientes/getdetalhepix/${this.pixId}`, {
+      headers: {
+        'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          // this.qrCodeData = response.result;
+
+          console.log('Resposta da API:', response);
+
+          
+        } else {
           this.error = true;
-          this.loading = false;
         }
-      });
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching QR code:', error);
+        this.error = true;
+        this.loading = false;
+      }
+    });
   }
 
   copyBrCode(): void {
