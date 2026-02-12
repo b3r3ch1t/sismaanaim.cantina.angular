@@ -108,4 +108,15 @@ export class MemberHistoryRecargaClientComponent implements OnInit, AfterViewIni
 
     return dataItem > dataAtual;
   }
+
+  isDataMenorQueAtual(data: string): boolean {
+
+    if(data === null || data === undefined) {
+      return false; // ou true, dependendo do comportamento desejado para valores nulos/indefinidos
+    }
+    const dataItem = new Date(data);
+    const dataAtual = new Date();
+
+    return dataItem < dataAtual;
+  }
 }

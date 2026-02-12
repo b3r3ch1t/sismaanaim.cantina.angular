@@ -82,7 +82,7 @@
               </button>
 
               <button
-                *ngIf="item.status === 1"
+                *ngIf="item.status === 1 && item.vencimento && isDataMaiorQueAtual(item.vencimento)"
                 mat-icon-button
                 class="text-orange-500"
                 matTooltip="Dados PIX"
@@ -102,7 +102,7 @@
               </button>
 
               <button
-                *ngIf="item.status === 3 || isDataMaiorQueAtual(item.data)"
+                *ngIf="item.status === 3 || isDataMenorQueAtual(item.vencimento)"
                 mat-icon-button
                 class="text-red-500"
                 matTooltip="Dados PIX"
