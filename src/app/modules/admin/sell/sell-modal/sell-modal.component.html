@@ -28,12 +28,12 @@
         <mat-label>Valor vendido</mat-label>
         <span matPrefix>R$&nbsp;</span>
         <input 
-        matInput type="tel" 
+        matInput
         inputmode="decimal" 
         pattern="[0-9]*" 
         autocomplete="off" 
-        currencyMask  
-        type="text" 
+        currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',' }" 
+        type="tel" 
         placeholder="Informe o valor vendido" />
 
     </mat-form-field>
