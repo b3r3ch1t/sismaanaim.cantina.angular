@@ -1,6 +1,7 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, inject, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -26,7 +27,8 @@ import { catchError } from 'rxjs';
         MatLabel,
         MatInputModule,
         MatProgressSpinnerModule,
-        CommonModule
+        CommonModule,
+        MatButtonModule
     ],
     providers: [
 
