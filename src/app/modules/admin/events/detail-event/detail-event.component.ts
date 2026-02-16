@@ -2,11 +2,13 @@ import { DatePipe } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { SummaryComponent } from '../../summary/summary.component';
+import { SummaryByEventComponent } from '../../summaryByEvent/summary-by-event.component';
 
 @Component({
     selector: 'app-detail-event',
     imports: [
         SummaryComponent,
+        SummaryByEventComponent,
         MatDialogModule,
         DatePipe
     ],

@@ -5,7 +5,7 @@
     <p><strong>Fim :</strong> {{evento.dataFinal | date: 'dd/MM/yyyy HH:mm'}}  </p>
     <p><strong>Status:</strong> {{evento.descriptionStateEvento}} </p>
 
-    <app-summary></app-summary>
+    <app-summary-by-event [eventoId]="evento.id"></app-summary-by-event>
 </mat-dialog-content>
 
 
